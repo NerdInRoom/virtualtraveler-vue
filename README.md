@@ -19,6 +19,4 @@
 - 개발환경
   - <a link ="./WIKI/About_VScode.md">VScode 꿀팁 모음</a>
 - Backend
-  - 
 - Frontend
-  - 
