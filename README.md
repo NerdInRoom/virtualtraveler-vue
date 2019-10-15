@@ -1,5 +1,21 @@
 # VirtualTraveler
 
+- GitHub - <a href=" https://github.com/NerdInRoom ">NerdInRoom</a>
+
+-  디렉토리 구조
+
+  - Backend - VirtualTraveler-API Clone
+
+  - FrontEnd - VirtualTraveler-Web Clone
+
+  - MeetingLog - 회의록
+
+  - WIKI - 위키저장소
+
+  - Deliverables - 산출물 저장소
+
+    
+
 ## 개요
 
 
