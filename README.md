@@ -21,7 +21,7 @@
 - <a href="">문서 작성 & 코딩 컨벤션</a>
 
 - 개발환경
-  - <a href="./WIKI/About_VScode.md">VScode 꿀팁 모음</a>
+  - <a href="./WIKI/about_vscode.md">VScode 꿀팁 모음</a>
 - Backend
 - Frontend
 
