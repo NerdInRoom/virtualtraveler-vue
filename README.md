@@ -1,9 +1,5 @@
 # VirtualTraveler
 
-> 2019.10.14 - 조우현 작성
-
-
-
 ## 개요
 
 
@@ -25,3 +21,8 @@
 - Backend
 - Frontend
 
+
+
+## 회의록
+
+- 2019.10.15 - <a href="./MeetingLog/20191015.md">기능정의 / 개발환경 / UI 회의</a>
