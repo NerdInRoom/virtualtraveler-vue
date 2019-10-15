@@ -1,10 +1,3 @@
 # VirtualTraveler-WEB
 
 
-
-
-
-## WIKI
-
-- 
-- 
