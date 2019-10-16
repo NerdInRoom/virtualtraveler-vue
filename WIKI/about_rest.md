@@ -1,5 +1,7 @@
 ## REST API
 
+> 2019.10.16 - 최승미 작성
+
 ##### REST란
 
 -  Representational State Transfer
