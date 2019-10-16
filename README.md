@@ -34,6 +34,7 @@
 - <a href="./WIKI/about_markdown.md">마크다운 사용법</a>
 - 개발환경
   - <a href="./WIKI/about_vscode.md">VScode 꿀팁 모음</a>
+- <a href="./WIKI/rest.md">REST API란</a>
 - Backend
 - Frontend
 
