@@ -40,8 +40,9 @@
 - Frontend
   - <a href="./WIKI/about_firebase.md">Firebase</a>
 
-
+냠냠
 
 ## 회의록
 
 - 2019.10.15 - <a href="./MeetingLog/20191015.md">기능정의 / 개발환경 / UI 회의</a>
+- 2019.10.21 - <a href="./MeetingLog/20191021.md">리소스 회의</a>
