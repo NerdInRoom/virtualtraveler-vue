@@ -4,11 +4,11 @@
 
 -  디렉토리 구조
 
-  - MeetingLog - 회의록
-
-  - WIKI - 위키저장소
-
-  - Deliverables - 산출물 저장소
+      - MeetingLog - 회의록
+    
+      - WIKI - 위키저장소
+    
+      - Deliverables - 산출물 저장소
 
     
 
