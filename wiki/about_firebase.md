@@ -1,6 +1,8 @@
 # FireBase
 
 > 2019-10-16 (작성자: 강민)
+>
+> 2019-10-22 (작성자: 강민)
 
 ### 환경 설정과정
 
@@ -38,7 +40,78 @@
    
    ```
 
-   
+
+
+
+### firebase 로그인 인증
+
+- https://firebase.google.com/docs/auth/web/start?hl=ko 
+
+- firebase Authentification 항목의 '로그인 방법'으로 인증 방법들을 설정이 가능.
+
+- **이메일 / 비밀번호**를 이용한 **신규 사용자 가입** (가입 후에는 자동으로 로그인이 된다)
+
+  ```javascript
+  firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(()=>{
+  	/*
+  	 * email과 비밀번호만을 user로 만들어 주는 것을 확장하는 파트,
+       * 여기서는 user의 이름을 update하는 형식
+       */
+      var user = firebase.auth().currentUser;
+      user.updateProfile({
+  		displayName: this.userName
+  	});
+      this.$router.push('/');
+  }).catch(function(error) {
+  	// Handle Errors here.
+  	var errorCode = error.code;
+  	var errorMessage = error.message;
+  	// ...
+  	alert(errorMessage);
+  });
+  ```
+
+- **이메일 / 비밀번호**를 이용한 **로그인**
+
+  ```javascript
+  firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(()=>{
+  	this.$router.push('/');
+  }).catch(function(error) {
+  	// Handle Errors here.
+  	var errorCode = error.code;
+  	var errorMessage = error.message;
+  	// ...
+  	alert(errorMessage);
+  });
+  ```
+
+- **구글 계정**을 이용한 **로그인**
+
+  ```javascript
+  var provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+  
+  firebase.auth().signInWithPopup(provider).then(result => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      var token = result.credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+      //        
+      this.$router.push('/');
+      }).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+      alert(errorCode);
+  });
+  ```
+
+
 
 ### firebase DB
 
@@ -52,9 +125,9 @@
 
 
 
-### Firebase JavaScript SDK
+### Firestore database Function
 
--  https://firebase.google.com/docs/reference/js?hl=ko 
+- https://firebase.google.com/docs/reference/js?hl=ko 
 
 - Document 추가 함수
 
@@ -90,5 +163,13 @@
 
 
 
+(??) 참여 중인 방이 폭파 될때는?
 
+(??) OnsnapShot이란???, firebase
+
+(!!) vuex 사용
+
+(!!) var대신 let으로=> 이유에 대한 DOC올리기
+
+(!!) timestamp를 원하는 date format으로 => util.js
 
