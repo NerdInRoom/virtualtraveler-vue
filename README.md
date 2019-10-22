@@ -45,21 +45,21 @@ npm run lint
 
 - <a href="">문서 작성 & 코딩 컨벤션</a>
   
-  - <a href="./WIKI/about_markdown.md">마크다운 사용법</a>
+  - <a href="./wiki/about_markdown.md">마크다운 사용법</a>
   
 - 개발환경
   
-  - <a href="./WIKI/cicd.md">CI / CD</a>
-  - <a href="./WIKI/about_vscode.md">VScode 꿀팁 모음</a>
+  - <a href="./wiki/cicd.md">CI / CD</a>
+  - <a href="./wiki/about_vscode.md">VScode 꿀팁 모음</a>
   
-- <a href="./WIKI/about_rest.md">REST API란</a>
+- <a href="./wiki/about_rest.md">REST API란</a>
 
-- <a href="./WIKI/about_firebase.md">Firebase</a>
+- <a href="./wiki/about_firebase.md">Firebase</a>
   
   
 
 ## 회의록
 
-- 2019.10.15 - <a href="./MeetingLog/20191015.md">기능정의 / 개발환경 / UI 회의</a>
-- 2019.10.21 - <a href="./MeetingLog/20191021.md">리소스 회의</a>
-- 2019.10.22 - <a href="./MeetingLog/20191022.md">스프린트 회의</a>
+- 2019.10.15 - <a href="./meeting-log/20191015.md">기능정의 / 개발환경 / UI 회의</a>
+- 2019.10.21 - <a href="./meeting-log/20191021.md">리소스 회의</a>
+- 2019.10.22 - <a href="./meeting-log/20191022.md">스프린트 회의</a>
