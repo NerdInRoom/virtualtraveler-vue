@@ -4,10 +4,6 @@
 
 -  디렉토리 구조
 
-  - Backend - VirtualTraveler-API Clone
-
-  - FrontEnd - VirtualTraveler-Web Clone
-
   - MeetingLog - 회의록
 
   - WIKI - 위키저장소
