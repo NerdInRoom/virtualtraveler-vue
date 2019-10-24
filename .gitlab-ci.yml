@@ -1,5 +1,21 @@
-merge-to-develop:
+# 배포 작업
+deploy-to-server:
+    stage: deploy
     only:
-    - develop
+        - master
     script:
-    - echo "Hello World"
+        - echo 'hello world'
+    tags:
+        - deploy
+        
+# 빌드 테스트 작업
+build-to-develop:
+    stage:
+        - build
+    only:
+        - develop
+    script:
+        - echo 'BUILD TEST RUNNING!'
+    tags:
+        - build
+        - merge
