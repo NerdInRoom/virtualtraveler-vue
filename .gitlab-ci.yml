@@ -10,7 +10,7 @@ build:
         - touch build/info.txt
         
 test:
-    stage: text
+    stage: test
     script:
         - echo "Testing"
         - test -f "build/info.txt"
