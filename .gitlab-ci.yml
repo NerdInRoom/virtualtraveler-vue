@@ -11,6 +11,7 @@ deploy-to-server:
         - cd ../server
         - npm install --progress=false
         - nohup npm run start &
+        - exit
     tags:
         - deploy
         
