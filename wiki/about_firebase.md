@@ -1,8 +1,6 @@
 # FireBase
 
-> 2019-10-16 (작성자: 강민)
->
-> 2019-10-22 (작성자: 강민)
+> 2019-10-16 (작성자: 강민) , 2019-10-22 (작성자: 강민), 2019-10-23 (작성자: 강민)
 
 ### 환경 설정과정
 
@@ -22,7 +20,7 @@
    
    require("firebase/firestore");
    
-   var firebaseConfig = {
+   const firebaseConfig = {
      apiKey: "여기에 api키가 자동 생성되있음",
      authDomain: "여기에 firebase domain이 자동 생성 되있음",
      databaseURL: "여기에 DB URL이 자동 생성 되있음",
@@ -36,7 +34,7 @@
    firebase.initializeApp(firebaseConfig)
    
    //파이어베이스의 cloud firestore를 사용
-   var db = firebase.firestore();
+   const db = firebase.firestore();
    
    ```
 
@@ -156,6 +154,51 @@
 
 
 
+### Firestore 데이터 가져오기
+
+- **메소드를 호출하는 get()** & **데이터 변경 이벤트를 수신하는 리스너 Onsnapshot()**
+
+- get()
+
+  - 문서를 가져오는 메소드
+
+  - 문서가 변경이 되었을 시 다시 get()을 호출해야 함. 즉, get() 호출 이후의 변경 사항들은 반영이 안됨.
+
+  - 쿼리를 실행하여 QuerySnapshot(해당 쿼리의 결과물) 형태로 return
+
+    ```javascript
+    db.collection("cities").doc("SF").get().then(function(doc) {
+        if (doc.exists) {
+            console.log("Document data:", doc.data());
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    });
+    ```
+
+- onSnapshot()
+
+  - 데이터 변경 이벤트를 수신하는 리스너
+
+  - 문서가 변경시 콜백이 호출되어 변경사항을 업데이트 됨
+
+  - 리스너 방식으로 데이터 변경사항을 주시하므로, 실시간으로 업데이트가 되는 구조 
+
+    ```javascript
+    db.collection("cities").doc("SF").onSnapshot(function(doc) {
+    	console.log("Current data: ", doc.data());
+    }, function(error){
+        console.log("Error getting document:", error);
+    });
+    ```
+
+    
+
+
+
 ### 참고
 
 - https://www.youtube.com/watch?v=ifOzAyR1cG4 
@@ -163,13 +206,7 @@
 
 
 
-(??) 참여 중인 방이 폭파 될때는?
-
-(??) OnsnapShot이란???, firebase
-
-(!!) vuex 사용
-
-(!!) var대신 let으로=> 이유에 대한 DOC올리기
+(!!) 참여 중인 방이 폭파 될때는?
 
 (!!) timestamp를 원하는 date format으로 => util.js
 

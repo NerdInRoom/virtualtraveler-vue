@@ -1,9 +1,25 @@
-# Master 브랜치에 push가 들어올 때 동작하는 job
+# 배포 작업
 deploy-to-server:
-  stage: deploy
-  only:
-    - master
-  script:
-    - echo 'hello world!'
-  tags:
-    - deploy
+    stage: deploy
+    only:
+        - master
+    script:
+        - echo 'DEPLOY RUNNING'
+        - cd client
+        - npm install --progress=false
+        - npm run build
+        - cd ../server
+        - npm run start
+    tags:
+        - deploy
+        
+# 빌드 테스트 작업
+build-test:
+    stage: build
+    script:
+        - echo 'BUILD TEST RUNNING'
+        - cd client
+        - npm install --progress=false
+        - npm run build
+    tags:
+        - build
