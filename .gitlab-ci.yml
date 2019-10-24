@@ -10,8 +10,7 @@ deploy-to-server:
         
 # 빌드 테스트 작업
 build-to-develop:
-    stage:
-        - build
+    stage: build
     only:
         - develop
     script:
