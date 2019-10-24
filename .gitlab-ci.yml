@@ -1,9 +1,16 @@
-# Master 브랜치에 push가 들어올 때 동작하는 job
-deploy-to-server:
-  stage: deploy
-  only:
-    - master
-  script:
-    - echo 'hello world!'
-  tags:
-    - deploy
+stages:
+    - build
+    - test
+    
+build:
+    stage: build
+    script:
+        - echo "Building"
+        - mkdir build
+        - touch build/info.txt
+        
+test:
+    stage: text
+    script:
+        - echo "Testing"
+        - test -f "build/info.txt"
