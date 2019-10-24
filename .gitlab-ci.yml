@@ -8,7 +8,9 @@ deploy-to-server:
         - cd client
         - npm install --progress=false
         - npm run build
+        - ls
         - cd ../server
+        - ls
         - npm run start
     tags:
         - deploy
