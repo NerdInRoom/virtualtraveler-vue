@@ -4,7 +4,12 @@ deploy-to-server:
     only:
         - master
     script:
-        - echo 'hello world'
+        - echo 'DEPLOY RUNNING'
+        - cd client
+        - npm install
+        - npm run build
+        - cd ../server
+        - npm run start
     tags:
         - deploy
         
@@ -14,8 +19,10 @@ build-test:
     only:
         - develop
     script:
-        - echo 'BUILD TEST RUNNING!'
-        - ls
+        - echo 'BUILD TEST RUNNING'
+        - cd client
+        - npm install
+        - npm run build
     tags:
         - build
         
@@ -26,6 +33,9 @@ merge-to-develop:
     only:
         - merge_requests
     script:
-        - echo 'MERGE'
+        - echo 'MERGE TEST RUNNING'
+        - cd client
+        - npm install
+        - npm run build
     tags:
         - merge
