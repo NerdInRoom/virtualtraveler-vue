@@ -1,16 +1,19 @@
-stages:
-    - build
-    - test
-    
-build:
-    stage: build
-    script:
-        - echo "Building"
-        - mkdir build
-        - touch build/info.txt
-        
-test:
-    stage: test
-    script:
-        - echo "Testing"
-        - test -f "build/info.txt"
+--- 
+build: 
+  script: 
+    - "echo \"Building\""
+    - "mkdir build"
+    - "touch build/info.txt"
+  stage: build
+demo_job_1: ~
+stages: 
+  - build
+  - test
+tags: 
+  - build
+  - test
+test: 
+  script: 
+    - "echo \"Testing\""
+    - "test -f \"build/info.txt\""
+  stage: test
