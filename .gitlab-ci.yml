@@ -9,7 +9,7 @@ deploy-to-server:
         - deploy
         
 # 빌드 테스트 작업
-build-to-develop:
+build-from-develop:
     stage: build
     only:
         - develop
@@ -17,4 +17,14 @@ build-to-develop:
         - echo 'BUILD TEST RUNNING!'
     tags:
         - build
+        
+
+# 머지 작업
+merge-to-develop:
+    stage: test
+    only:
+        - merge_requests
+    script:
+        - echo 'MERGE'
+    tags:
         - merge
