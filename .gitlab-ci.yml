@@ -11,8 +11,6 @@ deploy-to-server:
 # 빌드 테스트 작업
 build-from-develop:
     stage: build
-    only:
-        - develop
     script:
         - echo 'BUILD TEST RUNNING!'
     tags:
