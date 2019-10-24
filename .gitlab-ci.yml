@@ -1,3 +1,5 @@
-script:
-    - echo hello
-    - dir
+merge-to-develop:
+    only:
+    - develop
+    script:
+    - echo "Hello World"
