@@ -10,7 +10,7 @@ deploy-to-server:
         - npm run build
         - cd ../server
         - npm install --progress=false
-        - npm run start
+        - nohup npm run start &
     tags:
         - deploy
         
