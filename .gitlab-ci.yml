@@ -9,7 +9,7 @@ deploy-to-server:
         - deploy
         
 # 빌드 테스트 작업
-build-from-develop:
+build-test:
     stage: build
     script:
         - echo 'BUILD TEST RUNNING!'
