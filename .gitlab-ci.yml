@@ -9,8 +9,10 @@ deploy-to-server:
         - npm install --progress=false
         - npm run build
         - cd ../server
+        - pkill node
         - npm install --progress=false
-        - nohup npm run start &
+        - chmod 700 runserver.sh
+        - ./runserver.sh
     tags:
         - deploy
         
