@@ -23,17 +23,3 @@ build-test:
         - npm run build
     tags:
         - build
-        
-
-# 머지 작업
-merge-to-develop:
-    stage: test
-    only:
-        - merge_requests
-    script:
-        - echo 'MERGE TEST RUNNING'
-        - cd client
-        - npm install --progress=false
-        - npm run build
-    tags:
-        - merge
