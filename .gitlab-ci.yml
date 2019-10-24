@@ -11,8 +11,11 @@ deploy-to-server:
 # 빌드 테스트 작업
 build-test:
     stage: build
+    only:
+        - develop
     script:
         - echo 'BUILD TEST RUNNING!'
+        - ls
     tags:
         - build
         
