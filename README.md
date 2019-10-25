@@ -6,63 +6,85 @@
 
 
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-
-
 ## 아키텍쳐
 
+- <a href="./deliverables/mockup.md">UI Mockup</a>
+
+- <a href="./deliverables/function_specification.md">Function Specification</a>
+
+  
+
+- Data Structure
+
+  <img src="./deliverables/database_structure.png">
 
 
-## 일정
 
-- <a href="https://calendar.google.com/calendar/embed?src=k4h8g6b7jn7vrmqlngfj93lb7s%40group.calendar.google.com&ctz=Asia%2FSeoul">Google Team Calendar</a>
+- Service Architecture
+
+  <img src="./deliverables/service-architecture.png">
+
+
+
+## 일정	
+
+### <a href="https://calendar.google.com/calendar/embed?src=k4h8g6b7jn7vrmqlngfj93lb7s%40group.calendar.google.com&ctz=Asia%2FSeoul">Google Team Calendar</a>
+
+
 
 ## WIKI
 
-- <a href="">문서 작성 & 코딩 컨벤션</a>
+- 문서 작성 & 코딩 컨벤션
   
-  - <a href="./wiki/about_markdown.md">마크다운 사용법</a>
-  - <a href="./wiki/ESlint.md">ESlint</a>
+  - <a href="./wiki/about_markdown.md">마크다운 기본 문법</a>
+  
+    
+  
 - 개발환경
   
-  - <a href="./wiki/cicd.md">CI / CD</a>
-  - <a href="./wiki/gitlab-ci.md">GitLab CI/CD 도입하기</a>
-  - <a href="./wiki/about_vscode.md">VScode 꿀팁 모음</a>
-- <a href="./wiki/about_rest.md">REST API란</a>
-- <a href="./wiki/about_firebase.md">Firebase</a>
-- <a href="./wiki/about_realtime_database_chat.md">리얼타임 데이터베이스</a>
+  - CI / CD
+  
+    - <a href="./wiki/cicd.md">CI / CD 개념정리</a>
+    - <a href="./wiki/gitlab-ci.md">GitLab CI/CD 도입하기</a>
+  
+  - <a href="./wiki/about_vscode.md">VScode 팁 모음</a>
+  
+    
+  
+- Chatting
+
+  - <a href=" https://cionman.tistory.com/50 ">Firebase Realtime database chatting app</a>
+    - <a href="./wiki/about_realtime_database_chat.md">분석</a>
+  - <a href=" https://www.youtube.com/watch?v=ifOzAyR1cG4 ">Firebase Firestore chatting app</a>
+    - <a href="./wiki/about_firebase.md">분석</a>
+
+  
+
 - Vue
   
-  - <a href="./wiki/this.md">this</a>
-  - <a href="./wiki/vuex-vue.md">vuex</a>
-  - <a href="./wiki/es6-for-vue.md">vue에 필요한 es6 문법</a>
-  - <a href="./wiki/lifecycle-vue.md">뷰의 라이프싸이클</a>
+  - <a href=" https://joshua1988.github.io/web-development/vuejs/vue-structure/ ">실무에서 사용하는 Vue.js 프로젝트 구조</a>
+    
+  - <a href="https://joshua1988.github.io/web-development/vuejs/boost-productivity/">Vue.js 개발 생산성을 높여주는 도구 3가지</a>
+    
+  - <a href=" https://programmingsummaries.tistory.com/385 ">pakage.json에 대하여</a>
+    
+  - <a href="./wiki/this.md">상황에 따른 this</a>
+  
+  - <a href="./wiki/vuex-vue.md">Vuex에 대하여</a>
+  
+  - <a href="./wiki/es6-for-vue.md">Vue.js에 필요한 es6 문법</a>
+  
+  - <a href="./wiki/lifecycle-vue.md">Lifecycle에 대하여</a>
+  
+    
+  
 - API
-  - <a href="./wiki/about_roadview.md">로드 뷰</a>
+  
+  - <a href="./wiki/about_rest.md">REST API 개념정리</a>
+    
+  - <a href="./wiki/about_roadview.md">Kakao Roadview</a>
+  
+    
 
 ## 회의록
 
