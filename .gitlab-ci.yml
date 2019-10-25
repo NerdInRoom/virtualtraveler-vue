@@ -10,7 +10,6 @@ deploy-to-server:
         - npm run build
         - cd ../server
         - npm install
-        - pkill node
         - npm run start
     tags:
         - deploy
