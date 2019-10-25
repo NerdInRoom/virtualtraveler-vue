@@ -19,5 +19,6 @@ build-test:
         - cd client
         - npm install --progress=false
         - npm run build
+        - whoami
     tags:
         - build
