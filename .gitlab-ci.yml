@@ -5,7 +5,6 @@ deploy-to-server:
         - master
     script:
         - echo 'DEPLOY RUNNING'
-        - git pull origin master
         - cd client
         - npm install --progress=false
         - npm run build
