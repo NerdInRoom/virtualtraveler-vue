@@ -10,8 +10,7 @@ deploy-to-server:
         - npm run build
         - cd ../server
         - npm install --progress=false
-        - chmod 700 runserver.sh
-        - ./runserver.sh
+        - npm run start
     tags:
         - deploy
         
