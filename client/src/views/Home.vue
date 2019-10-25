@@ -5,7 +5,7 @@
     <h1>야이씨!! 좀 !!!!!!!!!!!</h1>
     <h1>야이씨!! 좀 !!!!!!!!!!!</h1>
     <h1>된다아아아아아!!!!!!!!!!</h1>
-    <img alt="Vue logo" src="../assets/logo.png">
+    <img alt="Vue logo" src="../images/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
