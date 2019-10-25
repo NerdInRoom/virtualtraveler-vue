@@ -50,6 +50,7 @@ npm run lint
 - 개발환경
   
   - <a href="./wiki/cicd.md">CI / CD</a>
+  - <a href="./wiki/gitlab-ci.md">GitLab CI/CD 도입하기</a>
   - <a href="./wiki/about_vscode.md">VScode 꿀팁 모음</a>
 - <a href="./wiki/about_rest.md">REST API란</a>
 - <a href="./wiki/about_firebase.md">Firebase</a>
