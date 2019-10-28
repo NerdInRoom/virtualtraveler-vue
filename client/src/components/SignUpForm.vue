@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import dbCRUD from '@/api/firebaseAPI.js';
+import dbCRUD from '../api/firebaseAPI.js';
 
 export default {
 	name: 'loginForm',
