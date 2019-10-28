@@ -18,8 +18,8 @@
 					label="비밀번호"
 				></v-text-field>
 				<div class="btn">
-					<v-btn class="login-btn white--text title" block color="#4285F4" large>로그인</v-btn>
-					<v-btn class="login-btn white--text title" block color="#EA4335" large>
+					<v-btn @click="login" :disabled="!valid" class="login-btn white--text title" block color="#4285F4" large>로그인</v-btn>
+					<v-btn @click="googleLogin" class="login-btn white--text title" block color="#EA4335" large>
 						<v-icon class="icon-google">
 							mdi-google
 						</v-icon>
@@ -32,6 +32,9 @@
 </template>
 
 <script>
+
+import firebase from 'firebase'
+
 export default {
 	name: 'loginForm',
 	data: () => ({
@@ -47,10 +50,47 @@ export default {
 		rules: {
 			required: value => !!value || '비밀번호를 입력하세요.',
 			min: v => v.length >= 8 || '비밀번호는 8자리 이상입니다.',
-			emailMatch: () => ('이메일 또는 비밀번호가 틀렸습니다.'),
+			//emailMatch: () => ('이메일 또는 비밀번호가 틀렸습니다.'),
 		},
      
-    })
+	}),
+	methods: {
+    login(){
+		const email = this.email
+		const password = this.password
+
+		this.$store.dispatch('emailLogin', { email, password })
+		.then((user) => {
+			this.$router.push('/map')
+		}).catch((err) => {
+			alert(err)
+		})
+	},
+	googleLogin(){
+        let provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+
+        firebase.auth().signInWithPopup(provider).then(result => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            let token = result.credential.accessToken;
+            // The signed-in user info.
+            let user = result.user;
+            // ...
+            
+            this.$router.push('/');
+            }).catch(function(error) {
+            // Handle Errors here.
+            let errorCode = error.code;
+            let errorMessage = error.message;
+            // The email of the user's account used.
+            let email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            let credential = error.credential;
+            // ...
+            alert(errorCode);
+        });
+    },
+  },
 }
 </script>
 

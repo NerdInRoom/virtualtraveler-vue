@@ -4,24 +4,24 @@
 			<h1>회원가입</h1>
 		</v-row>
 		<v-row class="row" align="center" justify="center">
-				<v-form id="login-form" v-model="valid">
-				<v-text-field
-					v-model="email"
-					:rules="emailRules"
-					label="이메일"
-					required
-				></v-text-field>
-				<v-text-field
-					v-model="password"
-					:rules="[rules.required, rules.min]"
-					:type="show ? 'text' : 'password'"
-					label="비밀번호"
-				></v-text-field>
+			<v-form id="login-form" v-model="valid">
+			<v-text-field
+				v-model="email"
+				:rules="emailRules"
+				label="이메일"
+				required
+			></v-text-field>
+			<v-text-field
+				v-model="password"
+				:rules="[rules.required, rules.min]"
+				:type="show ? 'text' : 'password'"
+				label="비밀번호"
+			></v-text-field>
 			</v-form>
 		</v-row>
 		<v-row class="row" align="center" justify="center">
 			<v-col id="v-col" cols="4">
-				<v-btn class="login-btn white--text title" color="#34A853" block large>가입</v-btn>
+				<v-btn @click="signUp" :disabled="!valid" class="login-btn white--text title" color="#34A853" block large>가입</v-btn>
 			</v-col>
 			<v-col id="v-col" cols="4">
 				<v-btn to="/" class="login-btn white--text title" color="#EA4335" block large>취소</v-btn>
@@ -31,10 +31,13 @@
 </template>
 
 <script>
+import dbCRUD from '@/api/firebaseAPI.js';
+
 export default {
 	name: 'loginForm',
 	data: () => ({
 		valid: false,
+		userName: "민강",
 		email: '',
 		emailRules: [
 		v => !!v || '이메일을 입력하세요.',
@@ -46,10 +49,17 @@ export default {
 		rules: {
 			required: value => !!value || '비밀번호를 입력하세요.',
 			min: v => v.length >= 8 || '비밀번호는 8자리 이상입니다.',
-			emailMatch: () => ('이메일 또는 비밀번호가 틀렸습니다.'),
-		},
-     
-    })
+			//emailMatch: () => ('이메일 또는 비밀번호가 틀렸습니다.'),
+		}
+	}),
+	methods: {
+		async signUp(){
+		let flag = await dbCRUD.signUp(this.email, this.password, this.userName)
+        if(flag){
+          this.$router.push('/map')
+        }
+      }
+	}
 }
 </script>
 

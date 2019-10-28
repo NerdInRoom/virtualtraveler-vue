@@ -11,16 +11,17 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'auth',
 	component: Auth,
 	children: [
         {
-          path: '',
-          component: LoginForm
+			name: 'auth',
+			path: '',
+			component: LoginForm
         },
         {
-          path: 'signup',
-          component: SignUpForm
+			name: 'signUp',
+			path: 'signup',
+			component: SignUpForm
         }
       ]
   },
