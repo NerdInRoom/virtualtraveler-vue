@@ -16,6 +16,5 @@ export default new Vuex.Store({
     chat: "chat"
   },
   mutations: {},
-  actions: {},
-  modules: {}
+  actions: {}
 })

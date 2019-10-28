@@ -4,7 +4,7 @@
 		<div id="nav">
 			<router-link to="/">Login</router-link> |
 			<router-link to="/map">Map</router-link> |
-			<router-link to="/travel/1">Travel</router-link>
+			<router-link :to="{name: 'travel', params: {roomId: 1}}">Travel</router-link>
 		</div>
 		<router-view />
 	</div>

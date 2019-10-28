@@ -7,9 +7,9 @@
 <script>
 
 export default {
-  name: 'login',
-  components: {
-    
-  }
+	name: 'login',
+	components: {
+
+	}
 }
 </script>
