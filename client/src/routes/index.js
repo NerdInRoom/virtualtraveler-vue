@@ -1,16 +1,28 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../views/Login.vue'
+import Auth from '../views/Auth.vue'
 import Map from '../views/Map.vue'
 import Travel from '../views/Travel.vue'
+import LoginForm from '@/components/LoginForm.vue';
+import SignUpForm from '@/components/SignUpForm.vue';
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'login',
-    component: Login
+    name: 'auth',
+	component: Auth,
+	children: [
+        {
+          path: '',
+          component: LoginForm
+        },
+        {
+          path: 'signup',
+          component: SignUpForm
+        }
+      ]
   },
   {
     path: '/map',

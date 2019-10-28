@@ -1,19 +1,18 @@
 <template>
   <v-app>
-    <Login />
+    <router-view></router-view>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
-import Login from './views/Login.vue';
+import Auth from './views/Auth.vue';
 import Map from './views/Map.vue';
 import Travel from './views/Travel.vue';
 
 export default {
   name: 'App',
   components: {
-    Login,
+    Auth,
     Map,
     Travel
   },

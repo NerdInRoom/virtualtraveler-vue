@@ -1,7 +1,7 @@
 <template>
-	<div class="login">
+	<div class="signUp">
 		<v-row class="row top-row" align="center" justify="center">
-			<h1>로그인</h1>
+			<h1>회원가입</h1>
 		</v-row>
 		<v-row class="row" align="center" justify="center">
 				<v-form id="login-form" v-model="valid">
@@ -17,16 +17,15 @@
 					:type="show ? 'text' : 'password'"
 					label="비밀번호"
 				></v-text-field>
-				<div class="btn">
-					<v-btn class="login-btn white--text title" block color="#4285F4" large>로그인</v-btn>
-					<v-btn class="login-btn white--text title" block color="#EA4335" large>
-						<v-icon class="icon-google">
-							mdi-google
-						</v-icon>
-							구글로 로그인하기</v-btn>
-					<v-btn to="/signup" class="login-btn white--text title" block color="#34A853" large>메일로 회원가입</v-btn>
-				</div>
 			</v-form>
+		</v-row>
+		<v-row class="row" align="center" justify="center">
+			<v-col id="v-col" cols="4">
+				<v-btn class="login-btn white--text title" color="#34A853" block large>가입</v-btn>
+			</v-col>
+			<v-col id="v-col" cols="4">
+				<v-btn to="/" class="login-btn white--text title" color="#EA4335" block large>취소</v-btn>
+			</v-col>
 		</v-row>
 	</div>
 </template>
