@@ -1,13 +1,13 @@
 <template>
-  <v-app>
-    <router-view></router-view>
-  </v-app>
+	<v-app>
+		<router-view></router-view>
+	</v-app>
 </template>
 
 <script>
-import Auth from './views/Auth.vue';
-import Map from './views/Map.vue';
-import Travel from './views/Travel.vue';
+import Auth from '@/views/Auth.vue';
+import Map from '@/views/Map.vue';
+import Travel from '@/views/Travel.vue';
 
 export default {
   name: 'App',
@@ -16,9 +16,6 @@ export default {
     Map,
     Travel
   },
-  data: () => ({
-    //
-  }),
 };
 </script>
 <style>

@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Auth from '../views/Auth.vue'
-import Map from '../views/Map.vue'
-import Travel from '../views/Travel.vue'
+import Auth from '@/views/Auth.vue'
+import Map from '@/views/Map.vue'
+import Travel from '@/views/Travel.vue'
 import LoginForm from '@/components/LoginForm.vue';
 import SignUpForm from '@/components/SignUpForm.vue';
 
@@ -19,7 +19,7 @@ const routes = [
 			component: LoginForm
         },
         {
-			name: 'signUp',
+			name: 'signup',
 			path: 'signup',
 			component: SignUpForm
         }
@@ -35,12 +35,10 @@ const routes = [
     name: 'travel',
     component: Travel
   }
-]
+];
 
-const router = new VueRouter({
+export default new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: routes
-})
-
-export default router
+});
