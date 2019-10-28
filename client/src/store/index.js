@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import dbCRUD from '@/api/firebaseAPI.js'
+import dbCRUD from '../api/firebaseAPI.js'
 
 Vue.use(Vuex)
 
