@@ -3,7 +3,7 @@
 		<Header />
 		<div id="nav">
 			<router-link to="/">Login</router-link> |
-			<router-link to="/map">Map</router-link> |
+			<router-link to="/main">main</router-link> |
 			<router-link to="/travel/1">Travel</router-link>
 		</div>
 		<router-view />
