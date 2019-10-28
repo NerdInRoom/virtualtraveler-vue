@@ -63,21 +63,21 @@
 - Vue
   
   - <a href=" https://joshua1988.github.io/web-development/vuejs/vue-structure/ ">실무에서 사용하는 Vue.js 프로젝트 구조</a>
-    
   - <a href="https://joshua1988.github.io/web-development/vuejs/boost-productivity/">Vue.js 개발 생산성을 높여주는 도구 3가지</a>
-    
   - <a href=" https://programmingsummaries.tistory.com/385 ">pakage.json에 대하여</a>
-    
   - <a href="./wiki/this.md">상황에 따른 this</a>
-  
   - <a href="./wiki/vuex-vue.md">Vuex에 대하여</a>
-  
   - <a href="./wiki/es6-for-vue.md">Vue.js에 필요한 es6 문법</a>
-  
   - <a href="./wiki/lifecycle-vue.md">Lifecycle에 대하여</a>
   
-    
   
+  
+- JavaScript
+
+  - <a href="./wiki/about_promise_async_await.md">비동기 개념 정리(Promise, Async/Await)</a>
+
+  
+
 - API
   
   - <a href="./wiki/about_rest.md">REST API 개념정리</a>
