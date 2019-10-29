@@ -34,6 +34,9 @@ export default new Vuex.Store({
 	getters: {
 		getUser(state) {
 			return state.user;
+		},
+		getRoomInfo: (state) => (id) => {
+			return state.roomList.find(room => room.roomId === id);
 		}
 	},
 	mutations: {
