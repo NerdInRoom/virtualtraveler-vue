@@ -13,6 +13,7 @@ export default new Vuex.Store({
     userStore
   },
   state: {
+
   },
   mutations: {
     setRoomLocation (state, changedInfo) {

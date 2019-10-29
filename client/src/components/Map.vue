@@ -32,13 +32,14 @@ export default {
                 roomOwnerId : Math.floor(Math.random() * 1000)
             });
         },
-        checkRoadview(position) {
+        checkRoadview(position, roomId) {
             const _this = this;
             _this.rvClient.getNearestPanoId(position, 50, function (panoId) {
                 if (panoId === null) {
                     alert('로드뷰 안됨');
                 } else {
-                    console.log('로드뷰 가능')
+                    console.log('로드뷰 가능 : ' + roomId);
+
                 }
             });
         },
@@ -55,8 +56,7 @@ export default {
                 });
                 marker.setDraggable(true);
                 kakao.maps.event.addListener(marker, 'click', function () {
-                    console.log('이 마커의 방 번호 : '+marker.getTitle());
-                    _this.checkRoadview(marker.getPosition());
+                    _this.checkRoadview(marker.getPosition(), marker.getTitle());
                 });
                 _this.markers.push(marker);
                 element.markerObj = marker;
@@ -81,8 +81,7 @@ export default {
 
             _this.addChatting(markerPosition, newRoomId);
             kakao.maps.event.addListener(marker, 'click', function () {
-                console.log('이 마커의 방 번호 : '+marker.getTitle());
-                _this.checkRoadview(marker.getPosition());
+                _this.checkRoadview(marker.getPosition(),marker.getTitle());
             });
 
             this.markers.push(marker);
