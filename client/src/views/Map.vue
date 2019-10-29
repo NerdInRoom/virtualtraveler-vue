@@ -1,15 +1,19 @@
 <template>
-    <div class="map">
-        <h1>This is Map-page</h1>
-		<router-link :to="{name:'travel', params:{roomId: 1}}" >Travel1</router-link>
-    </div>
+<div>
+    <h1>하이루</h1>
+    <!-- <MapMarker></MapMarker> -->
+</div>
 </template>
 
 <script>
-
+import MapMarker from '../components/MapMarker.vue'
 export default {
-  components: {
-    
-  }
+    components:{
+        MapMarker : MapMarker
+    }
 }
 </script>
+
+<style>
+
+</style>

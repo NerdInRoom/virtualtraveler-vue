@@ -53,6 +53,9 @@ export default new Vuex.Store({
 		}
 	},
 	actions: {
+		addRoom(){
+			//파베에다 넣기
+		},
 		async signup(state, payload){
 			try {
 				const result = await firebaseApi.signup(payload.email, payload.password, payload.nickname);
