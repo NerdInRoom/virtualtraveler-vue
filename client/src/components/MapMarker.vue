@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import router from '../routes/index.js';
 export default {
     data() {
         return {
@@ -26,12 +25,12 @@ export default {
             //파베에 set
         },
         checkRoadview(position, roomId) {
+			const vue = this;
             this.rvClient.getNearestPanoId(position, 50, function (panoId) {
                 if (panoId === null) {
                     alert('로드뷰 안됨');
                 } else {
-                    console.log('로드뷰 가능 : ' + roomId);
-                    router.push({ name: 'travel', params: { roomId: roomId }});
+					vue.$router.push({ name: 'travel', params: {roomId}});
                 }
             });
         },

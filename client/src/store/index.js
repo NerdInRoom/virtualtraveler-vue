@@ -3,7 +3,6 @@ import Vuex from 'vuex';
 
 // Store에서는 '@'로 src 접근이 불가하다.
 import firebaseApi from '../api/firebaseApi';
-import kakaomapApi from '../api/kakaomapApi';
 
 Vue.use(Vuex);
 
@@ -37,6 +36,9 @@ export default new Vuex.Store({
 		},
 		getRoomInfo: (state) => (id) => {
 			return state.roomList.find(room => room.roomId === id);
+		},
+		getRoomList(state) {
+			return state.roomList;
 		}
 	},
 	mutations: {

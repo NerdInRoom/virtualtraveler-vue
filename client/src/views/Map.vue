@@ -1,15 +1,14 @@
 <template>
-<div>
-    <h1>하이루</h1>
-    <!-- <MapMarker></MapMarker> -->
-</div>
+	<div>
+		<MapMarker></MapMarker>
+	</div>
 </template>
 
 <script>
 import MapMarker from '../components/MapMarker.vue'
 export default {
     components:{
-        MapMarker : MapMarker
+        MapMarker
     }
 }
 </script>

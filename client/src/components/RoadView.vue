@@ -5,11 +5,9 @@
 <script>
 /* global kakao */
 export default {
-	props: {
-		roomId: Number
-	},
+	props: ['roomId'],
 	async mounted () {
-		const roomInfo = this.$store.getters.getRoomInfo(this.roomId);
+		const roomInfo = this.$store.getters.getRoomInfo(Number(this.roomId));
 		const roadviewContainer = document.getElementById('roadview');
 
 		// 방장이 아닌 경우 로드뷰 클릭 방지
@@ -35,7 +33,7 @@ export default {
 	    kakao.maps.event.addListener(roadview, 'position_changed', () => {
 			const changedLocation = roadview.getPosition();
 			const changedLocationInfo = {
-				roomId: vue.roomId,
+				roomId: Number(vue.roomId),
 				latitude: changedLocation.Ha,
 				longitude: changedLocation.Ga
 			}
