@@ -1,16 +1,29 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../views/Login.vue'
-import Main from '../views/Main.vue'
-import Travel from '../views/Travel.vue'
+import Auth from '@/views/Auth.vue'
+import Map from '@/views/Map.vue'
+import Travel from '@/views/Travel.vue'
+import LoginForm from '@/components/LoginForm.vue';
+import SignUpForm from '@/components/SignUpForm.vue';
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'login',
-    component: Login
+	component: Auth,
+	children: [
+        {
+			name: 'auth',
+			path: '',
+			component: LoginForm
+        },
+        {
+			name: 'signup',
+			path: 'signup',
+			component: SignUpForm
+        }
+      ]
   },
   {
     path: '/map',
@@ -27,12 +40,10 @@ const routes = [
     name: 'travel',
     component: Travel
   }
-]
+];
 
-const router = new VueRouter({
+export default new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: routes
-})
-
-export default router
+});

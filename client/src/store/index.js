@@ -1,35 +1,60 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import {chatStore} from './chatStore'
-import {mapStore} from './mapStore'
-import {userStore} from './userStore'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+// Store에서는 '@'로 src 접근이 불가하다.
+import firebaseApi from '../api/firebaseApi';
+import kakaomapApi from '../api/kakaomapApi';
+
+Vue.use(Vuex);
 
 export default new Vuex.Store({
-  modules:{
-    chatStore,
-    mapStore,
-    userStore
-  },
-  state: {
+	state: {
+		accessToken: "",
+		refreshToken: "",
+		user: ""
+	},
+	getters: {
+		getUser(state) {
+			return state.user;
+		}
+	},
+	mutations: {
+		updateUser(state, payload){
+			state.user = payload.user;
+		}
+	},
+	actions: {
+		async signup(state, payload){
+			try {
+				const result = await firebaseApi.signup(payload.email, payload.password, payload.nickname);
+				state.commit('updateUser', result);
 
-  },
-  mutations: {
-    setRoomLocation (state, changedInfo) {
-      state.roomList.forEach((room, index) => {
-        if (room.roomId === changedInfo.roomId) {
-          state.roomList[index].roomGPS.latitude = changedInfo.latitude
-          state.roomList[index].roomGPS.longitude = changedInfo.longitude
-        }
-      })
-    }
-  },
-  actions: {
-    async getRoomInfo ({ state }, id) {
-      return state.roomList.find(room => room.roomId === id)
-    }
-  },
-  mutations: {},
-  actions: {},
+				return result;
+			} catch (error) {
+				throw error;
+			}
+		},
+		async loginWithEmail(state, payload){
+			try {
+				const result = await firebaseApi.loginWithEmail(payload.email, payload.password);
+				state.commit('updateUser', result);
+
+				return result;
+			} catch (error) {
+				throw error;
+			}
+		},
+		async loginWithGoogle(state){
+			try {
+				const result = await firebaseApi.loginWithGoogle();
+				state.commit('updateUser', result);
+
+				return result;
+			} catch (error) {
+				throw error;
+			}
+		},
+		logout(){
+		}
+	}
 })
