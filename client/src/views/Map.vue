@@ -7,9 +7,8 @@
 <script>
 
 export default {
-	name: 'map',
-	components: {
-
-	}
+  components: {
+    
+  }
 }
 </script>
