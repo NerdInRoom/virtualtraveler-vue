@@ -1,15 +1,20 @@
 <template>
-    <div class="travel">
-        <h1>This is Travel-page</h1>
-    </div>
+    <v-container
+		class="d-flex flex-row ma-0 pa-0"
+	>
+		<!-- <RoadView /> -->
+		<ChatRoom />
+    </v-container>
 </template>
 
 <script>
+import ChatRoom from '@/components/ChatRoom.vue';
+// import RoadView from '@/components/RoadView.vue';
 
 export default {
-  name: 'travel',
   components: {
-    
+	ChatRoom,
+	// RoadView
   }
 }
 </script>
