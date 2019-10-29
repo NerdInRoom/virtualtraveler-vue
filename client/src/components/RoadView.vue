@@ -4,35 +4,22 @@
 
 <script>
 /* global kakao */
-import { mapMutations, mapActions } from 'vuex';
-
 export default {
-	props: {
-		roomId: Number
-	},
-	methods: {
-		...mapMutations(['setRoomLocation']),
-		...mapActions(['getRoomInfo'])
-	},
+	props: ['roomId'],
 	async mounted () {
-		let roomInfo = null;
-		await this.getRoomInfo(this.roomId).then((info) => {
-			roomInfo = info;
-			console.log(roomInfo+'로드뷰컴포');
-		});
+		const roomInfo = this.$store.getters.getRoomInfo(Number(this.roomId));
 		const roadviewContainer = document.getElementById('roadview');
 
 		// 방장이 아닌 경우 로드뷰 클릭 방지
-		if (roomInfo.roomOwnerId !== 123) {
-			roadviewContainer.style.pointerEvents = 'none';
-		}
+		// if (roomInfo.roomOwnerId !== 123) {
+		// 	roadviewContainer.style.pointerEvents = 'none';
+		// }
 
+		const roadview = new kakao.maps.Roadview(roadviewContainer);
 		const rvPosition = new kakao.maps.LatLng(
 			roomInfo.roomGPS.latitude,
 			roomInfo.roomGPS.longitude
 		);
-
-	    const roadview = new kakao.maps.Roadview(roadviewContainer);
 
 		// roadviewClient : 좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
 		// 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다. 반경 50미터 이내
@@ -46,11 +33,11 @@ export default {
 	    kakao.maps.event.addListener(roadview, 'position_changed', () => {
 			const changedLocation = roadview.getPosition();
 			const changedLocationInfo = {
-				roomId: vue.roomId,
+				roomId: Number(vue.roomId),
 				latitude: changedLocation.Ha,
 				longitude: changedLocation.Ga
 			}
-			vue.setRoomLocation(changedLocationInfo);
+			vue.$store.commit('setRoomLocation', changedLocationInfo);
 		})
 	}
 }

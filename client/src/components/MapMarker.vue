@@ -18,18 +18,37 @@ export default {
     },
     created() {},
     mounted() {
-        this.getCurrentGPS();        
+        console.log('ㅋㅋ');
+        this.getCurrentGPS();
     },
     methods: {
         addChatting(position, roomId) {
-            //파베에 set
+            this.$store.commit('addRoom', {
+                roomId: roomId,
+                roomGPS: {
+                    latitude: position.Ha,
+                    longitude: position.Ga
+                },
+                roomOwnerId: Math.floor(Math.random() * 1000)
+            });
         },
-        checkRoadview(position, roomId) {
+        checkRoadview(position, roomId, marker) {
+            const vue = this;
             this.rvClient.getNearestPanoId(position, 50, function (panoId) {
                 if (panoId === null) {
                     alert('로드뷰 안됨');
                 } else {
-                    console.log('로드뷰 가능 : ' + roomId);
+                    vue.$store.commit('setRoomLocation', {
+                        roomId: Number(roomId),
+                        latitude: position.Ha,
+                        longitude: position.Ga
+                    });
+                    vue.$router.push({
+                        name: 'travel',
+                        params: {
+                            roomId
+                        }
+                    });
                 }
             });
         },
@@ -44,9 +63,8 @@ export default {
                     clickable: true,
                     title: element.roomId
                 });
-                marker.setDraggable(true);
                 kakao.maps.event.addListener(marker, 'click', function () {
-                    _this.checkRoadview(marker.getPosition(), marker.getTitle());
+                    _this.checkRoadview(marker.getPosition(), marker.getTitle(), marker);
                 });
                 _this.markers.push(marker);
                 element.markerObj = marker;
@@ -63,15 +81,14 @@ export default {
                 clickable: true,
                 title: newRoomId
             });
-            
+
             marker.setDraggable(true);
             _this.addChatting(markerPosition, newRoomId);
             kakao.maps.event.addListener(marker, 'click', function () {
-                _this.checkRoadview(marker.getPosition(), marker.getTitle());
+                _this.checkRoadview(marker.getPosition(), marker.getTitle(), marker);
             });
 
-            this.markers.push(marker);
-            this.drawMarker();
+            marker.setMap(_this.map);
         },
         drawMarker() {
             const _this = this;
