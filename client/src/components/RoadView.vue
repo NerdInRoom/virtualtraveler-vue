@@ -1,5 +1,7 @@
 <template>
-	<div id="roadview" style="width:100%; height:100vh;"></div>
+	<div id="roadviewWrapper">
+		<div id="roadview" style="width:100%; height:100vh;"></div>
+	</div>
 </template>
 
 <script>
@@ -9,11 +11,15 @@ export default {
 	async mounted () {
 		const roomInfo = this.$store.getters.getRoomInfo(Number(this.roomId));
 		const roadviewContainer = document.getElementById('roadview');
-
+		
+		console.log('방장 : '+roomInfo.roomOwnerId);
 		// 방장이 아닌 경우 로드뷰 클릭 방지
-		// if (roomInfo.roomOwnerId !== 123) {
-		// 	roadviewContainer.style.pointerEvents = 'none';
-		// }
+		if (roomInfo.roomOwnerId !== this.$store.getters.getUser.email) {
+			roadviewContainer.style.pointerEvents = 'none';
+			document.getElementById('roadviewWrapper').addEventListener('click', () => {
+				alert('너는 방장이 아니다.')
+			});
+		}
 
 		const roadview = new kakao.maps.Roadview(roadviewContainer);
 		const rvPosition = new kakao.maps.LatLng(

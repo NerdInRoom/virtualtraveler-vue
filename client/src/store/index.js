@@ -18,15 +18,7 @@ export default new Vuex.Store({
 				latitude: 37.501307,
 				longitude: 127.03966
 			  },
-			  roomOwnerId: 123
-			},
-			{
-			  roomId: 2,
-			  roomGPS: {
-				latitude: 35.92807,
-				longitude: 126.961661
-			  },
-			  roomOwnerId: 456
+			  roomOwnerId: "test@test.com"
 			}
 		  ]
 	},

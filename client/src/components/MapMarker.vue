@@ -18,17 +18,18 @@ export default {
     },
     created() {},
     mounted() {
-        this.getCurrentGPS();        
+        this.getCurrentGPS();
     },
     methods: {
         addChatting(position, roomId){
-			this.$store.commit('addRoom', {
+			const vue = this;
+			vue.$store.commit('addRoom', {
 				roomId : roomId,
                 roomGPS  : {
                     latitude: position.Ha,
                     longitude: position.Ga
                 },
-                roomOwnerId : Math.floor(Math.random() * 1000)
+                roomOwnerId : vue.$store.getters.getUser.email
 			});
         },
         checkRoadview(position, roomId) {
