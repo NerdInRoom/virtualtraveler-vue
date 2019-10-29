@@ -11,22 +11,32 @@ export default new Vuex.Store({
 	state: {
 		accessToken: "",
 		refreshToken: "",
-		user: ""
+		user: "",
+		roomList: [],
+		currentRoom: ""
 	},
 	getters: {
 		getUser(state) {
 			return state.user;
+		},
+		getRoom(state) {
+			return state.currentRoom;
 		}
 	},
 	mutations: {
 		updateUser(state, payload){
 			state.user = payload.user;
+		},
+		updateCurrentRoom(state, payload){
+			state.currentRoom = payload;
 		}
 	},
 	actions: {
 		async signup(state, payload){
 			try {
 				const result = await firebaseApi.signup(payload.email, payload.password, payload.nickname);
+				console.log(result);
+				await firebaseApi.addUser(result.user);
 				state.commit('updateUser', result);
 
 				return result;
@@ -47,6 +57,7 @@ export default new Vuex.Store({
 		async loginWithGoogle(state){
 			try {
 				const result = await firebaseApi.loginWithGoogle();
+				await firebaseApi.addUser(result.user);
 				state.commit('updateUser', result);
 
 				return result;
@@ -55,6 +66,27 @@ export default new Vuex.Store({
 			}
 		},
 		logout(){
+		},
+		async makeChatRoom(state, payload){
+			try {
+				const result = await firebaseApi.makeChatRoom(payload.roomName, payload.gpsX, payload.gpsY);
+				console.log(result);
+				state.commit('updateCurrentRoom', result);
+				
+				return result;
+			} catch (error) {
+				throw error;
+			}
+		},
+		async joinRoom(state, payload){
+			try {
+				const result = await firebaseApi.joinRoom(payload.roomId);
+				
+			} catch (error) {
+				
+			}
 		}
+
+		
 	}
 })
