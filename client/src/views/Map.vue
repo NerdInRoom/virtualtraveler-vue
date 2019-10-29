@@ -1,7 +1,7 @@
 <template>
 <div>
-    <h1>하이루</h1>
-    <!-- <MapMarker></MapMarker> -->
+    <!-- <h1>하이루</h1> -->
+    <MapMarker></MapMarker>
 </div>
 </template>
 
