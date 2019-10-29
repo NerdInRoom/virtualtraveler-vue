@@ -2,7 +2,6 @@
     <v-container
 		class="d-flex flex-row ma-0 pa-0"
 	>
-		<!-- <RoadView /> -->
 		<ChatRoom />
     </v-container>
 </template>
