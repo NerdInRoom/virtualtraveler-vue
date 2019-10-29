@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import router from '../routes/index.js';
 export default {
     data() {
         return {
@@ -19,19 +18,27 @@ export default {
     },
     created() {},
     mounted() {
-        this.getCurrentGPS();        
+        this.getCurrentGPS();
     },
     methods: {
-        addChatting(position, roomId) {
-            //파베에 set
+        addChatting(position, roomId){
+			const vue = this;
+			vue.$store.commit('addRoom', {
+				roomId : roomId,
+                roomGPS  : {
+                    latitude: position.Ha,
+                    longitude: position.Ga
+                },
+                roomOwnerId : vue.$store.getters.getUser.email
+			});
         },
         checkRoadview(position, roomId) {
+			const vue = this;
             this.rvClient.getNearestPanoId(position, 50, function (panoId) {
                 if (panoId === null) {
                     alert('로드뷰 안됨');
                 } else {
-                    console.log('로드뷰 가능 : ' + roomId);
-                    router.push({ name: 'travel', params: { roomId: roomId }});
+					vue.$router.push({ name: 'travel', params: {roomId}});
                 }
             });
         },

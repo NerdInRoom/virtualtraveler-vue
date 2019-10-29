@@ -3,7 +3,6 @@ import Vuex from 'vuex';
 
 // Store에서는 '@'로 src 접근이 불가하다.
 import firebaseApi from '../api/firebaseApi';
-import kakaomapApi from '../api/kakaomapApi';
 
 Vue.use(Vuex);
 
@@ -19,15 +18,7 @@ export default new Vuex.Store({
 				latitude: 37.501307,
 				longitude: 127.03966
 			  },
-			  roomOwnerId: 123
-			},
-			{
-			  roomId: 2,
-			  roomGPS: {
-				latitude: 35.92807,
-				longitude: 126.961661
-			  },
-			  roomOwnerId: 456
+			  roomOwnerId: "test@test.com"
 			}
 		  ]
 	},
@@ -35,7 +26,10 @@ export default new Vuex.Store({
 		getUser(state) {
 			return state.user;
 		},
-		getRoomList(state){
+		getRoomInfo: (state) => (id) => {
+			return state.roomList.find(room => room.roomId === id);
+		},
+		getRoomList(state) {
 			return state.roomList;
 		}
 	},
@@ -50,6 +44,9 @@ export default new Vuex.Store({
 					state.roomList[index].roomGPS.longitude = changedInfo.longitude
 				}
 			})
+		},
+		addRoom(state, roomInfo) {
+			state.roomList.push(roomInfo);
 		}
 	},
 	actions: {
@@ -87,11 +84,6 @@ export default new Vuex.Store({
 			}
 		},
 		logout(){
-		},
-		async getRoomInfo ({ state }, id) {
-			let roomInfo = state.roomList.find((room) => room.roomId === id);
-			console.log(roomInfo+'스토어');
-			return roomInfo;
 		}
 	}
 })
