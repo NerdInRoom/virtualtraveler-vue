@@ -11,9 +11,9 @@ export default {
 		const roadviewContainer = document.getElementById('roadview');
 
 		// 방장이 아닌 경우 로드뷰 클릭 방지
-		if (roomInfo.roomOwnerId !== 123) {
-			roadviewContainer.style.pointerEvents = 'none';
-		}
+		// if (roomInfo.roomOwnerId !== 123) {
+		// 	roadviewContainer.style.pointerEvents = 'none';
+		// }
 
 		const roadview = new kakao.maps.Roadview(roadviewContainer);
 		const rvPosition = new kakao.maps.LatLng(

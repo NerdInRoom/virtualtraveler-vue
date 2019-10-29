@@ -52,6 +52,9 @@ export default new Vuex.Store({
 					state.roomList[index].roomGPS.longitude = changedInfo.longitude
 				}
 			})
+		},
+		addRoom(state, roomInfo) {
+			state.roomList.push(roomInfo);
 		}
 	},
 	actions: {

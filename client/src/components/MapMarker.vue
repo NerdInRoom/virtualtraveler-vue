@@ -21,8 +21,15 @@ export default {
         this.getCurrentGPS();        
     },
     methods: {
-        addChatting(position, roomId) {
-            //파베에 set
+        addChatting(position, roomId){
+			this.$store.commit('addRoom', {
+				roomId : roomId,
+                roomGPS  : {
+                    latitude: position.Ha,
+                    longitude: position.Ga
+                },
+                roomOwnerId : Math.floor(Math.random() * 1000)
+			});
         },
         checkRoadview(position, roomId) {
 			const vue = this;
