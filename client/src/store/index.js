@@ -11,19 +11,51 @@ export default new Vuex.Store({
 	state: {
 		accessToken: "",
 		refreshToken: "",
-		user: ""
+		user: "",
+		roomList: [
+			{
+			  roomId: 1,
+			  roomGPS: {
+				latitude: 37.501307,
+				longitude: 127.03966
+			  },
+			  roomOwnerId: 123
+			},
+			{
+			  roomId: 2,
+			  roomGPS: {
+				latitude: 35.92807,
+				longitude: 126.961661
+			  },
+			  roomOwnerId: 456
+			}
+		  ]
 	},
 	getters: {
 		getUser(state) {
 			return state.user;
+		},
+		getRoomList(state){
+			return state.roomList;
 		}
 	},
 	mutations: {
 		updateUser(state, payload){
 			state.user = payload.user;
+		},
+		setRoomLocation (state, changedInfo) {
+			state.roomList.forEach((room, index) => {
+				if (room.roomId === changedInfo.roomId) {
+					state.roomList[index].roomGPS.latitude = changedInfo.latitude
+					state.roomList[index].roomGPS.longitude = changedInfo.longitude
+				}
+			})
 		}
 	},
 	actions: {
+		addRoom(){
+			//파베에다 넣기
+		},
 		async signup(state, payload){
 			try {
 				const result = await firebaseApi.signup(payload.email, payload.password, payload.nickname);
@@ -55,6 +87,11 @@ export default new Vuex.Store({
 			}
 		},
 		logout(){
+		},
+		async getRoomInfo ({ state }, id) {
+			let roomInfo = state.roomList.find((room) => room.roomId === id);
+			console.log(roomInfo+'스토어');
+			return roomInfo;
 		}
 	}
 })
