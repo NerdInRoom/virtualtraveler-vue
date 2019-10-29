@@ -1,7 +1,6 @@
 <template>
 	<v-app>
-		<Travel />
-		<!-- <router-view></router-view> -->
+		<router-view></router-view>
 	</v-app>
 </template>
 

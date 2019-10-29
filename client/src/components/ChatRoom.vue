@@ -90,8 +90,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 	.room {
-		height: 800px;
-		width: 35%;
+		height: 100vh;
+		width: 30vw;
+		padding: 0;
 		.chat-footer {
 			display: flex;
 			justify-content: center;

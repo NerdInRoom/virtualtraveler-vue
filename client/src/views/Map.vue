@@ -1,14 +1,18 @@
 <template>
-    <div class="map">
-        <h1>This is Map-page</h1>
-    </div>
+	<div>
+		<MapMarker></MapMarker>
+	</div>
 </template>
 
 <script>
-
+import MapMarker from '../components/MapMarker.vue'
 export default {
-  components: {
-    
-  }
+    components:{
+        MapMarker
+    }
 }
 </script>
+
+<style>
+
+</style>
