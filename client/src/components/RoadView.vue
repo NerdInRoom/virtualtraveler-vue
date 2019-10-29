@@ -4,19 +4,13 @@
 
 <script>
 /* global kakao */
-import { mapMutations, mapActions } from 'vuex';
-
 export default {
 	props: {
 		roomId: Number
 	},
-	methods: {
-		...mapMutations(['setRoomLocation']),
-		...mapActions(['getRoomInfo'])
-	},
 	async mounted () {
 		let roomInfo = null;
-		await this.getRoomInfo(this.roomId).then((info) => {
+		await this.$store.dispatch('getRoomInfo', this.roomId).then((info) => {
 			roomInfo = info;
 		});
 
@@ -50,7 +44,7 @@ export default {
 				latitude: changedLocation.Ha,
 				longitude: changedLocation.Ga
 			}
-			vue.setRoomLocation(changedLocationInfo);
+			vue.$store.commit('setRoomLocation', changedLocationInfo);
 		})
 	}
 }
