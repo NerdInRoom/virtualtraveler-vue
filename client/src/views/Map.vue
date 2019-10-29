@@ -1,6 +1,7 @@
 <template>
 <div>
-    <MapMarker></MapMarker>
+    <h1>하이루</h1>
+    <!-- <MapMarker></MapMarker> -->
 </div>
 </template>
 

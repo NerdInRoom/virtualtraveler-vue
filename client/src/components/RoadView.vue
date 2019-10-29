@@ -18,8 +18,8 @@ export default {
 		let roomInfo = null;
 		await this.getRoomInfo(this.roomId).then((info) => {
 			roomInfo = info;
+			console.log(roomInfo+'로드뷰컴포');
 		});
-
 		const roadviewContainer = document.getElementById('roadview');
 
 		// 방장이 아닌 경우 로드뷰 클릭 방지

@@ -90,6 +90,7 @@ export default new Vuex.Store({
 		},
 		async getRoomInfo ({ state }, id) {
 			let roomInfo = state.roomList.find((room) => room.roomId === id);
+			console.log(roomInfo+'스토어');
 			return roomInfo;
 		}
 	}

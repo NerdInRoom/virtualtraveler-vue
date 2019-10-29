@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import router from '../routes/index.js';
 export default {
     data() {
         return {
@@ -30,6 +31,7 @@ export default {
                     alert('로드뷰 안됨');
                 } else {
                     console.log('로드뷰 가능 : ' + roomId);
+                    router.push({ name: 'travel', params: { roomId: roomId }});
                 }
             });
         },
