@@ -1,21 +1,30 @@
 <template>
-	<div id="app">
-		<Header />
-		<div id="nav">
-			<router-link to="/">Login</router-link> |
-			<router-link to="/map">Map</router-link> |
-			<router-link to="/travel/1">Travel</router-link>
-		</div>
-		<router-view />
-	</div>
+	<v-app>
+		<router-view></router-view>
+	</v-app>
 </template>
 
 <script>
-import Header from '@/components/Header.vue'
+import Auth from '@/views/Auth.vue';
+import Map from '@/views/Map.vue';
+import Travel from '@/views/Travel.vue';
+
 export default {
-	name: 'travel',
-	components: {
-		Header
-	}
-}
+  name: 'App',
+  components: {
+    Auth,
+    Map,
+    Travel
+  },
+};
 </script>
+<style>
+	@font-face { 
+		font-family: 'yg-jalnan';
+		src:url( fonts/yg-jalnan.woff );
+	}
+
+	* { 
+		font-family: 'yg-jalnan';
+	}
+</style>
