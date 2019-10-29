@@ -84,10 +84,6 @@ export default new Vuex.Store({
 			}
 		},
 		logout(){
-		},
-		async getRoomInfo ({ state }, id) {
-			let roomInfo = state.roomList.find((room) => room.roomId === id);
-			return roomInfo;
 		}
 	}
 })

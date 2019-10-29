@@ -9,11 +9,7 @@ export default {
 		roomId: Number
 	},
 	async mounted () {
-		let roomInfo = null;
-		await this.$store.dispatch('getRoomInfo', this.roomId).then((info) => {
-			roomInfo = info;
-		});
-
+		const roomInfo = this.$store.getters.getRoomInfo(this.roomId);
 		const roadviewContainer = document.getElementById('roadview');
 
 		// 방장이 아닌 경우 로드뷰 클릭 방지
@@ -21,12 +17,11 @@ export default {
 			roadviewContainer.style.pointerEvents = 'none';
 		}
 
+		const roadview = new kakao.maps.Roadview(roadviewContainer);
 		const rvPosition = new kakao.maps.LatLng(
 			roomInfo.roomGPS.latitude,
 			roomInfo.roomGPS.longitude
 		);
-
-	    const roadview = new kakao.maps.Roadview(roadviewContainer);
 
 		// roadviewClient : 좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
 		// 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다. 반경 50미터 이내
