@@ -12,24 +12,24 @@ export default new Vuex.Store({
 		accessToken: "",
 		refreshToken: "",
 		user: "",
-		roomList : [
-            {
-              roomId: 1,
-              roomGPS: {
-                latitude: 37.501659145454916,
-                longitude: 127.03949742339348
-              },
-              roomOwnerId: 123,
-            },
-            {
-              roomId: 2,
-              roomGPS: {
-                latitude: 37.50110077097606,
-                longitude: 127.03874507229055
-              },
-              roomOwnerId: 456,
-            }
-        ]
+		roomList: [
+			{
+			  roomId: 1,
+			  roomGPS: {
+				latitude: 37.501307,
+				longitude: 127.03966
+			  },
+			  roomOwnerId: 123
+			},
+			{
+			  roomId: 2,
+			  roomGPS: {
+				latitude: 35.92807,
+				longitude: 126.961661
+			  },
+			  roomOwnerId: 456
+			}
+		  ]
 	},
 	getters: {
 		getUser(state) {
@@ -43,8 +43,13 @@ export default new Vuex.Store({
 		updateUser(state, payload){
 			state.user = payload.user;
 		},
-		addRoom(){
-
+		setRoomLocation (state, changedInfo) {
+			state.roomList.forEach((room, index) => {
+				if (room.roomId === changedInfo.roomId) {
+					state.roomList[index].roomGPS.latitude = changedInfo.latitude
+					state.roomList[index].roomGPS.longitude = changedInfo.longitude
+				}
+			})
 		}
 	},
 	actions: {
@@ -82,6 +87,10 @@ export default new Vuex.Store({
 			}
 		},
 		logout(){
+		},
+		async getRoomInfo ({ state }, id) {
+			let roomInfo = state.roomList.find((room) => room.roomId === id);
+			return roomInfo;
 		}
 	}
 })

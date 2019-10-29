@@ -1,15 +1,18 @@
 <template>
     <div class="travel">
-        <h1>This is Travel-page</h1>
+        <RoadView
+          :roomId=$route.params.roomId
+        />
     </div>
 </template>
 
 <script>
+import RoadView from '@/components/RoadView.vue';
 
 export default {
-  name: 'travel',
-  components: {
-    
-  }
+	name: 'travel',
+	components: {
+		RoadView
+	}
 }
 </script>
