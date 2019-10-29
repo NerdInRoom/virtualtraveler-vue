@@ -12,7 +12,15 @@ export default new Vuex.Store({
 		refreshToken: "",
 		user: "",
 		roomList: [
- 		  ]
+			{
+			  roomId: 1,
+			  roomGPS: {
+				latitude: 37.501307,
+				longitude: 127.03966
+			  },
+			  roomOwnerId: "test@test.com"
+			}
+		  ]
 	},
 	getters: {
 		getUser(state) {
