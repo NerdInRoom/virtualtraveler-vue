@@ -31,11 +31,6 @@ const routes = [
     component: Map
   },
   {
-    path: '/main',
-    name: 'main',
-    component: Main
-  },
-  {
     path: '/travel/:roomId',
     name: 'travel',
     component: Travel

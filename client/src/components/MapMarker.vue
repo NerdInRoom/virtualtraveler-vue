@@ -9,50 +9,40 @@
 export default {
     data() {
         return {
-            rvClient:'',
+            rvClient: '',
             markers: [],
             map: '',
             currentlatlng: '',
-            chattingList: []
+            chattingList: [],
         }
     },
     created() {},
     mounted() {
-        this.getCurrentGPS();
+        this.getCurrentGPS();        
     },
     methods: {
-        addChatting(position, roomId){
-            let roomListInStore = this.$store.state.mapStore.roomList;
-            roomListInStore.push({
-                roomId : roomId,
-                roomGPS  : {
-                    latitude: position.Ha,
-                    longitude: position.Ga
-                },
-                roomOwnerId : Math.floor(Math.random() * 1000)
-            });
+        addChatting(position, roomId) {
+            //파베에 set
         },
         checkRoadview(position, roomId) {
-            const _this = this;
-            _this.rvClient.getNearestPanoId(position, 50, function (panoId) {
+            this.rvClient.getNearestPanoId(position, 50, function (panoId) {
                 if (panoId === null) {
                     alert('로드뷰 안됨');
                 } else {
                     console.log('로드뷰 가능 : ' + roomId);
-
                 }
             });
         },
-        getList() {
+        getChattingList() {
+            this.chattingList = this.$store.getters.getRoomList;
             const _this = this;
-            this.chattingList = this.$store.state.mapStore.roomList; //여 기는 파베
             this.chattingList.forEach(function (element) {
                 var markerPosition = new kakao.maps.LatLng(element.roomGPS.latitude, element.roomGPS.longitude);
                 // 마커를 생성합니다
                 var marker = new kakao.maps.Marker({
                     position: markerPosition,
                     clickable: true,
-                    title : element.roomId
+                    title: element.roomId
                 });
                 marker.setDraggable(true);
                 kakao.maps.event.addListener(marker, 'click', function () {
@@ -65,23 +55,19 @@ export default {
         },
         addMarker() {
             const _this = this;
-            let roomListInStore = this.$store.state.mapStore.roomList;
-            let newRoomId = roomListInStore.length+1;
-            // 마커가 표시될 위치입니다 
+            let newRoomId = this.chattingList.length + 1;
+
             var markerPosition = new kakao.maps.LatLng(this.currentlatlng.Ha, this.currentlatlng.Ga);
-            // 마커를 생성합니다
             var marker = new kakao.maps.Marker({
                 position: markerPosition,
                 clickable: true,
-                title : newRoomId
+                title: newRoomId
             });
-
-            // 마커가 드래그 가능하도록 설정합니다 
+            
             marker.setDraggable(true);
-
             _this.addChatting(markerPosition, newRoomId);
             kakao.maps.event.addListener(marker, 'click', function () {
-                _this.checkRoadview(marker.getPosition(),marker.getTitle());
+                _this.checkRoadview(marker.getPosition(), marker.getTitle());
             });
 
             this.markers.push(marker);
@@ -89,7 +75,7 @@ export default {
         },
         drawMarker() {
             const _this = this;
-            this.markers.forEach(function(element){
+            this.markers.forEach(function (element) {
                 element.setMap(_this.map);
             });
         },
@@ -103,12 +89,13 @@ export default {
                 };
             // 지도를 생성한다 
             var map = new kakao.maps.Map(mapContainer, mapOption);
+
             _this.currentlatlng = map.getCenter();
             kakao.maps.event.addListener(map, 'dragend', function () {
                 _this.currentlatlng = map.getCenter();
             });
             _this.map = map;
-            var rvClient = new kakao.maps.RoadviewClient(); 
+            var rvClient = new kakao.maps.RoadviewClient();
             _this.rvClient = rvClient;
         },
         getCurrentGPS() {
@@ -116,7 +103,7 @@ export default {
             if (navigator.geolocation) { // GPS를 지원하면
                 navigator.geolocation.getCurrentPosition(function (position) {
                     _this.loadMap(position);
-                    _this.getList();
+                    _this.getChattingList();
                     _this.drawMarker();
                 }, function (error) {
                     console.error(error);
