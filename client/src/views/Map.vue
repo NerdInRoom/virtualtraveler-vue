@@ -1,15 +1,18 @@
 <template>
-    <div class="map">
-        <h1>This is Map-page</h1>
-		<chatroomtest/>
-    </div>
+	<div>
+		<MapMarker></MapMarker>
+	</div>
 </template>
 
 <script>
-import chatroomtest from '@/components/ChatRoomTest'
+import MapMarker from '../components/MapMarker.vue'
 export default {
-  	components: {
-    	chatroomtest
-  	}
+    components:{
+        MapMarker
+    }
 }
 </script>
+
+<style>
+
+</style>

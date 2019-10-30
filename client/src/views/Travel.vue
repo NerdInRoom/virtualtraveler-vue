@@ -1,15 +1,28 @@
 <template>
     <div class="travel">
-        <h1>This is Travel-page</h1>
+		<RoadView
+          :roomId=$route.params.roomId
+        />
+		<ChatRoom />
     </div>
 </template>
 
 <script>
+import ChatRoom from '@/components/ChatRoom.vue';
+import RoadView from '@/components/RoadView.vue';
 
 export default {
-  name: 'travel',
   components: {
-    
+	ChatRoom,
+	RoadView
   }
 }
 </script>
+<style scoped>
+	.travel{
+		height: 100vh;
+		width: 100vw;
+		display: flex;
+		flex-direction: row;
+	}
+</style>
