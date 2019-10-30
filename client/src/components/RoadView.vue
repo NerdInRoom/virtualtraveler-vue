@@ -1,6 +1,6 @@
 <template>
-	<div id="roadviewWrapper">
-		<div id="roadview" style="width:100%; height:100vh;"></div>
+	<div class="roadviewWrapper">
+		<div id="roadview" class="roadview"></div>
 	</div>
 </template>
 
@@ -48,3 +48,13 @@ export default {
 	}
 }
 </script>
+<style scoped>
+	.roadviewWrapper {
+		display: flex;
+		padding: 0;
+	}
+	.roadview {
+		height: 100%;
+		width: 85vw;
+	}
+</style>
