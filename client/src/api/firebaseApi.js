@@ -1,7 +1,8 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
-// import randomName from '@util/randomName.js';
+import randomName from '../utils/randomName.js';
+//import name from '../utils/nicknamedata'
 
 // Firebase config
 const config = {
@@ -20,11 +21,11 @@ const firestore = firebase.firestore();
 export default {
 
 	/* Firebase Auth */
-	async signup(email, password, nickname) {
+	async signup(email, password) {
 		try {
 			const result = await firebase.auth().createUserWithEmailAndPassword(email, password);
 			await result.user.updateProfile({
-				displayName: nickname
+				displayName: await this.randomizeName()
 			});
 			return result;
 		} catch (error) {
@@ -44,6 +45,9 @@ export default {
 
 		try {
 			const result = await firebase.auth().signInWithPopup(provider);
+			await result.user.updateProfile({
+				displayName: await this.randomizeName()
+			});
 			return result;
 		} catch (error) {
 			throw error;
@@ -66,8 +70,41 @@ export default {
 			.onAuthStateChanged((user) => {
 			return user;
 		  });
-	}
+	},
 
 	/* FireStore */
-	
+	async randomizeName(){
+		let cnt = 0
+        while(cnt < 5){
+            const randomNickname = randomName.randomizeName()
+            let confirm = await this.nameConfirm(randomNickname)
+            if(confirm == true){
+                await firestore.collection('nicknamePool').doc(randomNickname).set({
+                    nickname : randomNickname
+                })
+                .then( () => {
+                    console.log("nickname setting complete")
+                }).catch( (error) => {
+                    console.log(error)
+                })
+                return randomNickname
+            }else{
+                cnt = cnt + 1
+            }
+        }
+	},
+	async nameConfirm(randomNickname){
+		let confirm = false
+		await firestore.collection('nicknamePool').doc(randomNickname).get().then(
+            (doc) => {
+                if(doc.exists){
+                    confirm = false
+                } else{
+                    confirm = true
+				}
+				return confirm
+            }
+		)
+		return confirm
+	}
 }
