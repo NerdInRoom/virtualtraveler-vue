@@ -83,7 +83,13 @@ export default new Vuex.Store({
 				throw error;
 			}
 		},
-		logout(){
+		async logout(state){
+			try {
+				const result = await firebaseApi.logout();
+				state.commit('updateUser', '');
+			} catch (error) {
+				throw error;
+			}
 		}
 	}
 })

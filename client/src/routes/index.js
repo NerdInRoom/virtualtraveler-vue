@@ -10,12 +10,12 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/auth',
 	component: Auth,
 	children: [
         {
-			name: 'auth',
-			path: '',
+			name: 'login',
+			path: 'login',
 			component: LoginForm
         },
         {
@@ -26,7 +26,7 @@ const routes = [
       ]
   },
   {
-    path: '/map',
+    path: '/',
     name: 'map',
     component: Map
   },

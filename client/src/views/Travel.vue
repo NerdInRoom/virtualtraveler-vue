@@ -1,5 +1,6 @@
 <template>
     <div class="travel">
+		<Header />
 		<RoadView
           :roomId=$route.params.roomId
         />
@@ -8,6 +9,7 @@
 </template>
 
 <script>
+import Header from '@/components/Header.vue';
 import ChatRoom from '@/components/ChatRoom.vue';
 import RoadView from '@/components/RoadView.vue';
 

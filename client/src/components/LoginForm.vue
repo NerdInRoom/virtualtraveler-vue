@@ -23,6 +23,7 @@
 					required
 				></v-text-field>
 				<v-text-field
+					@keyup.enter="loginEnter"
 					v-model="password"
 					:rules="[passwordRules.required, passwordRules.min]"
 					:type="show ? 'text' : 'password'"
@@ -32,6 +33,7 @@
 					<v-btn
 						@click="loginWithEmail"
 						:disabled="!valid"
+						id="btn-login"
 						class="btn-login white--text title"
 						block
 						color="#4285F4"
@@ -88,6 +90,10 @@ export default {
 		}
 	}),
 	methods: {
+		loginEnter() {
+			const loginBtn = document.getElementById('btn-login');
+			loginBtn.click();
+		},
 		async loginWithEmail() {
 			try {
 				const result = await this.$store.dispatch('loginWithEmail', {
@@ -95,7 +101,7 @@ export default {
 					password: this.password,
 					nickname: this.nickname
 				});
-				this.$router.push('map');
+				this.$router.push('/');
 			} catch (error) {
 				const code = error.code;
 				const msg = error.message;
@@ -114,7 +120,7 @@ export default {
 		async loginWithGoogle() {
 			try {
 				const result = await this.$store.dispatch('loginWithGoogle');
-				this.$router.push('map');
+				this.$router.push('/');
 			} catch (error) {
 				const code = error.code;
 				const msg = error.message;

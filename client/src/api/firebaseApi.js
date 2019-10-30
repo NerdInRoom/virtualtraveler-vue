@@ -49,23 +49,21 @@ export default {
 			throw error;
 		}
 	},
-	logout() {
-		firebase
-			.auth()
-			.signOut()
-			.then(() => {
-				return true;
-        	}).catch((err) => {
-				console.log("[" + err.code + "] " + err.message);
-				return false;
-        });
+	async logout() {
+		try {
+			const result = await firebase.auth().signOut();
+		} catch (error) {
+			throw error;
+		}
 	},
-	getCurrentUser() {
-		firebase
-			.auth()
-			.onAuthStateChanged((user) => {
-			return user;
-		  });
+	checkState() {
+		firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+			  return user;
+			} else {
+			  return false;
+			}
+		});
 	}
 
 	/* FireStore */
