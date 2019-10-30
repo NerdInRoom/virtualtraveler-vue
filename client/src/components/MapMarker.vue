@@ -56,13 +56,7 @@ export default {
                     const roomInfo = vue.$store.getters.getRoomInfo(Number(roomId));
                     vue.$store.commit('setRoomInfoForChatDetail', roomInfo);
                     vue.$store.commit('setDialog');
-                    //디테일 창 가기
-                    // vue.$router.push({
-                    //     name: 'travel',
-                    //     params: {
-                    //         roomId
-                    //     }
-                    // });
+
                 }
             });
         },
