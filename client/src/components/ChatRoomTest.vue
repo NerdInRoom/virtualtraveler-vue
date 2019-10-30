@@ -29,8 +29,8 @@ export default {
 		}
 	},
 	created() {
+		this.$store.dispatch('fetchGPS');
 		this.$store.dispatch('fetchRoomList');
-		
 	}
 }
 </script>

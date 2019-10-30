@@ -116,38 +116,36 @@ export default {
 		const user = store.getters.getUser;
 		await firestore.collection('user').doc(user.email).update({ userGuestRoom: roomId });
 		await firestore.collection('chatRoomList').doc(roomId).collection('roomJoinUser').doc(user.email).set({ userName: user.displayName });
-		await firestore.collection('chatRoomList').doc(roomId).get().then((doc)=>{
-			let data = doc.data();
-			return data;
-		});
+		const doc = await firestore.collection('chatRoomList').doc(roomId).get();
+		let data = doc.data();
+		data.roomId = roomId;
+		return data;
+	
 	},
 	fetchGPS() {
-		const currentRoom = store.getters.getRoom;
-		firestore.collection('chatRoomList').doc(currentRoom.id).onSnapshot((documentSnapshot) => {
-			let data = documentSnapshot.data();
-			return data;
+		return new Promise((resolve, reject) => {
+			const currentRoom = store.getters.getRoom;
+			console.log(currentRoom.roomId);
+			firestore.collection('chatRoomList').doc(currentRoom.roomId).onSnapshot((documentSnapshot) => {
+				let data = documentSnapshot.data();
+				data.roomId = currentRoom.roomId;
+				store.commit('updateCurrentRoom', data);
+				resolve(data);
+			}, reject);
 		});
 	},
-	async fetchRoomList() {
+	fetchRoomList() {
 		return new Promise((resolve, reject) => {
 			const querySnapshot = firestore.collection('chatRoomList').onSnapshot((querySnapshot)=>{
 				let roomList = [];
 				querySnapshot.forEach(function (doc) {
-					roomList.push(doc.data());
+					let data = doc.data();
+					data.roomId = doc.id;
+					roomList.push(data);
 				});
-				console.log(roomList);
+				store.commit('updateRoomList', roomList);
 				resolve(roomList);
 			}, reject);
 		});
-
-
-		/*await firestore.collection('chatRoomList').onSnapshot((querySnapshot)=>{
-			let roomList = [];
-			querySnapshot.forEach(function (doc) {
-				roomList.push(doc.data());
-			});
-			console.log(roomList);
-			return roomList;
-		});*/
 	}
 }

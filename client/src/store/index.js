@@ -32,6 +32,9 @@ export default new Vuex.Store({
 		},
 		updateRoomList(state, payload){
 			state.roomList = payload;
+		},
+		updateCurrentRoom(state, payload){
+			state.currentRoom = payload;
 		}
 	},
 	actions: {
@@ -92,9 +95,16 @@ export default new Vuex.Store({
 		},
 		async fetchRoomList(state){
 			try {
-				const result = await firebaseApi.fetchRoomList()
-				console.log(result);
-				state.commit('updateRoomList', result);
+				const result = await firebaseApi.fetchRoomList();
+		
+				return result;
+			} catch (error) {
+				
+			}
+		},
+		async fetchGPS(state){
+			try {
+				const result = await firebaseApi.fetchGPS();
 				return result;
 			} catch (error) {
 				
