@@ -1,5 +1,5 @@
 <template>
-	<div class="roadviewWrapper">
+	<div id="roadviewWrapper" class="roadviewWrapper">
 		<div id="roadview" class="roadview"></div>
 	</div>
 </template>
