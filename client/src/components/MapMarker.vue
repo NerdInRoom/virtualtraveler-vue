@@ -6,6 +6,7 @@
 </template>
 
 <script>
+/* global kakao */
 export default {
     data() {
         return {
