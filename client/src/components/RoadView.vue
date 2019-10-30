@@ -10,17 +10,23 @@ import kakaomapAPI from '@/api/kakaomapApi.js';
 
 export default {
 	props: ['roomId'],
+	data() {
+		return {
+			roomInfo: null,
+			roadviewContainer: null
+		}
+	},
 	mounted () {
-		const roomInfo = this.$store.getters.getRoomInfo(Number(this.roomId));
-		const roadviewContainer = document.getElementById('roadview');
+		this.roomInfo = this.$store.getters.getRoomInfo(Number(this.roomId));
+		this.roadviewContainer = document.getElementById('roadview');
 		
-		kakaomapAPI.initRoadview(roadviewContainer, roomInfo, this);
-		this.checkControlAuthority(roomInfo, roadviewContainer); // 방장만 로드뷰 조작
+		kakaomapAPI.initRoadview(this);
+		this.checkControlAuthority(); // 방장만 로드뷰 조작
 	},
 	methods: {
-		checkControlAuthority(roomInfo, roadviewContainer){
-			if (roomInfo.roomOwnerId !== this.$store.getters.getUser.email) {
-				roadviewContainer.style.pointerEvents = 'none';
+		checkControlAuthority(){
+			if (this.roomInfo.roomOwnerId !== this.$store.getters.getUser.email) {
+				this.roadviewContainer.style.pointerEvents = 'none';
 				document.getElementById('roadviewWrapper').addEventListener('click', () => {
 					alert('너는 방장이 아니다.')
 				});
