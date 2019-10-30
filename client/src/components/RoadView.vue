@@ -1,10 +1,7 @@
 <template>
-	<v-container
-		id="roadviewWrapper"
-		class="room d-flex flex-column"
-	>
-		<div id="roadview" style="width:70vw; height:100vh;"></div>
-	</v-container>
+	<div class="roadviewWrapper">
+		<div id="roadview" class="roadview"></div>
+	</div>
 </template>
 
 <script>
@@ -52,8 +49,12 @@ export default {
 }
 </script>
 <style scoped>
-	#roadviewWrapper {
-		display: block;
+	.roadviewWrapper {
+		display: flex;
 		padding: 0;
+	}
+	.roadview {
+		height: 100%;
+		width: 85vw;
 	}
 </style>

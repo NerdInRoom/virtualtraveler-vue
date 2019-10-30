@@ -1,12 +1,10 @@
 <template>
-    <v-container
-		class="d-flex flex-row ma-0 pa-0"
-	>
+    <div class="travel">
 		<RoadView
           :roomId=$route.params.roomId
         />
 		<ChatRoom />
-    </v-container>
+    </div>
 </template>
 
 <script>
@@ -20,3 +18,11 @@ export default {
   }
 }
 </script>
+<style scoped>
+	.travel{
+		height: 100vh;
+		width: 100vw;
+		display: flex;
+		flex-direction: row;
+	}
+</style>

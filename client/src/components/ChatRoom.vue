@@ -1,7 +1,5 @@
 <template>
-<v-container
-	class="room d-flex flex-column"
->
+<div class="room">
 	<div class="chat-header">
 		<h1 class="room-title">윤병이의 강남여행</h1>
 		<div class="room-info">
@@ -50,14 +48,14 @@
 			<v-icon
 				class="sendbtn"
 				@click="sendChat"
-				size="30"
+				size="25"
 				color="brown"
 			>
 				mdi-send
 			</v-icon>
 		</div>
 	</div>
-</v-container>
+</div>
 </template>
 
 <script>
@@ -90,8 +88,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 	.room {
-		height: 100vh;
-		width: 30vw;
+		width: 300px;
+		display: flex;
+		flex-direction: column;
 		padding: 0;
 		.chat-footer {
 			display: flex;
@@ -106,10 +105,15 @@ export default {
 				border-radius: 7px;
 				background-color: white;
 
+				@media screen and (max-width: 1685px) {
+					.sendbtn {
+						display: none;
+					}
+				}
 				.sendbtn {
 					margin-bottom: 5px;
-					margin-left: 10px;
-					margin-right: 10px;
+					margin-left: 9px;
+					margin-right: 5px;
 					color: #381e1f;
 					-webkit-transition: all 0.3s ease-in-out;
 					-moz-transition: all 0.3s ease-in-out;
@@ -126,7 +130,7 @@ export default {
 				text-align: center;
 				margin-left: 10px;
 				margin-top: 14px;
-				width: 83%;
+				width: 78%;
 				border: none;
 				border-right: solid 2px #F1F1F1;
 				&:focus {
@@ -164,7 +168,8 @@ export default {
 					word-break: break-all;
 					padding: 13px;
 					margin: 10px;
-					font-size: 17px;
+					font-size: 15px;
+					font-family: 'Roboto';
 					font-weight: 400;
 					border-radius: 10px;
 					&.to {
@@ -185,13 +190,13 @@ export default {
 				width: 10px;
 				height: 10px;
 				&.to {
-					right: -10px;
+					right: -9px;
 					border-bottom: 10px solid #fef01b;
 					border-right: 10px solid transparent;
 					border-top-right-radius: 10px;
 				}
 				&.from {
-					left: -10px;
+					left: -9px;
 					border-bottom: 10px solid #ffffff;
 					border-left: 10px solid transparent;
 					border-top-left-radius: 10px;
