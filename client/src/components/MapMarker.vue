@@ -1,12 +1,22 @@
 <template>
 <div>
     <div id="map" style="width:100%;height:600px;"></div>
+    <div style="background-color:pink">
+        <h3>리스트할거야</h3>
+        <chattingList></chattingList>
+    </div>
     <button @click="addMarker()">마커 만들기</button>
 </div>
 </template>
 
 <script>
+import chattingList from './ChattingList.vue'
+import ChattingDetail from './ChattingDetail.vue'
 export default {
+    components: {
+        chattingList: chattingList,
+        ChattingDetail: ChattingDetail
+    },
     data() {
         return {
             rvClient: '',
@@ -21,16 +31,16 @@ export default {
         this.getCurrentGPS();
     },
     methods: {
-        addChatting(position, roomId){
-			const vue = this;
-			vue.$store.commit('addRoom', {
-				roomId : roomId,
-                roomGPS  : {
+        addChatting(position, roomId) {
+            const vue = this;
+            vue.$store.commit('addRoom', {
+                roomId: roomId,
+                roomGPS: {
                     latitude: position.Ha,
                     longitude: position.Ga
                 },
-                roomOwnerId : vue.$store.getters.getUser.email
-			});
+                roomOwnerId: vue.$store.getters.getUser.email
+            });
         },
         checkRoadview(position, roomId, marker) {
             const vue = this;
@@ -43,12 +53,13 @@ export default {
                         latitude: position.Ha,
                         longitude: position.Ga
                     });
-                    vue.$router.push({
-                        name: 'travel',
-                        params: {
-                            roomId
-                        }
-                    });
+                    //디테일 창 가기
+                    // vue.$router.push({
+                    //     name: 'travel',
+                    //     params: {
+                    //         roomId
+                    //     }
+                    // });
                 }
             });
         },
@@ -67,7 +78,6 @@ export default {
                     _this.checkRoadview(marker.getPosition(), marker.getTitle(), marker);
                 });
                 _this.markers.push(marker);
-                element.markerObj = marker;
             });
             this.drawMarker();
         },
