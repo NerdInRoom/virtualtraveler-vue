@@ -14,7 +14,7 @@
 			max-width="390"
 		>
 			<v-card>
-			<v-card-title class="mb-5">채팅방을 나가시겠습니까?</v-card-title>
+			<v-card-title class="mb-5">🎈 채팅방을 나가시겠습니까?</v-card-title>
 			<v-card-actions>
 				<v-spacer></v-spacer>
 				<v-btn
@@ -25,7 +25,7 @@
 					Yes
 				</v-btn>
 				<v-btn
-					color="red darken-1"
+					color="warning"
 					text
 					@click="dialog = false"
 				>
