@@ -1,6 +1,24 @@
 <template>
 	<div id="roadviewWrapper" class="roadviewWrapper">
 		<div id="roadview" class="roadview"></div>
+		<v-dialog
+			v-model="dialog"
+			max-width="390"
+		>
+			<v-card>
+			<v-card-title class="mb-5">🚗 로드뷰 이동은 방장만 가능합니다.</v-card-title>
+			<v-card-actions>
+				<v-spacer></v-spacer>
+				<v-btn
+					color="primary darken-1"
+					text
+					@click="dialog=false"
+				>
+					OK
+				</v-btn>
+			</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
@@ -13,7 +31,8 @@ export default {
 	data() {
 		return {
 			roomInfo: null,
-			roadviewContainer: null
+			roadviewContainer: null,
+			dialog: false
 		}
 	},
 	mounted () {
@@ -28,7 +47,7 @@ export default {
 			if (this.roomInfo.roomOwnerId !== this.$store.getters.getUser.email) {
 				this.roadviewContainer.style.pointerEvents = 'none';
 				document.getElementById('roadviewWrapper').addEventListener('click', () => {
-					alert('너는 방장이 아니다.')
+					this.dialog=true;
 				});
 			}
 		}

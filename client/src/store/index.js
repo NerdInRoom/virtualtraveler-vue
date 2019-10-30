@@ -19,7 +19,9 @@ export default new Vuex.Store({
 				},
 				roomOwnerId: "test@test.com"
 			}
-		  ]
+		],
+		roomInfoForChatDetail : "",
+		dialog:false
 	},
 	getters: {
 		getLoginState(state) {
@@ -33,7 +35,13 @@ export default new Vuex.Store({
 		},
 		getRoomList(state) {
 			return state.roomList;
-		}
+		},
+		getRoomInfoForChatDetail(state){
+			return state.roomInfoForChatDetail;
+		},
+		getDialog(state){
+			return state.dialog;
+		},
 	},
 	mutations: {
 		updateLoginState(state, payload){
@@ -68,6 +76,12 @@ export default new Vuex.Store({
 		},
 		addRoom(state, roomInfo) {
 			state.roomList.push(roomInfo);
+		},
+		setRoomInfoForChatDetail(state, roomInfo){
+			state.roomInfoForChatDetail = roomInfo;
+		},
+		setDialog(state){
+			state.dialog = !state.dialog;
 		}
 	},
 	actions: {

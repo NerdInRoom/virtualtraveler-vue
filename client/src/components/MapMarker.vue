@@ -1,12 +1,22 @@
 <template>
 <div>
     <div id="map" style="width:100%;height:600px;"></div>
+    <div style="background-color:pink">
+        <h3>리스트할거야</h3>
+        <chattingList></chattingList>
+    </div>
     <button @click="addMarker()">마커 만들기</button>
 </div>
 </template>
 
 <script>
+import chattingList from './ChattingList.vue'
+import ChattingDetail from './ChattingDetail.vue'
 export default {
+    components: {
+        chattingList: chattingList,
+        ChattingDetail: ChattingDetail
+    },
     data() {
         return {
             rvClient: '',
@@ -44,12 +54,10 @@ export default {
                         latitude: position.Ha,
                         longitude: position.Ga
                     });
-                    vue.$router.push({
-                        name: 'travel',
-                        params: {
-                            roomId
-                        }
-                    });
+                    const roomInfo = vue.$store.getters.getRoomInfo(Number(roomId));
+                    vue.$store.commit('setRoomInfoForChatDetail', roomInfo);
+                    vue.$store.commit('setDialog');
+
                 }
             });
         },
@@ -68,7 +76,6 @@ export default {
                     _this.checkRoadview(marker.getPosition(), marker.getTitle(), marker);
                 });
                 _this.markers.push(marker);
-                element.markerObj = marker;
             });
             this.drawMarker();
         },
