@@ -3,12 +3,12 @@
 		<v-btn 
 			id="button" icon large color="white"
 			@click="dialog=true"
-			@mouseover="mouseover"
-            @mouseout="mouseout"
+			@mouseover="showText=true"
+            @mouseout="showText=false"
 		>
 			<v-icon>mdi-chevron-double-left</v-icon>
 		</v-btn>
-		<span v-if="show" style="color:white">나가기</span>
+		<span v-if="showText" style="color:white">나가기</span>
 		<v-dialog
 			v-model="dialog"
 			max-width="390"
@@ -40,30 +40,15 @@
 export default {
 	data() {
 		return {
-			show: false,
+			showText: false,
 			dialog: false
 		}
 	},
 	methods: {
-		setButtonOpacity(val) {
-			document.getElementById('button').style.opacity=val;
-		},
-		mouseover(){
-			this.show = true;
-			this.setButtonOpacity(1.0);
-		},
-		mouseout(){
-			this.show = false;
-			this.setButtonOpacity(0.4);
-		},
 		exit(){
-			// 나가기전에 뭔가 해야 될 듯...
-			this.dialog = true;
+			// 방장이면 나가기전에 뭔가 해야 될 듯...
 			this.$router.go(-1);
 		}
-	},
-	mounted() {
-		this.setButtonOpacity(0.4);
 	}
 }
 </script>
