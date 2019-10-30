@@ -2,7 +2,6 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import randomName from '../utils/randomName.js';
-//import name from '../utils/nicknamedata'
 
 // Firebase config
 const config = {
@@ -45,9 +44,12 @@ export default {
 
 		try {
 			const result = await firebase.auth().signInWithPopup(provider);
-			await result.user.updateProfile({
-				displayName: await this.randomizeName()
-			});
+			const confirm = await this.userNameConfirm(result.user.email);
+			if(confirm == true){
+				await result.user.updateProfile({
+					displayName: await this.randomizeName()
+				});
+			}
 			return result;
 		} catch (error) {
 			throw error;
@@ -74,13 +76,13 @@ export default {
 
 	/* FireStore */
 	async randomizeName(){
-		let cnt = 0
-        while(cnt < 5){
+        while(true){
             const randomNickname = randomName.randomizeName()
             let confirm = await this.nameConfirm(randomNickname)
             if(confirm == true){
                 await firestore.collection('nicknamePool').doc(randomNickname).set({
-                    nickname : randomNickname
+					nickname : randomNickname,
+					user : firebase.auth().currentUser.email
                 })
                 .then( () => {
                     console.log("nickname setting complete")
@@ -88,8 +90,6 @@ export default {
                     console.log(error)
                 })
                 return randomNickname
-            }else{
-                cnt = cnt + 1
             }
         }
 	},
@@ -104,6 +104,20 @@ export default {
 				}
 				return confirm
             }
+		)
+		return confirm
+	},
+	async userNameConfirm(email){
+		let confirm = false
+		await firestore.collection('nicknamePool').where('user', '==', email).get().then(
+			(doc) => {
+				if(doc.empty){
+					confirm = true
+				}else{
+					confirm = false
+				}
+				return confirm
+			}
 		)
 		return confirm
 	}
