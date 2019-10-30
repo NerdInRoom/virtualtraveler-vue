@@ -1,10 +1,10 @@
 <template>
 <div>
-    <v-list flat>
+    <v-list >
         <v-subheader>CHATTING ROOM LIST</v-subheader>
         <v-list-item-group v-model="item" color="primary">
             <v-list-item v-for="(chat, i) in chattingList" :key="i">
-                <v-list-item-content>
+                <v-list-item-content @click="setRoomId(chat.roomId)"> 
                     <v-list-item-title>방번호 : {{chat.roomId}}</v-list-item-title>
                     <v-list-item-title>방타이틀 : {{chat.roomId}}</v-list-item-title>
                     <v-list-item-title>방장 : {{chat.roomOwnerId}}</v-list-item-title>
@@ -12,11 +12,16 @@
             </v-list-item>
         </v-list-item-group>
     </v-list>
+    <chattingDetail></chattingDetail>
 </div>
 </template>
 
 <script>
+import chattingDetail from './ChattingDetail.vue'
 export default {
+    components : {
+        chattingDetail:chattingDetail
+    },
     data() {
         return {
             chattingList: [],
@@ -27,12 +32,10 @@ export default {
         this.chattingList = this.$store.getters.getRoomList;
     },
     methods: {
-        chattingDetail(roomId) {
-            vue.$store.commit('setRoomLocation', {
-                roomId: Number(roomId),
-                latitude: position.Ha,
-                longitude: position.Ga
-            });
+        setRoomId(roomId) {
+            const roomInfo = this.$store.getters.getRoomInfo(Number(roomId));
+            this.$store.commit('setRoomInfoForChatDetail', roomInfo);
+            this.$store.commit('setDialog');
         }
     }
 }
