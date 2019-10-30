@@ -106,14 +106,14 @@ export default {
 
 	},
 	getUserGuestRoom() {
-		const user = store.getters.getUser();
+		const user = store.getters.getUser;
 		firestore.collection('user').doc(user.email).get().then((documentSnapshot) => {
 			let data = documentSnapshot.data();
 			return data.userGuestRoom;
 		});
 	},
 	async joinRoom(roomId) {
-		const user = store.getters.getUser();
+		const user = store.getters.getUser;
 		await firestore.collection('user').doc(user.email).update({ userGuestRoom: roomId });
 		await firestore.collection('chatRoomList').doc(roomId).collection('roomJoinUser').doc(user.email).set({ userName: user.displayName });
 		await firestore.collection('chatRoomList').doc(roomId).get().then((doc)=>{
@@ -122,19 +122,32 @@ export default {
 		});
 	},
 	fetchGPS() {
-		const currentRoom = store.getters.getRoom();
+		const currentRoom = store.getters.getRoom;
 		firestore.collection('chatRoomList').doc(currentRoom.id).onSnapshot((documentSnapshot) => {
 			let data = documentSnapshot.data();
 			return data;
 		});
 	},
-	fetchRoomList() {
-		firestore.collection('chatRoomList').onSnapshot((querySnapshot) => {
-			var roomList = [];
+	async fetchRoomList() {
+		return new Promise((resolve, reject) => {
+			const querySnapshot = firestore.collection('chatRoomList').onSnapshot((querySnapshot)=>{
+				let roomList = [];
+				querySnapshot.forEach(function (doc) {
+					roomList.push(doc.data());
+				});
+				console.log(roomList);
+				resolve(roomList);
+			}, reject);
+		});
+
+
+		/*await firestore.collection('chatRoomList').onSnapshot((querySnapshot)=>{
+			let roomList = [];
 			querySnapshot.forEach(function (doc) {
 				roomList.push(doc.data());
 			});
+			console.log(roomList);
 			return roomList;
-		});
+		});*/
 	}
 }

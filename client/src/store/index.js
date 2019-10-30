@@ -29,6 +29,9 @@ export default new Vuex.Store({
 		},
 		updateCurrentRoom(state, payload){
 			state.currentRoom = payload;
+		},
+		updateRoomList(state, payload){
+			state.roomList = payload;
 		}
 	},
 	actions: {
@@ -70,7 +73,6 @@ export default new Vuex.Store({
 		async makeChatRoom(state, payload){
 			try {
 				const result = await firebaseApi.makeChatRoom(payload.roomName, payload.gpsX, payload.gpsY);
-				console.log(result);
 				state.commit('updateCurrentRoom', result);
 				
 				return result;
@@ -81,7 +83,19 @@ export default new Vuex.Store({
 		async joinRoom(state, payload){
 			try {
 				const result = await firebaseApi.joinRoom(payload.roomId);
+				state.commit('updateCurrentRoom', result);
+
+				return result;
+			} catch (error) {
 				
+			}
+		},
+		async fetchRoomList(state){
+			try {
+				const result = await firebaseApi.fetchRoomList()
+				console.log(result);
+				state.commit('updateRoomList', result);
+				return result;
 			} catch (error) {
 				
 			}
