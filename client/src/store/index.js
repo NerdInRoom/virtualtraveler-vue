@@ -8,23 +8,25 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		accessToken: "",
-		refreshToken: "",
-		user: "",
+		loginState: false,
+		loginUser: "",
 		roomList: [
 			{
-			  roomId: 1,
-			  roomGPS: {
-				latitude: 37.501307,
-				longitude: 127.03966
-			  },
-			  roomOwnerId: "test@test.com"
+				roomId: 1,
+				roomGPS: {
+					latitude: 37.501307,
+					longitude: 127.03966
+				},
+				roomOwnerId: "test@test.com"
 			}
 		  ]
 	},
 	getters: {
-		getUser(state) {
-			return state.user;
+		getLoginState(state) {
+			return state.loginState;
+		},
+		getLoginUser(state) {
+			return state.loginUser;
 		},
 		getRoomInfo: (state) => (id) => {
 			return state.roomList.find(room => room.roomId === id);
@@ -34,8 +36,27 @@ export default new Vuex.Store({
 		}
 	},
 	mutations: {
-		updateUser(state, payload){
-			state.user = payload.user;
+		updateLoginState(state, payload){
+			state.loginState = payload;	
+		},
+		updateLoginUser(state, payload){
+			const user = {
+				uid: '',
+				email: '',
+				nickname: ''
+			}
+
+			if(payload){
+				user.uid = payload.uid;
+				user.email = payload.email;
+				user.nickname = payload.displayName;
+
+				state.loginUser = user;
+				state.loginState = true;
+			} else {
+				state.loginUser = null;
+				state.loginState = false;
+			}
 		},
 		setRoomLocation (state, changedInfo) {
 			state.roomList.forEach((room, index) => {
@@ -56,7 +77,7 @@ export default new Vuex.Store({
 		async signup(state, payload){
 			try {
 				const result = await firebaseApi.signup(payload.email, payload.password, payload.nickname);
-				state.commit('updateUser', result);
+				state.commit('updateLoginUser', result.user);
 
 				return result;
 			} catch (error) {
@@ -66,7 +87,7 @@ export default new Vuex.Store({
 		async loginWithEmail(state, payload){
 			try {
 				const result = await firebaseApi.loginWithEmail(payload.email, payload.password);
-				state.commit('updateUser', result);
+				state.commit('updateLoginUser', result.user);
 
 				return result;
 			} catch (error) {
@@ -76,7 +97,7 @@ export default new Vuex.Store({
 		async loginWithGoogle(state){
 			try {
 				const result = await firebaseApi.loginWithGoogle();
-				state.commit('updateUser', result);
+				state.commit('updateLoginUser', result.user);
 
 				return result;
 			} catch (error) {
@@ -86,9 +107,23 @@ export default new Vuex.Store({
 		async logout(state){
 			try {
 				const result = await firebaseApi.logout();
-				state.commit('updateUser', '');
 			} catch (error) {
 				throw error;
+			}
+		},
+		setAuthListener(state){
+			try {
+					firebase.auth().onAuthStateChanged(function(user) {
+						if (user) {
+							if(user.uid != state.getters.getLoginUser.uid){
+								state.dispatch('logout');
+							}
+						} else {
+							state.commit('updateLoginUser', null);
+						}
+				});
+			} catch (error) {
+				console.log("[" + error.code + "] " + error.message);
 			}
 		}
 	}

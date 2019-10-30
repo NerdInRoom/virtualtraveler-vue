@@ -22,14 +22,15 @@ export default {
     },
     methods: {
         addChatting(position, roomId){
-			const vue = this;
-			vue.$store.commit('addRoom', {
+			const email = this.$store.getters.getLoginUser.email;
+			
+			this.$store.commit('addRoom', {
 				roomId : roomId,
                 roomGPS  : {
                     latitude: position.Ha,
                     longitude: position.Ga
                 },
-                roomOwnerId : vue.$store.getters.getUser.email
+                roomOwnerId : email
 			});
         },
         checkRoadview(position, roomId, marker) {

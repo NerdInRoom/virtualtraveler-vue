@@ -56,7 +56,7 @@
 						구글로 로그인하기
 					</v-btn>
 					<v-btn
-						to="/signup"
+						to="/auth/signup"
 						class="btn-login white--text title"
 						block
 						color="#34A853"

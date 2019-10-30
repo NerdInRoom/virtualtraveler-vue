@@ -10,24 +10,19 @@
 </template>
 
 <script>
-import firebaseApi from '@/api/firebaseApi.js';
-
 export default {
-  name: 'App',
-  created() {
-	  const user = firebaseApi.checkState();
-	  
-	  if(user){
-		  // 저장된 user와 로그인된 user를 비교해서 다르면 바꿔줘야함
-		  console.log("Checked user");
-		  console.log(user);
-		  console.log("Logged user");
-		  console.log(this.$store.getters.getUser);
-	  } else {
-		  this.$store.commit('updateUser', '');
-		  this.$router.push('/auth/login');
-	  }
-  }
+	name: 'App',
+	mounted() {
+		this.$store.dispatch('setAuthListener');
+		this.$store.watch(() => {
+			const loginState = this.$store.getters.getLoginState;
+			if(loginState){
+				console.log("로그인 상태 입니다.");
+			} else {
+				this.$router.push('/auth/login');
+			}
+		})
+	},
 };
 </script>
 <style>

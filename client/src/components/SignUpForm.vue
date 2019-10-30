@@ -49,7 +49,7 @@
 			</v-col>
 			<v-col cols="4">
 				<v-btn
-					to="/"
+					to="/auth/login"
 					class="btn-signup white--text title"
 					color="#EA4335"
 					block
@@ -87,7 +87,7 @@ export default {
 					email: this.email,
 					password: this.password
 				});
-				this.$router.push('map');
+				this.$router.push('/');
 			} catch (error) {
 				const code = error.code;
 				const msg = error.message;

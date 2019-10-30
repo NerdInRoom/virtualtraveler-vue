@@ -18,7 +18,6 @@ firebase.initializeApp(config);
 const firestore = firebase.firestore();
 
 export default {
-
 	/* Firebase Auth */
 	async signup(email, password, nickname) {
 		try {
@@ -56,16 +55,5 @@ export default {
 			throw error;
 		}
 	},
-	checkState() {
-		firebase.auth().onAuthStateChanged(function(user) {
-			if (user) {
-			  return user;
-			} else {
-			  return false;
-			}
-		});
-	}
-
 	/* FireStore */
-	
 }
