@@ -22,7 +22,8 @@ export default new Vuex.Store({
 			}
 		],
 		roomInfoForChatDetail : "",
-		dialog:false
+		dialog:false,
+		nickname: ''
 	},
 	getters: {
 		getUser(state) {
@@ -40,6 +41,9 @@ export default new Vuex.Store({
 		getDialog(state){
 			return state.dialog;
 		},
+		getNickname(state){
+			return state.nickname;
+		}
 	},
 	mutations: {
 		updateUser(state, payload){
@@ -61,6 +65,9 @@ export default new Vuex.Store({
 		},
 		setDialog(state){
 			state.dialog = !state.dialog;
+		},
+		setNickname(state, payload){
+			state.nickname = payload
 		}
 	},
 	actions: {
@@ -98,6 +105,16 @@ export default new Vuex.Store({
 			}
 		},
 		logout(){
+		},
+		async ramdomNickname(state){
+			try{
+				const result = await firebaseApi.emailRandomizeName();
+				state.commit('setNickname',result);
+				
+				return result;
+			} catch(error) {
+				throw error;
+			}
 		}
 	}
 })
