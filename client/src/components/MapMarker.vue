@@ -1,21 +1,28 @@
 <template>
-<div>
-    <div id="map" style="width:100%;height:600px;"></div>
-    <div style="background-color:pink">
-        <h3>리스트할거야</h3>
-        <chattingList></chattingList>
-    </div>
-    <button @click="addMarker()">마커 만들기</button>
-</div>
+	<div class="map-wrapper">
+		<div class="map" id="map"></div>
+		<ChatRoomInfo />
+		<img
+			src="@/images/location.png"
+			class="marker"
+			@click="addMarker()"
+		/>
+		<img
+			src="@/images/unlocked.png"
+			class="logout"
+			@click="logout()"
+		/>
+	</div>
 </template>
 
 <script>
-import chattingList from './ChattingList.vue'
-import ChattingDetail from './ChattingDetail.vue'
+
+import ChatRoomInfo from '@/components/ChatRoomInfo.vue';
+import kakaomapApi from '@/api/kakaomapApi.js';
+
 export default {
     components: {
-        chattingList: chattingList,
-        ChattingDetail: ChattingDetail
+		ChatRoomInfo
     },
     data() {
         return {
@@ -26,7 +33,6 @@ export default {
             chattingList: [],
         }
     },
-    created() {},
     mounted() {
         this.getCurrentGPS();
     },
@@ -136,11 +142,56 @@ export default {
             } else {
                 alert('GPS를 지원하지 않습니다');
             }
-        },
+		},
+		logout() {
+			this.$store.dispatch('logout');
+		}
     }
 }
 </script>
 
-<style>
+<style lang="scss">
+.map {
+	height: 100vh;
+	width: 100vw;
+}
+.marker {
+	left: 10px;
+	bottom: 25px;
+	position: fixed;
+	height: 64px;
+	width: 64px;
+	border-radius: 50px;
+	cursor: pointer;
+	z-index: 9999;
 
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	-ms-transition: all 0.3s ease-in-out;
+	&:hover {
+		opacity: 0.7;
+		cursor: pointer;
+	}
+}
+
+.logout {
+	right: 10px;
+	top: 10px;
+	position: fixed;
+	height: 64px;
+	width: 64px;
+	border-radius: 50px;
+	cursor: pointer;
+	z-index: 9999;
+
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	-ms-transition: all 0.3s ease-in-out;
+	&:hover {
+		opacity: 0.7;
+		cursor: pointer;
+	}
+}
 </style>

@@ -44,7 +44,7 @@ export default {
 	},
 	methods: {
 		checkControlAuthority(){
-			if (this.roomInfo.roomOwnerId !== this.$store.getters.getUser.email) {
+			if (this.roomInfo.roomOwnerId !== this.$store.getters.getLoginUser.email) {
 				this.roadviewContainer.style.pointerEvents = 'none';
 				document.getElementById('roadviewWrapper').addEventListener('click', () => {
 					this.dialog=true;
@@ -61,6 +61,6 @@ export default {
 	}
 	.roadview {
 		height: 100%;
-		width: 85vw;
+		width: 80vw;
 	}
 </style>

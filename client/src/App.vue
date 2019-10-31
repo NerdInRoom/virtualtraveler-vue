@@ -21,7 +21,7 @@ export default {
 			} else {
 				this.$router.push('/auth/login');
 			}
-		})
+		});
 	},
 };
 </script>

@@ -56,7 +56,7 @@ export default {
 	},
 	async logout() {
 		try {
-			const result = await firebase.auth().signOut();
+			await firebase.auth().signOut();
 		} catch (error) {
 			throw error;
 		}

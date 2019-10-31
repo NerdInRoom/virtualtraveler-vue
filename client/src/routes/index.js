@@ -66,13 +66,13 @@ router.beforeEach(function (to, from, next) {
 		if(loginState){
 			next();
 		} else {
-			console.log("로그인이 필요한 페이지 입니다.");
+			// console.log("로그인이 필요한 페이지 입니다.");
 		}	
 	} else {
 		// 로그인이 필요없는 페이지
 		if(loginState){
 			next(from);
-			console.log("이미 로그인 상태입니다.");
+			// console.log("이미 로그인 상태입니다.");
 		} else {
 			next();
 		}

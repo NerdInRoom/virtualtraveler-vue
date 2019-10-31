@@ -10,40 +10,62 @@ export default new Vuex.Store({
 	state: {
 		loginState: false,
 		loginUser: "",
-		roomList: [
+		chatRoomList: [
 			{
-				roomId: 1,
-				roomGPS: {
+				id: 1,
+				title: "전국노래자랑 여행",
+				location: {
 					latitude: 37.501307,
 					longitude: 127.03966
 				},
-				roomOwnerId: "test@test.com"
+				host: {
+					uid: 1,
+					email: "test@test.com",
+					nickname: "testman"
+				},
+				guest: [
+					{
+						uid: 2,
+						email: "b@b.com",
+						nickname: '케로츄'
+					},
+					{
+						uid: 3,
+						email: 'c@c.com',
+						nickname: '슈슈미밍'
+					},
+					{
+						uid: 4,
+						email: 'd@d.com',
+						nickname: '빛니리'
+					}
+				]
 			}
 		],
-		roomInfoForChatDetail : "",
-		dialog:false
+		chatRoomInfoForChatDetail : "",
 	},
 	getters: {
+		// User Auth Getters
 		getLoginState(state) {
 			return state.loginState;
 		},
 		getLoginUser(state) {
 			return state.loginUser;
 		},
-		getRoomInfo: (state) => (id) => {
-			return state.roomList.find(room => room.roomId === id);
+
+		// Chat Room Getters
+		getChatRoomInfo: (state) => (id) => {
+			return state.chatRoomList.find(room => room.id === id);
 		},
-		getRoomList(state) {
-			return state.roomList;
+		getChatRoomList(state) {
+			return state.chatRoomList;
 		},
-		getRoomInfoForChatDetail(state){
-			return state.roomInfoForChatDetail;
-		},
-		getDialog(state){
-			return state.dialog;
-		},
+		getChatRoomInfoForChatDetail(state){
+			return state.chatRoomInfoForChatDetail;
+		}
 	},
 	mutations: {
+		// User Auth Mutations
 		updateLoginState(state, payload){
 			state.loginState = payload;	
 		},
@@ -66,28 +88,25 @@ export default new Vuex.Store({
 				state.loginState = false;
 			}
 		},
-		setRoomLocation (state, changedInfo) {
-			state.roomList.forEach((room, index) => {
-				if (room.roomId === changedInfo.roomId) {
-					state.roomList[index].roomGPS.latitude = changedInfo.latitude
-					state.roomList[index].roomGPS.longitude = changedInfo.longitude
+
+		// Chat Room Mutations
+		setChatRoomLocation (state, chatRoom) {
+			state.chatRoomList.forEach((room, index) => {
+				if (room.id === chatRoom.id) {
+					state.chatRoomList[index].location.latitude = chatRoom.latitude
+					state.chatRoomList[index].location.longitude = chatRoom.longitude
 				}
 			})
 		},
-		addRoom(state, roomInfo) {
-			state.roomList.push(roomInfo);
+		addRoom(state, chatRoom) {
+			state.chatRoomList.push(chatRoom);
 		},
-		setRoomInfoForChatDetail(state, roomInfo){
-			state.roomInfoForChatDetail = roomInfo;
+		setRoomInfoForChatDetail(state, chatRoom){
+			state.chatRoomInfoForChatDetail = chatRoom;
 		},
-		setDialog(state){
-			state.dialog = !state.dialog;
-		}
 	},
 	actions: {
-		addRoom(){
-			//파베에다 넣기
-		},
+		// User Auth Actions
 		async signup(state, payload){
 			try {
 				const result = await firebaseApi.signup(payload.email, payload.password, payload.nickname);
@@ -120,7 +139,8 @@ export default new Vuex.Store({
 		},
 		async logout(state){
 			try {
-				const result = await firebaseApi.logout();
+				await firebaseApi.logout();
+				state.commit('updateLoginUser', null);
 			} catch (error) {
 				throw error;
 			}
@@ -128,6 +148,7 @@ export default new Vuex.Store({
 		setAuthListener(state){
 			try {
 					firebase.auth().onAuthStateChanged(function(user) {
+						console.log("auth 변화 발생");
 						if (user) {
 							if(user.uid != state.getters.getLoginUser.uid){
 								state.dispatch('logout');
