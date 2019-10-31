@@ -19,6 +19,7 @@ export default {
 			if(loginState){
 				console.log("로그인 상태 입니다.");
 			} else {
+				console.log("로그인 안된 상태 입니다.");
 				this.$router.push('/auth/login');
 			}
 		});

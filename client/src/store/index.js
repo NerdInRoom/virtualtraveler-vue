@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 
 // Store에서는 '@'로 src 접근이 불가하다.
 import firebaseApi from '../api/firebaseApi';
+import { stat } from 'fs';
 
 Vue.use(Vuex);
 
@@ -22,6 +23,66 @@ export default new Vuex.Store({
 					uid: 1,
 					email: "test@test.com",
 					nickname: "testman"
+				},
+				guest: [
+					{
+						uid: 2,
+						email: "b@b.com",
+						nickname: '케로츄'
+					},
+					{
+						uid: 3,
+						email: 'c@c.com',
+						nickname: '슈슈미밍'
+					},
+					{
+						uid: 4,
+						email: 'd@d.com',
+						nickname: '빛니리'
+					}
+				]
+			},
+			{
+				id: 2,
+				title: "망고수박",
+				location: {
+					latitude: 37.519999711926474,
+					longitude: 127.0346463314149
+				},
+				host: {
+					uid: 2,
+					email: "test2@test2.com",
+					nickname: "testman2"
+				},
+				guest: [
+					{
+						uid: 2,
+						email: "b@b.com",
+						nickname: '케로츄'
+					},
+					{
+						uid: 3,
+						email: 'c@c.com',
+						nickname: '슈슈미밍'
+					},
+					{
+						uid: 4,
+						email: 'd@d.com',
+						nickname: '빛니리'
+					}
+				]
+			},
+			{
+				id: 3,
+				title: "바나나 우유",
+				location: {
+					latitude: 37.519347301827864,
+					longitude: 127.0349310891608
+				},
+				host: {
+					uid: 3,
+					email: "test3@test3.com",
+					nickname: "testman3"
 				},
 				guest: [
 					{
@@ -98,7 +159,24 @@ export default new Vuex.Store({
 				}
 			})
 		},
-		addRoom(state, chatRoom) {
+		createChatRoom(state, payload) {
+			const host = state.loginUser;
+			const chatRoom = {
+				id: state.chatRoomList.length + 1,
+				title: payload.title,
+				location: {
+					latitude: payload.location.latitude,
+					longitude: payload.location.longitude
+				},
+				host: {
+					uid: host.uid,
+					email: host.email,
+					nickname: host.nickname
+				},
+				guest: [
+					
+				]
+			}
 			state.chatRoomList.push(chatRoom);
 		},
 		setRoomInfoForChatDetail(state, chatRoom){
