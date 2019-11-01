@@ -150,7 +150,45 @@ export default new Vuex.Store({
 				throw error;
 			}
 		},
+		logout(){
+		},
+		async makeChatRoom(state, payload){
+			try {
+				const result = await firebaseApi.makeChatRoom(payload.roomName, payload.gpsX, payload.gpsY);
+				state.commit('updateCurrentRoom', result);
+				
+				return result;
+			} catch (error) {
+				throw error;
+			}
+		},
+		async joinRoom(state, payload){
+			try {
+				const result = await firebaseApi.joinRoom(payload.roomId);
+				state.commit('updateCurrentRoom', result);
 
+				return result;
+			} catch (error) {
+				
+			}
+		},
+		async fetchRoomList(state){
+			try {
+				const result = await firebaseApi.fetchRoomList();
+		
+				return result;
+			} catch (error) {
+				
+			}
+		},
+		async fetchGPS(state){
+			try {
+				const result = await firebaseApi.fetchGPS();
+				return result;
+			} catch (error) {
+				
+			}
+		},
 		// Chat Room Actions
 		async createChatRoom(state, payload) {
 			const host = state.getters.getLoginUser;
