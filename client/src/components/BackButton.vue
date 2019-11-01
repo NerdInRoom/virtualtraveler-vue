@@ -37,6 +37,8 @@
 	</div>
 </template>
 <script>
+import storage from '../utils/storage.js';
+
 export default {
 	data() {
 		return {

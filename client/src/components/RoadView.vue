@@ -27,7 +27,6 @@
 import kakaomapAPI from '@/api/kakaomapApi.js';
 
 export default {
-	props: ['roomId'],
 	data() {
 		return {
 			roomInfo: null,
@@ -36,7 +35,7 @@ export default {
 		}
 	},
 	mounted () {
-		this.roomInfo = this.$store.getters.getRoomInfo(Number(this.roomId));
+		this.roomInfo = this.$store.getters.getSelectedChatRoom;
 		this.roadviewContainer = document.getElementById('roadview');
 		
 		kakaomapAPI.initRoadview(this);
@@ -44,7 +43,7 @@ export default {
 	},
 	methods: {
 		checkControlAuthority(){
-			if (this.roomInfo.roomOwnerId !== this.$store.getters.getLoginUser.email) {
+			if (this.roomInfo.host.email !== this.$store.getters.getLoginUser.email) {
 				this.roadviewContainer.style.pointerEvents = 'none';
 				document.getElementById('roadviewWrapper').addEventListener('click', () => {
 					this.dialog=true;

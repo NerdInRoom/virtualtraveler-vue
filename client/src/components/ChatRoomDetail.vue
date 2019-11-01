@@ -35,8 +35,8 @@ export default {
 			return people.join(', ');
 		},
 		isSelected: function() {
-			const title = this.getSelectedChatRoom.title;
-			if(title.length > 0){
+			const room = this.getSelectedChatRoom;
+			if(room){
 				return true;
 			} else {
 				return false;

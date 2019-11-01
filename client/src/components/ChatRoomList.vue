@@ -1,9 +1,10 @@
 <template>
-	<div class="chatRoom-list">
+	<div class="chatRoomList">
 		<h2>함께할 수 있는 여행</h2>
-		<v-list>
+		<v-list class="chat-list">
 			<v-list-item-group
 				v-model="model"
+				v-if="this.getChatRoomList"
 				mandatory
 				color="indigo"
 			>
@@ -15,13 +16,13 @@
 						@click="selectRoom(room.host.email)"
 					> 
 						<v-list-item-title>
-							No. {{ room.id }}
-						</v-list-item-title>
-						<v-list-item-title>
 							{{ room.title }}
 						</v-list-item-title>
 						<v-list-item-title>
 							{{ room.host.nickname }}
+						</v-list-item-title>
+						<v-list-item-title>
+							{{ room.guest.length }} 명이 함께 여행중입니다.
 						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
@@ -50,17 +51,19 @@ export default {
 </script>
 
 <style lang="scss">
-	.chatRoom-list {
+	.chatRoomList {
 		margin: 10px;
 		height: 100%;
-		overflow-y: scroll;
-		-ms-overflow-style: none;
-		&::-webkit-scrollbar {
-			display: none;
-		}
-
 		h2 {
 			margin-left: 3px;
+		}
+
+		.chat-list {
+			overflow-y: scroll;
+			-ms-overflow-style: none;
+			&::-webkit-scrollbar {
+				display: none;
+			}
 		}
 	}
 

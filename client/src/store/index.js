@@ -14,12 +14,7 @@ export default new Vuex.Store({
 		loginState: storage.fetchLoginState(),
 		loginUser: storage.fetchLoginUser(),
 		chatRoomList: new HashMap(),
-		selectedChatRoom: {
-			title: '',
-			host:{
-				nickname: ''
-			}
-		},
+		selectedChatRoom: storage.fetchSelectedChatRoom(),
 		nicknameByDraw: ''
 	},
 	getters: {

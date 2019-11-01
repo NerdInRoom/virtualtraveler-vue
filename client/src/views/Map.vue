@@ -26,6 +26,7 @@ import ChatRoomInfo from '@/components/ChatRoomInfo.vue';
 import kakaomapApi from '@/api/kakaomapApi.js';
 import { mapGetters } from "vuex";
 import { HashMap } from '../utils/hashMap.js';
+import storage from '../utils/storage.js';
 
 
 export default {
@@ -39,7 +40,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getChatRoomList', 'getLoginUser']),
+        ...mapGetters(['getChatRoomList', 'getLoginUser', 'getSelectedChatRoom']),
     },
     mounted() {
         navigator.geolocation.getCurrentPosition(position => { this.init(position) }, this.failToGetGeoInfo);
@@ -85,8 +86,10 @@ export default {
 			await Promise.all(promises);
 			
 			return;
-        },
-
+		},
+		start() {
+			this.$router.push('/travel');
+		},
         async logout() {
             await this.$store.dispatch('logout');
             this.$router.push('/auth/login');

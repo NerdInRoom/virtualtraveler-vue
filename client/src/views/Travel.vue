@@ -1,9 +1,7 @@
 <template>
     <div class="travel">
 		<BackButton />
-		<RoadView
-          :roomId=$route.params.roomId
-        />
+		<RoadView />
 		<ChatRoom />
     </div>
 </template>

@@ -5,8 +5,8 @@ export default {
 	initRoadview (_this) {
 		const roadview = new kakao.maps.Roadview(_this.roadviewContainer);
 		const roadviewPosition = new kakao.maps.LatLng(
-			_this.roomInfo.roomGPS.latitude,
-			_this.roomInfo.roomGPS.longitude
+			_this.roomInfo.location.latitude,
+			_this.roomInfo.location.longitude
 		);
 	
 		// roadviewClient : 좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
