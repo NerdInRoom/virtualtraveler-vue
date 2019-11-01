@@ -11,11 +11,15 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
+		nicknameByDraw: '',
 		loginState: storage.fetchLoginState(),
 		loginUser: storage.fetchLoginUser(),
+
 		chatRoomList: new HashMap(),
-		selectedChatRoom: storage.fetchSelectedChatRoom(),
-		nicknameByDraw: ''
+		markerList: new Hashmap(),
+		selectedId: null,
+
+		chatMessages: null
 	},
 	getters: {
 		// User Auth Getters
