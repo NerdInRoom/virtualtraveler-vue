@@ -60,6 +60,6 @@ export default {
 	}
 	.roadview {
 		height: 100%;
-		width: 80vw;
+		width: 100vw;
 	}
 </style>

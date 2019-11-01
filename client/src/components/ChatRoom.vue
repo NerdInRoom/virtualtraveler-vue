@@ -1,13 +1,14 @@
 <template>
 <div class="room">
+	<div class="panel"></div>
 	<div class="chat-header">
-		<h1 class="room-title">윤병이의 강남여행</h1>
+		<h1 class="room-title ya"> {{ this.getSelectedChatRoom.title }} </h1>
 		<div class="room-info">
 			<span class="room-master">
-				채윤병 abcd1234@naver.com
+				<span class="ya">운전자</span> {{ this.getSelectedChatRoom.host.nickname }} <span class="ya">님</span>
 			</span>
 			<span class="room-traveler">
-				곽빛나라, 강민, 등 4명
+				<span class="ya">동승자</span> {{ this.guests }} <span class="ya">님</span>
 			</span>
 		</div>
 	</div>
@@ -16,21 +17,19 @@
 			<div
 				class="message"
 				v-for="chat in storedChatLog"
-				:key="chat.index"
-				v-bind:class="{to: chat.to, from: chat.from}"
-			>
-				<p v-bind:class="{to: chat.to, from: chat.from}">
-					{{ chat.text }}
-					<span 
-						class="time-stamp"
-						v-bind:class="{to: chat.to, from: chat.from}"
-					>
-						{{ chat.when }}
+				:key="chat.id"
+			>	
+				<p
+					v-bind:class="[isMine(chat.sender) ? 'me' : 'others']"
+				>
+					{{ chat.content }}	
+					<span class="name"
+							v-bind:class="[isMine(chat.sender) ? 'me' : 'others']">
+						{{ chat.sender }}
 					</span>
-					<span
-						class="tail"
-						v-bind:class="{to: chat.to, from: chat.from}"
-					>
+					<span class="time"
+							v-bind:class="[isMine(chat.sender) ? 'me' : 'others']">
+						{{ chat.createdAt }}
 					</span>
 				</p>
 			</div>
@@ -59,35 +58,74 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import {time} from "../utils/time.js";
+
 export default {
-  data: () => ({
-	inputText: '',
-	storedChatLog: [
-						{ index: 1, to: true, from: false, text: "안녕", when: "15:39" },
-						{ index: 2, to: false, from: true, text: "그래 안녕", when: "15:39" },
-						{ index: 3, to: true, from: false, text: "싸피로 가자", when: "15:40" },
-						{ index: 4, to: false, from: true, text: "그랭 근데 긴글을 치면 어떻게 될지 너무너무 궁굼해서 안쳐볼수가 없자나? 3줄까지는 어떨까 나나나나나나나나나나나나나ㅏ나나나난나ㅏㄴ나나나", when: "15:40" }
-					]
-  }),
-  methods: {
-	  clearInput() {
-		  this.inputText = '';
-	  },
-	  sendChat() {
-		  if(this.inputText === '') return;
-		  // Sending Chat logic
-	  }
-  },
-  computed: {
-	  // Get ChatLog
-  },
-  updated() {
-	  //this.$emit('scrollBottom');
-  }
+	data: () => ({
+		inputText: '',
+		storedChatLog: [
+							{ id:"0x1231", roomid:"1", sender:"슈슈미밍", content:"안녕하세요.", createdAt: time.getNow().detailTime },
+							{ id:"0x1232", roomid:"1", sender:"민강강수월래미콘", content:"네 반갑습니다.", createdAt: time.getNow().detailTime},
+							{ id:"0x1233", roomid:"1", sender:"슈슈미밍", content:"안녕히가세요.", createdAt: time.getNow().detailTime},
+							{ id:"0x1234", roomid:"1", sender:"민강", content:"네 잘지내요.", createdAt: time.getNow().detailTime},
+						]
+	}),
+	computed: {
+		...mapGetters(['getSelectedChatRoom','getLoginUser']),
+		guests: function() {
+			const people = new Array();
+			const guest = this.getSelectedChatRoom.guest;
+			for(let i in guest){
+				people.push(guest[i].nickname);
+			}
+			return people.join(', ');
+		},
+	},
+	updated() {
+		this.scrollBottom();
+	},
+	methods: {
+		isMine(sender){
+			if(sender === this.getLoginUser.nickname) return true;
+			else return false;
+		},
+		clearInput() {
+			this.inputText = '';
+		},
+		sendChat() {
+			if(this.inputText === '') return;
+			// Sending Chat logic
+		},
+		scrollBottom(){
+			const mainTextArea = document.querySelector('.text-area');
+			mainTextArea.scrollTop = mainTextArea.scrollHeight;
+		},
+	}
 };
 </script>
 <style lang="scss" scoped>
+	* {
+		font-family: "Roboto";
+	}
+	.ya {
+		font-family: "yg-jalnan";
+		font-size: 15px;
+	}
+	.panel {
+		position: fixed;
+		opacity: 0.18;
+		right: 0;
+		height: 100%;
+		width: 360px;
+		background-color: white;
+	}
 	.room {
+		width: 350px;
+		height: 100%;
+		position: fixed;
+		right: 0;
+		z-index: 9999;
 		display: flex;
 		flex-direction: column;
 		padding: 0;
@@ -95,7 +133,7 @@ export default {
 			display: flex;
 			justify-content: center;
 			height: 100px;
-			background-color: #F1F1F1;
+			background-color: transparent;
 
 			.chat-input {
 				margin: 15px;
@@ -140,7 +178,8 @@ export default {
 		.chat-body {
 			height: 100%;
 			.text-area {
-				background-color: #9bbbd4;
+				// background-color: #EEEEEE;
+				background-color: transparent;
 				height: 100%;
 				width: 100%;
 				overflow-y: scroll;
@@ -153,73 +192,65 @@ export default {
 				width: 98%;
 				height: auto;
 				overflow: hidden;
-				&.to {
-					padding: 5px 0 5px 40px;
-				}
-				&.from {
-					padding: 5px 40px 5px 0;
-					margin-left: 8px;
-				}
+				margin-bottom: 10px;
+				margin-top: 14px;
+				padding: 14px;
 				p {
 					position: relative;
 					display: block;
 					text-align: left;
 					word-break: break-all;
-					padding: 13px;
+					padding: 15px;
 					margin: 10px;
 					font-size: 15px;
 					font-family: 'Roboto';
 					font-weight: 400;
-					border-radius: 10px;
-					&.to {
-						background-color: #fef01b;
-						color: black;
+					&.me {
+						border-radius: 30px;
+						border-top-right-radius: 0;
+						margin-right: -1px;
+						color: white;
+						background-color: #01579B;
 						float: right;
 					}
-					&.from {
+					&.others {
+						border-radius: 30px;
+						border-top-left-radius: 0;
 						color: black;
-						background-color: #ffffff;
+						background-color: white;
 						float: left;
 					}
 				}
-			}
-			.tail {
-				position: absolute;
-				bottom: 8px;
-				width: 10px;
-				height: 10px;
-				&.to {
-					right: -9px;
-					border-bottom: 10px solid #fef01b;
-					border-right: 10px solid transparent;
-					border-top-right-radius: 10px;
-				}
-				&.from {
-					left: -9px;
-					border-bottom: 10px solid #ffffff;
-					border-left: 10px solid transparent;
-					border-top-left-radius: 10px;
-				}
-			}
-			.time-stamp {
-				&.to {
+				.name {
+					overflow: visible;
+					color: white;
+					font-family: 'yg-jalnan';
+					font-size: 17px;
+					top: -19px;
 					position: absolute;
-					color: #556677;
-					font-size: 10px;
-					bottom: 3px;
-					left: -33px;
+					width: max-content;
+					&.me {
+						right: 5px;
+					}
+					&.others {
+						left: 5px;
+					}
 				}
-				&.from {
+				.time {
+					color: white;
+					font-size: 12px;
+					bottom: -17px;
 					position: absolute;
-					color: #556677;
-					font-size: 10px;
-					bottom: 3px;
-					right: -33px;
+					&.me {
+						right: 20px;
+					}
+					&.others {
+						left: 20px;
+					}
 				}
 			}
 		}
 		.chat-header {
-			background-color: #381e1f;
 			h1 {
 				color: #FDD835;
 				margin-top: 8px;
@@ -232,14 +263,20 @@ export default {
 				color: white;
 				margin-left: 12px;
 				margin-bottom: 8px;
+				padding: 5px;
 				.room-master {
 					display: block;
 					font-size: 15px;
 				}
 				.room-traveler {
+					display: inline-block;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+					width: 280px;
 					display: block;
-					margin-top: 5px;
-					font-size: 10px;
+					margin-top: 7px;
+					font-size: 13px;
 				}
 			}
 		}
