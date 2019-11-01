@@ -6,7 +6,7 @@ import randomName from '../utils/randomName.js';
 import { HashMap } from '../utils/hashMap.js';
 
 // Firebase config
-/* const config = {
+const config = {
 	apiKey: "AIzaSyDTUkBmOKTMBSyanz8aE9lVpTZ7N_arbT4",
 	authDomain: "vue-fb-chat-test.firebaseapp.com",
 	databaseURL: "https://vue-fb-chat-test.firebaseio.com",
@@ -14,14 +14,6 @@ import { HashMap } from '../utils/hashMap.js';
 	storageBucket: "vue-fb-chat-test.appspot.com",
 	messagingSenderId: "294332183075",
 	appId: "1:294332183075:web:b897ddecb6df108a2ef796"
-};*/
-const config = {
-    apiKey: "AIzaSyDdghMoTmWMMsno4LHzFyeAR6p8oKWjwRE",
-    authDomain: "seungmi-chatting-test.firebaseapp.com",
-    databaseURL: "https://seungmi-chatting-test.firebaseio.com",
-    projectId: "seungmi-chatting-test",
-    storageBucket: "gs://seungmi-chatting-test.appspot.com/",
-    messagingSenderId: "746818600428"
 };
 
 firebase.initializeApp(config);
@@ -101,7 +93,7 @@ export default {
 		}
 	},
 	async joinRoom(roomId) {
-		const user = store.getters.getUser;
+		const user = store.getters.getLoginUser;
 		await firestore.collection('chatRoomList').doc(roomId).collection('guest').add(user);
 		const doc = await firestore.collection('chatRoomList').doc(roomId).get();
 		let data = doc.data();
@@ -109,10 +101,10 @@ export default {
 		return data;
 	
 	},
+	// 필요없을 수 있음
 	fetchGPS() {
 		return new Promise((resolve, reject) => {
 			const currentRoom = store.getters.getRoom;
-			console.log(currentRoom.roomId);
 			firestore.collection('chatRoomList').doc(currentRoom.roomId).onSnapshot((documentSnapshot) => {
 				let data = documentSnapshot.data();
 				data.roomId = currentRoom.roomId;
@@ -132,6 +124,23 @@ export default {
 				});
 				store.commit('updateRoomList', roomList);
 				resolve(roomList);
+			}, reject);
+		});
+	},
+	sendMessage(roomId, message){
+        firestore.collection('room').doc(roomId).collection('chatMessages').add(message);
+	},
+	fetchMessage(roomId){
+		return new Promise((resolve, reject) => {
+			firestore.collection('room').doc(roomId).collection('chatMessages').orderBy('createdAt').onSnapshot((querySnapshot) => {
+				let allMessages = [];
+				querySnapshot.forEach(doc => {
+					let data = doc.data();
+					data.id = doc.id;
+					allMessages.push(data);
+				}),
+				store.commit('setMessages', allMessages);
+				resolve(allMessages);
 			}, reject);
 		});
 	},

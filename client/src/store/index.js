@@ -159,7 +159,6 @@ export default new Vuex.Store({
 		async fetchRoomList(state){
 			try {
 				const result = await firebaseApi.fetchRoomList();
-		
 				return result;
 			} catch (error) {
 				
