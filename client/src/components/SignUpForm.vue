@@ -137,7 +137,7 @@ export default {
 		async randomNickname(){
 			try{
 				const result = await this.$store.dispatch('ramdomNickname');
-				this.nickname = this.$store.getters.getNickname;
+				this.nickname = this.$store.getters.getNicknameByDraw;
 			} catch(error){
 				const code = error.code;
 				const msg = error.message;

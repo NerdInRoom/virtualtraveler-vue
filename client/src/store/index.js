@@ -19,7 +19,8 @@ export default new Vuex.Store({
 			host:{
 				nickname: ''
 			}
-		}
+		},
+		nicknameByDraw: ''
 	},
 	getters: {
 		// User Auth Getters
@@ -36,12 +37,16 @@ export default new Vuex.Store({
 		},
 		getSelectedChatRoom(state) {
 			return state.selectedChatRoom;
+		},
+		getNicknameByDraw(state){
+			return state.nicknameByDraw;
 		}
-		// getNickname(state){
-		// 	return state.nickname;
-		// }
 	},
 	mutations: {
+		// User Nickname Mutations
+		setNicknameByDraw(state, payload){
+			state.nicknameByDraw = payload;
+		},
 		// User Auth Mutations
 		updateLoginState(state, payload){
 			state.loginState = payload;	
@@ -177,8 +182,10 @@ export default new Vuex.Store({
 		},
 		async ramdomNickname(state){
 			try{
+				console.log("hit");
 				const result = await firebaseApi.emailRandomizeName();
-				state.commit('setNickname',result);
+				console.log(result);
+				state.commit('setNicknameByDraw',result);
 				
 				return result;
 			} catch(error) {
