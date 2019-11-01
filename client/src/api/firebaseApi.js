@@ -3,6 +3,7 @@ import 'firebase/firestore';
 import 'firebase/auth';
 import storage from '../utils/storage.js';
 import randomName from '../utils/randomName.js';
+import { HashMap } from '../utils/hashMap.js';
 
 // Firebase config
 /* const config = {
@@ -90,44 +91,18 @@ export default {
 	},
 
 	/* FireStore */
-	// 회원가입 및 구글로그인 시 실행
-	addUser(user) {
-		let docRef = firestore.collection('user').doc(user.email);
-		docRef.get().then((doc) => {
-			if (!doc.exists) {
-				docRef.set({ displayName: user.displayName });
-			}
-		});
-	},
-	async makeChatRoom(roomName, gpsX, gpsY) {
-		const user = store.getters.getUser;
-		let newData = {
-			roomName: roomName,
-			roomGpsX: gpsX,
-			roomGpsY: gpsY,
-			roomHost: user.email
-		};
+	async createChatRoom(chatRoom) {
 		try {
-			const docRef = await firestore.collection('chatRoomList').add(newData);
-			await firestore.collection('user').doc(user.email).update({ userHostRoom: docRef.id });
-			newData.roomId = docRef.id;
-			return newData;
+			const docRef = await firestore.collection('chatRoomList').add(chatRoom);
+			chatRoom.id = docRef.id;
+			return chatRoom;
 		} catch (error) {
 			throw error;
 		}
-
-	},
-	getUserGuestRoom() {
-		const user = store.getters.getUser;
-		firestore.collection('user').doc(user.email).get().then((documentSnapshot) => {
-			let data = documentSnapshot.data();
-			return data.userGuestRoom;
-		});
 	},
 	async joinRoom(roomId) {
 		const user = store.getters.getUser;
-		await firestore.collection('user').doc(user.email).update({ userGuestRoom: roomId });
-		await firestore.collection('chatRoomList').doc(roomId).collection('roomJoinUser').doc(user.email).set({ userName: user.displayName });
+		await firestore.collection('chatRoomList').doc(roomId).collection('guest').add(user);
 		const doc = await firestore.collection('chatRoomList').doc(roomId).get();
 		let data = doc.data();
 		data.roomId = roomId;
@@ -149,11 +124,11 @@ export default {
 	fetchRoomList() {
 		return new Promise((resolve, reject) => {
 			const querySnapshot = firestore.collection('chatRoomList').onSnapshot((querySnapshot)=>{
-				let roomList = [];
+				let roomList = new HashMap();
 				querySnapshot.forEach(function (doc) {
 					let data = doc.data();
 					data.roomId = doc.id;
-					roomList.push(data);
+					roomList.put(roomId, data);
 				});
 				store.commit('updateRoomList', roomList);
 				resolve(roomList);

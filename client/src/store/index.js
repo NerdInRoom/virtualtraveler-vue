@@ -57,22 +57,13 @@ export default new Vuex.Store({
 
 		// Chat Room Mutations
 		createChatRoom(state, payload) {
-			const email = payload.host.email;
 			const chatRoom = payload.chatRoom;
+			const id = payload.id;
 			const map = state.chatRoomList.getAll();
 			// ES6 문법
-			const addedMap = { ...map, [email]: chatRoom};
+			const addedMap = { ...map, [id]: chatRoom};
 
 			state.chatRoomList.map = addedMap;
-		},
-		updateCurrentRoom(state, payload){
-			state.currentRoom = payload;
-		},
-		updateRoomList(state, payload){
-			state.roomList = payload;
-		},
-		updateCurrentRoom(state, payload){
-			state.currentRoom = payload;
 		},
 		setRoomLocation (state, changedInfo) {
 			state.roomList.forEach((room, index) => {
@@ -87,6 +78,9 @@ export default new Vuex.Store({
 		},
 		selectChatRoom(state, payload){
 			state.selectedChatRoom = payload;
+		},
+		updateRoomList(state, payload) {
+			state.chatRoomList = payload;
 		}
 	},
 	actions: {
@@ -152,20 +146,10 @@ export default new Vuex.Store({
 		},
 		logout(){
 		},
-		async makeChatRoom(state, payload){
-			try {
-				const result = await firebaseApi.makeChatRoom(payload.roomName, payload.gpsX, payload.gpsY);
-				state.commit('updateCurrentRoom', result);
-				
-				return result;
-			} catch (error) {
-				throw error;
-			}
-		},
 		async joinRoom(state, payload){
 			try {
-				const result = await firebaseApi.joinRoom(payload.roomId);
-				state.commit('updateCurrentRoom', result);
+				const result = await firebaseApi.joinRoom(payload.id);
+				state.commit('selectChatRoom', result);
 
 				return result;
 			} catch (error) {
@@ -228,9 +212,10 @@ export default new Vuex.Store({
 				]
 			}
 			// Upload Firestore
-
+			await firebaseApi.createChatRoom(chatRoom);
+			let id = chatRoom.id;
 			state.commit('createChatRoom', {
-				host,
+				id,
 				chatRoom
 			});
 			return;
