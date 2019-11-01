@@ -30,12 +30,13 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 export default {
 	/* Firebase Auth */
-	async signup(email, password) {
+	async signup(email, password, nickname) {
 		try {
 			const result = await firebase.auth().createUserWithEmailAndPassword(email, password);
 			await result.user.updateProfile({
-				displayName: await this.randomizeName()
+				displayName: nickname
 			});
+			await this.addNicknameInPool(nickname);
 			return result;
 		} catch (error) {
 			throw error;
@@ -57,7 +58,7 @@ export default {
 			const confirm = await this.userNameConfirm(result.user.email);
 			if(confirm == true){
 				await result.user.updateProfile({
-					displayName: await this.randomizeName()
+					displayName: await this.googleRandomizeName()
 				});
 			}
 			return result;
@@ -74,26 +75,35 @@ export default {
 	},
 
 	/* FireStore */
-	
-	
-	/* Nickname */
-	async randomizeName(){
+	async emailRandomizeName(){
+		while(true){
+            const randomNickname = randomName.randomizeName()
+			let confirm = await this.nameConfirm(randomNickname)
+			if(confirm == true){
+				return randomNickname
+			}
+		}
+	},
+	async googleRandomizeName(){
         while(true){
             const randomNickname = randomName.randomizeName()
             let confirm = await this.nameConfirm(randomNickname)
             if(confirm == true){
-                await firestore.collection('nicknamePool').doc(randomNickname).set({
-					nickname : randomNickname,
-					user : firebase.auth().currentUser.email
-                })
-                .then( () => {
-                    console.log("nickname setting complete")
-                }).catch( (error) => {
-                    console.log(error)
-                })
+                await this.addNicknameInPool(randomNickname)
                 return randomNickname
             }
         }
+	},
+	async addNicknameInPool(randomNickname){
+		await firestore.collection('nicknamePool').doc(randomNickname).set({
+			nickname : randomNickname,
+			user : firebase.auth().currentUser.email
+		})
+		.then( () => {
+			console.log("nickname setting complete")
+		}).catch( (error) => {
+			console.log(error)
+		})
 	},
 	async nameConfirm(randomNickname){
 		let confirm = false

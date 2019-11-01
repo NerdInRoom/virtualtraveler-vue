@@ -37,6 +37,9 @@ export default new Vuex.Store({
 		getSelectedChatRoom(state) {
 			return state.selectedChatRoom;
 		}
+		// getNickname(state){
+		// 	return state.nickname;
+		// }
 	},
 	mutations: {
 		// User Auth Mutations
@@ -171,6 +174,16 @@ export default new Vuex.Store({
 				chatRoom
 			});
 			return;
+		},
+		async ramdomNickname(state){
+			try{
+				const result = await firebaseApi.emailRandomizeName();
+				state.commit('setNickname',result);
+				
+				return result;
+			} catch(error) {
+				throw error;
+			}
 		}
 	}
-})
+});
