@@ -1,6 +1,7 @@
 /* global kakao */
-
 export default {
+
+	// RoadView API
 	initRoadview (_this) {
 		const roadview = new kakao.maps.Roadview(_this.roadviewContainer);
 		const roadviewPosition = new kakao.maps.LatLng(
@@ -24,5 +25,66 @@ export default {
 			}
 			_this.$store.commit('setRoomLocation', changedLocationInfo);
 		});
+	},
+
+	// Map API
+	drawMap (mapContainer, position, currentLocation) {
+		return new Promise(resolve => {
+			const mapOption = {
+				// 지도 중심 좌표
+				center: new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude),
+				// 지도의 확대 레벨
+				level: 3,
+				// 지도종류
+				mapTypeId: kakao.maps.MapTypeId.ROADMAP 
+			};
+	
+			const map = new kakao.maps.Map(mapContainer, mapOption);
+
+			// const center = map.getCenter();
+			// currentLocation = {
+			// 	latitude: center.Ha,
+			// 	longitude: center.Ga
+			// }
+
+			// kakao.maps.event.addListener(map, 'dragend', function () {
+			// 	const center = map.getCenter();
+			// 	currentLocation = {
+			// 		latitude: center.Ha,
+			// 		longitude: center.Ga
+			// 	}
+			// 	console.log(currentLocation);
+			// });
+
+			resolve(map);
+		})
+	},
+	createMarker(center){
+		return new Promise(resolve => {
+			const rvClient = new kakao.maps.RoadviewClient();
+			const position = new kakao.maps.LatLng(center.Ha, center.Ga);
+
+			// 로드뷰 가능지점인지 체크
+			rvClient.getNearestPanoId(position, 50, function (panoId) {
+				if(panoId === null) {
+					throw new Error('🚗로드뷰를 지원하지 않는 지점입니다.');
+				} else {
+					const marker = new kakao.maps.Marker({
+						position,
+						clickable: true
+					});
+					marker.setDraggable(true);
+					resolve(marker);
+				}
+			});
+		});
+	},
+	drawMarker(map, marker) {
+		return new Promise(resolve => {
+			marker.setMap(map);
+		});
 	}
+
+
+
 }

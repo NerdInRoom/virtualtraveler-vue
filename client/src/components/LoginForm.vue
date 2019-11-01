@@ -23,6 +23,7 @@
 					required
 				></v-text-field>
 				<v-text-field
+					@keyup.enter="loginEnter"
 					v-model="password"
 					:rules="[passwordRules.required, passwordRules.min]"
 					:type="show ? 'text' : 'password'"
@@ -32,6 +33,7 @@
 					<v-btn
 						@click="loginWithEmail"
 						:disabled="!valid"
+						id="btn-login"
 						class="btn-login white--text title"
 						block
 						color="#4285F4"
@@ -54,7 +56,7 @@
 						구글로 로그인하기
 					</v-btn>
 					<v-btn
-						to="/signup"
+						to="/auth/signup"
 						class="btn-login white--text title"
 						block
 						color="#34A853"
@@ -74,7 +76,6 @@ export default {
 	data: () => ({
 		valid: false,
 		show: false,
-		nickname: '왓따빡',
 		email: '',
 		password: '',
 		emailRules: [
@@ -88,14 +89,17 @@ export default {
 		}
 	}),
 	methods: {
+		loginEnter() {
+			const loginBtn = document.getElementById('btn-login');
+			loginBtn.click();
+		},
 		async loginWithEmail() {
 			try {
 				const result = await this.$store.dispatch('loginWithEmail', {
 					email: this.email,
 					password: this.password,
-					nickname: this.nickname
 				});
-				this.$router.push('map');
+				this.$router.push('/');
 			} catch (error) {
 				const code = error.code;
 				const msg = error.message;
@@ -114,7 +118,7 @@ export default {
 		async loginWithGoogle() {
 			try {
 				const result = await this.$store.dispatch('loginWithGoogle');
-				this.$router.push('map');
+				this.$router.push('/');
 			} catch (error) {
 				const code = error.code;
 				const msg = error.message;

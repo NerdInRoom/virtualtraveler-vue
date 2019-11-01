@@ -78,7 +78,7 @@
 			</v-col>
 			<v-col cols="4">
 				<v-btn
-					to="/"
+					to="/auth/login"
 					class="btn-signup white--text title"
 					color="#EA4335"
 					block
@@ -118,7 +118,7 @@ export default {
 					password: this.password,
 					nickname: this.nickname
 				});
-				this.$router.push('map');
+				this.$router.push('/');
 			} catch (error) {
 				const code = error.code;
 				const msg = error.message;
@@ -137,7 +137,7 @@ export default {
 		async randomNickname(){
 			try{
 				const result = await this.$store.dispatch('ramdomNickname');
-				this.nickname = this.$store.getters.getNickname;
+				this.nickname = this.$store.getters.getNicknameByDraw;
 			} catch(error){
 				const code = error.code;
 				const msg = error.message;

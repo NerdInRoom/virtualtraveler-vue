@@ -2,84 +2,90 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 // Store에서는 '@'로 src 접근이 불가하다.
-import firebaseApi from '../api/firebaseApi';
+import firebaseApi from '../api/firebaseApi.js';
+import storage from '../utils/storage.js';
+import { HashMap } from '../utils/hashMap.js';
+
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		accessToken: "",
-		refreshToken: "",
-		user: "",
-		roomList: [
-			{
-			  roomId: 1,
-			  roomGPS: {
-				latitude: 37.501307,
-				longitude: 127.03966
-			  },
-			  roomOwnerId: "test@test.com"
+		loginState: storage.fetchLoginState(),
+		loginUser: storage.fetchLoginUser(),
+		chatRoomList: new HashMap(),
+		selectedChatRoom: {
+			title: '',
+			host:{
+				nickname: ''
 			}
-		],
-		roomInfoForChatDetail : "",
-		dialog:false,
-		nickname: ''
+		},
+		nicknameByDraw: ''
 	},
 	getters: {
-		getUser(state) {
-			return state.user;
+		// User Auth Getters
+		getLoginState(state) {
+			return state.loginState;
 		},
-		getRoomInfo: (state) => (id) => {
-			return state.roomList.find(room => room.roomId === id);
+		getLoginUser(state) {
+			return state.loginUser;
 		},
-		getRoomList(state) {
-			return state.roomList;
+
+		// Chat Room Getters
+		getChatRoomList(state) {
+			return state.chatRoomList;
 		},
-		getRoomInfoForChatDetail(state){
-			return state.roomInfoForChatDetail;
+		getSelectedChatRoom(state) {
+			return state.selectedChatRoom;
 		},
-		getDialog(state){
-			return state.dialog;
-		},
-		getNickname(state){
-			return state.nickname;
+		getNicknameByDraw(state){
+			return state.nicknameByDraw;
 		}
 	},
 	mutations: {
-		updateUser(state, payload){
-			state.user = payload.user;
+		// User Nickname Mutations
+		setNicknameByDraw(state, payload){
+			state.nicknameByDraw = payload;
 		},
-		setRoomLocation (state, changedInfo) {
-			state.roomList.forEach((room, index) => {
-				if (room.roomId === changedInfo.roomId) {
-					state.roomList[index].roomGPS.latitude = changedInfo.latitude
-					state.roomList[index].roomGPS.longitude = changedInfo.longitude
-				}
-			})
+		// User Auth Mutations
+		updateLoginState(state, payload){
+			state.loginState = payload;	
 		},
-		addRoom(state, roomInfo) {
-			state.roomList.push(roomInfo);
+		updateLoginUser(state, payload){
+			state.loginUser = payload;
 		},
-		setRoomInfoForChatDetail(state, roomInfo){
-			state.roomInfoForChatDetail = roomInfo;
+
+		// Chat Room Mutations
+		createChatRoom(state, payload) {
+			const email = payload.host.email;
+			const chatRoom = payload.chatRoom;
+			const map = state.chatRoomList.getAll();
+			// ES6 문법
+			const addedMap = { ...map, [email]: chatRoom};
+
+			state.chatRoomList.map = addedMap;
 		},
-		setDialog(state){
-			state.dialog = !state.dialog;
+		deleteChatRoom(state, payload){
+
 		},
-		setNickname(state, payload){
-			state.nickname = payload
+		selectChatRoom(state, payload){
+			state.selectedChatRoom = payload;
 		}
 	},
 	actions: {
-		addRoom(){
-			//파베에다 넣기
-		},
+		// User Auth Actions
 		async signup(state, payload){
 			try {
-				const result = await firebaseApi.signup(payload.email, payload.password, payload.nickname);
-				state.commit('updateUser', result);
-
-				return result;
+				const result = await firebaseApi.signup(payload.email, payload.password);
+				const loginUser = {
+					uid: result.user.uid,
+					email: result.user.email,
+					nickname: result.user.displayName
+				};
+				state.commit('updateLoginUser', loginUser);
+				state.commit('updateLoginState', true);
+				storage.login(loginUser);
+				return;
 			} catch (error) {
 				throw error;
 			}
@@ -87,9 +93,15 @@ export default new Vuex.Store({
 		async loginWithEmail(state, payload){
 			try {
 				const result = await firebaseApi.loginWithEmail(payload.email, payload.password);
-				state.commit('updateUser', result);
-
-				return result;
+				const loginUser = {
+					uid: result.user.uid,
+					email: result.user.email,
+					nickname: result.user.displayName
+				};
+				state.commit('updateLoginUser', loginUser);
+				state.commit('updateLoginState', true);
+				storage.login(loginUser);
+				return;
 			} catch (error) {
 				throw error;
 			}
@@ -97,19 +109,83 @@ export default new Vuex.Store({
 		async loginWithGoogle(state){
 			try {
 				const result = await firebaseApi.loginWithGoogle();
-				state.commit('updateUser', result);
-
-				return result;
+				const loginUser = {
+					uid: result.user.uid,
+					email: result.user.email,
+					nickname: result.user.displayName
+				};
+				state.commit('updateLoginUser', loginUser);
+				state.commit('updateLoginState', true);
+				storage.login(loginUser);
+				return;
 			} catch (error) {
 				throw error;
 			}
 		},
-		logout(){
+		async logout(state){
+			try {
+				await firebaseApi.logout();
+				const loginUser = null;
+				state.commit('updateLoginUser', loginUser);
+				state.commit('updateLoginState', false);
+				return;
+			} catch (error) {
+				throw error;
+			}
+		},
+
+		// Chat Room Actions
+		async createChatRoom(state, payload) {
+			const host = state.getters.getLoginUser;
+			const chatRoom = {
+				id: 1,
+				title: payload.title,
+				location: {
+					latitude: payload.latitude,
+					longitude: payload.longitude,
+					marker: payload.marker
+				},
+				host: {
+					uid: host.uid,
+					email: host.email,
+					nickname: host.nickname
+				},
+				guest: [
+						{
+							uid: "afadf",
+							nickname: "케로츄",
+							email: "eee@ndf.com"
+						},
+						{
+							uid: "afadf",
+							nickname: "슈슈밍",
+							email: "eee@ndf.com"
+						},
+						{
+							uid: "afadf",
+							nickname: "곽빛",
+							email: "eee@ndf.com"
+						},
+
+				],
+				chat: [
+
+				]
+			}
+			// Upload Firestore
+
+			state.commit('createChatRoom', {
+				host,
+				chatRoom
+			});
+			return;
 		},
 		async ramdomNickname(state){
 			try{
+				console.log("hit");
 				const result = await firebaseApi.emailRandomizeName();
-				state.commit('setNickname',result);
+				console.log(result);
+				state.commit('setNicknameByDraw',result);
 				
 				return result;
 			} catch(error) {
@@ -117,4 +193,4 @@ export default new Vuex.Store({
 			}
 		}
 	}
-})
+});
