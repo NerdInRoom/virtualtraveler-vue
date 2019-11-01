@@ -74,13 +74,6 @@ export default {
 			throw error;
 		}
 	},
-	getCurrentUser() {
-		firebase
-			.auth()
-			.onAuthStateChanged((user) => {
-			return user;
-		  });
-	},
 
 	/* FireStore */
 	async createChatRoom(chatRoom) {
@@ -100,18 +93,6 @@ export default {
 		data.roomId = roomId;
 		return data;
 	
-	},
-	// 필요없을 수 있음
-	fetchGPS() {
-		return new Promise((resolve, reject) => {
-			const currentRoom = store.getters.getRoom;
-			firestore.collection('chatRoomList').doc(currentRoom.roomId).onSnapshot((documentSnapshot) => {
-				let data = documentSnapshot.data();
-				data.roomId = currentRoom.roomId;
-				store.commit('updateCurrentRoom', data);
-				resolve(data);
-			}, reject);
-		});
 	},
 	fetchRoomList() {
 		return new Promise((resolve, reject) => {

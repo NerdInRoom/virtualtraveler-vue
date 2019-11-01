@@ -81,7 +81,7 @@ export default {
 	},
 	drawMarker(map, marker) {
 		return new Promise(resolve => {
-			marker.setMap(map);
+			resolve(marker.setMap(map));
 		});
 	}
 

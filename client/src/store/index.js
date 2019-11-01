@@ -139,8 +139,6 @@ export default new Vuex.Store({
 				throw error;
 			}
 		},
-		logout(){
-		},
 		async joinRoom(state, payload){
 			try {
 				const result = await firebaseApi.joinRoom(payload.id);
