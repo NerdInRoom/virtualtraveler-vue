@@ -13,17 +13,16 @@
 export default {
 	name: 'App',
 	mounted() {
-		this.$store.dispatch('setAuthListener');
-		this.$store.watch(() => {
-			const loginState = this.$store.getters.getLoginState;
-			if(loginState){
-				console.log("로그인 상태 입니다.");
-			} else {
-				console.log("로그인 안된 상태 입니다.");
-				this.$router.push('/auth/login');
-			}
-		});
+		navigator.geolocation.getCurrentPosition(this.permision_granted, this.permision_denide);
 	},
+	methods: {
+		permision_denide() {
+			alert("방구석 여행 서비스는 위치 정보가 반드시 필요합니다. 위치 정보 수집을 허가해주세요.");
+		},
+		permision_granted() {
+			console.log("위치 정보 수집 허가");
+		}
+	}
 };
 </script>
 <style>

@@ -10,7 +10,6 @@ import ChatRoomDetail from "@/components/ChatRoomDetail.vue";
 import ChatRoomList from "@/components/ChatRoomList.vue";
 
 export default {
-
 	components : {
 		ChatRoomDetail,
 		ChatRoomList

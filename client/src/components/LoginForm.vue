@@ -76,7 +76,6 @@ export default {
 	data: () => ({
 		valid: false,
 		show: false,
-		nickname: '왓따빡',
 		email: '',
 		password: '',
 		emailRules: [
@@ -99,7 +98,6 @@ export default {
 				const result = await this.$store.dispatch('loginWithEmail', {
 					email: this.email,
 					password: this.password,
-					nickname: this.nickname
 				});
 				this.$router.push('/');
 			} catch (error) {

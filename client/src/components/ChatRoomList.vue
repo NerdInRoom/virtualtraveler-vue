@@ -9,10 +9,10 @@
 			>
 				<v-list-item
 					:key="room.id"
-					v-for="room in chatRoomList"
+					v-for="room in this.getChatRoomList.map"
 				>
 					<v-list-item-content
-						@click="setRoomId(chat.roomId)"
+						@click="selectRoom(room.host.email)"
 					> 
 						<v-list-item-title>
 							No. {{ room.id }}
@@ -31,22 +31,20 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
 	data: () => ({
 		model: 1,
-		chatRoomList: ''
 	}),
-	mounted() {
-		this.$store.watch(() => {
-			this.chatRoomList = this.$store.getters.getChatRoomList;
-		});
-	},
+	computed: {
+        ...mapGetters(['getChatRoomList']),
+    },
 	methods: {
-		// setRoomId(roomId) {
-		// 	const roomInfo = this.$store.getters.getRoomInfo(Number(roomId));
-		// 	this.$store.commit('setRoomInfoForChatDetail', roomInfo);
-		// 	this.$store.commit('setDialog');
-		// }
+		selectRoom(email){
+			const selectedRoom = this.getChatRoomList.get(email);
+			this.$store.commit('selectChatRoom', selectedRoom);
+		}
 	}
 }
 </script>

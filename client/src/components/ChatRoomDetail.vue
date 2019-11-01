@@ -1,59 +1,50 @@
 <template>
 	<div class="chat-detail">
-		<!-- <div class="service-info">
+		<div class="room-info" v-if='isSelected'>
+			<h2 class="room-title"> {{ this.getSelectedChatRoom.title }} </h2>
+			<h3>🙋‍방장</h3>
+			<h4 class="room-host"> {{ this.getSelectedChatRoom.host.nickname }} </h4>
+			<h3>🏃‍♀️참가자‍</h3>
+			<h4 class="room-guest"> {{ this.guests }} </h4>
+			<h3>🧭현재위치</h3>
+			<h4 class="address">강남대로94번길 73</h4>
+		</div>
+		
+		<div class="service-info" v-else>
 			<img class="logo" src="@/images/logo1.png" />
 			<div class="text">
 				<h1 class="service-name">방구석 여행</h1>
 				<h3 class="slogan">웹으로 여행하자!</h3>
 			</div>
-		</div> -->
-		<div class="room-info">
-			<h2 class="room-title">윤병이의 강남여행</h2>
-			<h3>🙋‍방장</h3>
-			<h4 class="room-host">에라토스테네스의채</h4>
-			<h3>🏃‍♀️참가자‍</h3>
-			<h4 class="room-guest">곽빛, 슈밍, 민강, 냠냠맨</h4>
-			<h3>🧭현재위치</h3>
-			<h4 class="address">강남대로94번길 73</h4>
 		</div>
-
-		<!-- <v-dialog :value="getDialog" width="500" @click:outside="setDialog">
-			<v-card>
-				<v-card-title class="headline grey lighten-2" primary-title>
-					{{getRoomInfoForChatDetail.roomId}} 번 방
-				</v-card-title>
-
-				<v-card-text>
-					{{getRoomInfoForChatDetail}}
-				</v-card-text>
-
-				<v-btn color="red lighten-2" @click="startChatting(getRoomInfoForChatDetail.roomId)">
-					채팅 카즈아
-				</v-btn>
-				<v-divider></v-divider>
-
-			</v-card>
-		</v-dialog> -->
 	</div>
 </template>
 
 <script>
-import {
-    mapGetters
-} from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
-    data() {
-        return {}
+    computed: {
+		...mapGetters(['getSelectedChatRoom']),
+		guests: function() {
+			const people = new Array();
+			const guest = this.getSelectedChatRoom.guest;
+			for(let i in guest){
+				people.push(guest[i].nickname);
+			}
+			return people.join(', ');
+		},
+		isSelected: function() {
+			const title = this.getSelectedChatRoom.title;
+			if(title.length > 0){
+				return true;
+			} else {
+				return false;
+			}
+		}
     },
-    computed: mapGetters([
-        'getRoomInfoForChatDetail',
-        'getDialog',
-    ]),
     methods: {
-        setDialog() {
-            this.$store.commit('setDialog');
-        },
+        
         startChatting(roomId) {
             this.$router.push({
                 name: 'travel',

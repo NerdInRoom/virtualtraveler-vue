@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+import storage from '../utils/storage.js';
 import randomName from '../utils/randomName.js';
 
 // Firebase config
@@ -16,6 +17,16 @@ const config = {
 
 firebase.initializeApp(config);
 const firestore = firebase.firestore();
+
+firebase.auth().onAuthStateChanged(function(user) {
+	if (user) {
+		console.log("Log ON");
+	} else {
+		console.log("Log Off");
+		storage.logout();
+		storage.clear();
+	}
+});
 
 export default {
 	/* Firebase Auth */
@@ -63,7 +74,7 @@ export default {
 	},
 
 	/* FireStore */
-
+	
 	
 	/* Nickname */
 	async randomizeName(){

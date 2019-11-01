@@ -28,58 +28,60 @@ export default {
 	},
 
 	// Map API
-	initMap (_this, position) {
-		const mapContainer = _this.mapContainer;
-		const mapOption = {
-			// 지도 중심 좌표
-			center: new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude),
-			// 지도의 확대 레벨
-			level: 3,
-			// 지도종류
-			mapTypeId: kakao.maps.MapTypeId.ROADMAP 
-		};
-		const map = new kakao.maps.Map(mapContainer, mapOption);
-		const centerOfMap = map.getCenter();
+	drawMap (mapContainer, position, currentLocation) {
+		return new Promise(resolve => {
+			const mapOption = {
+				// 지도 중심 좌표
+				center: new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude),
+				// 지도의 확대 레벨
+				level: 3,
+				// 지도종류
+				mapTypeId: kakao.maps.MapTypeId.ROADMAP 
+			};
+	
+			const map = new kakao.maps.Map(mapContainer, mapOption);
 
-		_this.currentlatlng = {
-			latitude: centerOfMap.Ha,
-			longitude: centerOfMap.Ga
-		}
+			// const center = map.getCenter();
+			// currentLocation = {
+			// 	latitude: center.Ha,
+			// 	longitude: center.Ga
+			// }
 
-		kakao.maps.event.addListener(map, 'dragend', function () {
-			const centerOfMap = map.getCenter();
-			_this.currentlatlng = {
-				latitude: centerOfMap.Ha,
-				longitude: centerOfMap.Ga
-			}
-		});
+			// kakao.maps.event.addListener(map, 'dragend', function () {
+			// 	const center = map.getCenter();
+			// 	currentLocation = {
+			// 		latitude: center.Ha,
+			// 		longitude: center.Ga
+			// 	}
+			// 	console.log(currentLocation);
+			// });
 
-		_this.map = map;
+			resolve(map);
+		})
 	},
-	createMarker(_this, title, location){
+	createMarker(center){
 		return new Promise(resolve => {
 			const rvClient = new kakao.maps.RoadviewClient();
-			const position = new kakao.maps.LatLng(location.latitude, location.longitude);
+			const position = new kakao.maps.LatLng(center.Ha, center.Ga);
+
 			// 로드뷰 가능지점인지 체크
 			rvClient.getNearestPanoId(position, 50, function (panoId) {
 				if(panoId === null) {
-					alert('🚗로드뷰를 지원하지 않는 지점입니다.');
+					throw new Error('🚗로드뷰를 지원하지 않는 지점입니다.');
 				} else {
 					const marker = new kakao.maps.Marker({
 						position,
-						clickable: true,
-						title
+						clickable: true
 					});
 					marker.setDraggable(true);
-					_this.markerList.push(marker);
-					resolve();
+					resolve(marker);
 				}
 			});
 		});
 	},
-	drawMarker(_this, marker) {
+	drawMarker(map, marker) {
 		return new Promise(resolve => {
-			marker.setMap(_this.map);
+			marker.setMap(map);
 		});
 	}
 
