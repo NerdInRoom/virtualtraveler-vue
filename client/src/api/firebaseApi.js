@@ -1,8 +1,8 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
-import store from '../store/index.js'
-// import randomName from '@util/randomName.js';
+import storage from '../utils/storage.js';
+import randomName from '../utils/randomName.js';
 
 // Firebase config
 /* const config = {
@@ -26,8 +26,17 @@ const config = {
 firebase.initializeApp(config);
 const firestore = firebase.firestore();
 
-export default {
+firebase.auth().onAuthStateChanged(function(user) {
+	if (user) {
+		console.log("Log ON");
+	} else {
+		console.log("Log Off");
+		storage.logout();
+		storage.clear();
+	}
+});
 
+export default {
 	/* Firebase Auth */
 	async signup(email, password, nickname) {
 		try {
@@ -35,6 +44,7 @@ export default {
 			await result.user.updateProfile({
 				displayName: nickname
 			});
+			await this.addNicknameInPool(nickname);
 			return result;
 		} catch (error) {
 			throw error;
@@ -53,21 +63,23 @@ export default {
 
 		try {
 			const result = await firebase.auth().signInWithPopup(provider);
+			const confirm = await this.userNameConfirm(result.user.email);
+			if(confirm == true){
+				await result.user.updateProfile({
+					displayName: await this.googleRandomizeName()
+				});
+			}
 			return result;
 		} catch (error) {
 			throw error;
 		}
 	},
-	logout() {
-		firebase
-			.auth()
-			.signOut()
-			.then(() => {
-				return true;
-        	}).catch((err) => {
-				console.log("[" + err.code + "] " + err.message);
-				return false;
-        });
+	async logout() {
+		try {
+			await firebase.auth().signOut();
+		} catch (error) {
+			throw error;
+		}
 	},
 	getCurrentUser() {
 		firebase
@@ -147,5 +159,64 @@ export default {
 				resolve(roomList);
 			}, reject);
 		});
+	},
+	/* FireStore */
+	async emailRandomizeName(){
+		while(true){
+            const randomNickname = randomName.randomizeName()
+			let confirm = await this.nameConfirm(randomNickname)
+			if(confirm == true){
+				return randomNickname
+			}
+		}
+	},
+	async googleRandomizeName(){
+        while(true){
+            const randomNickname = randomName.randomizeName()
+            let confirm = await this.nameConfirm(randomNickname)
+            if(confirm == true){
+                await this.addNicknameInPool(randomNickname)
+                return randomNickname
+            }
+        }
+	},
+	async addNicknameInPool(randomNickname){
+		await firestore.collection('nicknamePool').doc(randomNickname).set({
+			nickname : randomNickname,
+			user : firebase.auth().currentUser.email
+		})
+		.then( () => {
+			console.log("nickname setting complete")
+		}).catch( (error) => {
+			console.log(error)
+		})
+	},
+	async nameConfirm(randomNickname){
+		let confirm = false
+		await firestore.collection('nicknamePool').doc(randomNickname).get().then(
+            (doc) => {
+                if(doc.exists){
+                    confirm = false
+                } else{
+                    confirm = true
+				}
+				return confirm
+            }
+		)
+		return confirm
+	},
+	async userNameConfirm(email){
+		let confirm = false
+		await firestore.collection('nicknamePool').where('user', '==', email).get().then(
+			(doc) => {
+				if(doc.empty){
+					confirm = true
+				}else{
+					confirm = false
+				}
+				return confirm
+			}
+		)
+		return confirm
 	}
 }

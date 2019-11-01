@@ -34,6 +34,35 @@
 			class="row"
 			align="center"
 			justify="center"
+		>			
+			<v-col 
+				v-if="nickname!=''"
+				cols="7">
+				닉네임 : "{{nickname}}"
+			</v-col>
+			<v-col 
+				v-if="nickname==''"
+				cols="7">
+				닉네임 : 설정 중......
+			</v-col>
+			<v-col cols="3">
+				<v-btn
+					@click="randomNickname"
+					large
+					color="rgb(142, 33, 165)"
+					dark
+				>
+					<v-icon>
+						mdi-refresh
+					</v-icon>
+					바꾸기
+				</v-btn>
+			</v-col>
+		</v-row>
+		<v-row
+			class="row"
+			align="center"
+			justify="center"
 		>
 			<v-col cols="4">
 				<v-btn
@@ -49,7 +78,7 @@
 			</v-col>
 			<v-col cols="4">
 				<v-btn
-					to="/"
+					to="/auth/login"
 					class="btn-signup white--text title"
 					color="#EA4335"
 					block
@@ -69,6 +98,7 @@ export default {
 		show: false,
 		email: '',
 		password: '',
+		nickname: '',
 		emailRules: [
 		v => !!v || '이메일을 입력하세요.',
 		v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '유효하지 않은 이메일 입니다.'
@@ -85,9 +115,10 @@ export default {
 			try {
 				const result = await this.$store.dispatch('signup', {
 					email: this.email,
-					password: this.password
+					password: this.password,
+					nickname: this.nickname
 				});
-				this.$router.push('map');
+				this.$router.push('/');
 			} catch (error) {
 				const code = error.code;
 				const msg = error.message;
@@ -101,11 +132,22 @@ export default {
 				// } else if (code === 'auth/weak-password'){
 
 				// }
+			}			
+		},
+		async randomNickname(){
+			try{
+				const result = await this.$store.dispatch('ramdomNickname');
+				this.nickname = this.$store.getters.getNicknameByDraw;
+			} catch(error){
+				const code = error.code;
+				const msg = error.message;
+				console.log("[" + code + "] " + msg);
 			}
-			
-			
 		}
-	}
+	},
+	created() {
+		this.randomNickname()
+	},
 }
 </script>
 

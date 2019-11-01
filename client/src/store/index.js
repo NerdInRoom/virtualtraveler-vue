@@ -2,35 +2,68 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 // Store에서는 '@'로 src 접근이 불가하다.
-import firebaseApi from '../api/firebaseApi';
+import firebaseApi from '../api/firebaseApi.js';
+import storage from '../utils/storage.js';
+import { HashMap } from '../utils/hashMap.js';
+
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		accessToken: "",
-		refreshToken: "",
-		user: "",
-		roomList: [],
-		currentRoom: ""
+		loginState: storage.fetchLoginState(),
+		loginUser: storage.fetchLoginUser(),
+		chatRoomList: new HashMap(),
+		selectedChatRoom: {
+			title: '',
+			host:{
+				nickname: ''
+			}
+		},
+		nicknameByDraw: ''
 	},
 	getters: {
-		getUser(state) {
-			return state.user;
+		// User Auth Getters
+		getLoginState(state) {
+			return state.loginState;
 		},
-		getRoom(state) {
-			return state.currentRoom;
+		getLoginUser(state) {
+			return state.loginUser;
 		},
-		getRoomInfo: (state) => (id) => {
-			return state.roomList.find(room => room.roomId === id);
+
+		// Chat Room Getters
+		getChatRoomList(state) {
+			return state.chatRoomList;
 		},
-		getRoomList(state) {
-			return state.roomList;
+		getSelectedChatRoom(state) {
+			return state.selectedChatRoom;
+		},
+		getNicknameByDraw(state){
+			return state.nicknameByDraw;
 		}
 	},
 	mutations: {
-		updateUser(state, payload){
-			state.user = payload.user;
+		// User Nickname Mutations
+		setNicknameByDraw(state, payload){
+			state.nicknameByDraw = payload;
+		},
+		// User Auth Mutations
+		updateLoginState(state, payload){
+			state.loginState = payload;	
+		},
+		updateLoginUser(state, payload){
+			state.loginUser = payload;
+		},
+
+		// Chat Room Mutations
+		createChatRoom(state, payload) {
+			const email = payload.host.email;
+			const chatRoom = payload.chatRoom;
+			const map = state.chatRoomList.getAll();
+			// ES6 문법
+			const addedMap = { ...map, [email]: chatRoom};
+
+			state.chatRoomList.map = addedMap;
 		},
 		updateCurrentRoom(state, payload){
 			state.currentRoom = payload;
@@ -49,22 +82,27 @@ export default new Vuex.Store({
 				}
 			})
 		},
-		addRoom(state, roomInfo) {
-			state.roomList.push(roomInfo);
+		deleteChatRoom(state, payload){
+
+		},
+		selectChatRoom(state, payload){
+			state.selectedChatRoom = payload;
 		}
 	},
 	actions: {
-		addRoom(){
-			//파베에다 넣기
-		},
+		// User Auth Actions
 		async signup(state, payload){
 			try {
-				const result = await firebaseApi.signup(payload.email, payload.password, payload.nickname);
-				console.log(result);
-				await firebaseApi.addUser(result.user);
-				state.commit('updateUser', result);
-
-				return result;
+				const result = await firebaseApi.signup(payload.email, payload.password);
+				const loginUser = {
+					uid: result.user.uid,
+					email: result.user.email,
+					nickname: result.user.displayName
+				};
+				state.commit('updateLoginUser', loginUser);
+				state.commit('updateLoginState', true);
+				storage.login(loginUser);
+				return;
 			} catch (error) {
 				throw error;
 			}
@@ -72,9 +110,15 @@ export default new Vuex.Store({
 		async loginWithEmail(state, payload){
 			try {
 				const result = await firebaseApi.loginWithEmail(payload.email, payload.password);
-				state.commit('updateUser', result);
-
-				return result;
+				const loginUser = {
+					uid: result.user.uid,
+					email: result.user.email,
+					nickname: result.user.displayName
+				};
+				state.commit('updateLoginUser', loginUser);
+				state.commit('updateLoginState', true);
+				storage.login(loginUser);
+				return;
 			} catch (error) {
 				throw error;
 			}
@@ -82,54 +126,90 @@ export default new Vuex.Store({
 		async loginWithGoogle(state){
 			try {
 				const result = await firebaseApi.loginWithGoogle();
-				await firebaseApi.addUser(result.user);
-				state.commit('updateUser', result);
-
-				return result;
+				const loginUser = {
+					uid: result.user.uid,
+					email: result.user.email,
+					nickname: result.user.displayName
+				};
+				state.commit('updateLoginUser', loginUser);
+				state.commit('updateLoginState', true);
+				storage.login(loginUser);
+				return;
 			} catch (error) {
 				throw error;
 			}
 		},
-		logout(){
-		},
-		async makeChatRoom(state, payload){
+		async logout(state){
 			try {
-				const result = await firebaseApi.makeChatRoom(payload.roomName, payload.gpsX, payload.gpsY);
-				state.commit('updateCurrentRoom', result);
-				
-				return result;
+				await firebaseApi.logout();
+				const loginUser = null;
+				state.commit('updateLoginUser', loginUser);
+				state.commit('updateLoginState', false);
+				return;
 			} catch (error) {
 				throw error;
 			}
 		},
-		async joinRoom(state, payload){
-			try {
-				const result = await firebaseApi.joinRoom(payload.roomId);
-				state.commit('updateCurrentRoom', result);
 
-				return result;
-			} catch (error) {
-				
+		// Chat Room Actions
+		async createChatRoom(state, payload) {
+			const host = state.getters.getLoginUser;
+			const chatRoom = {
+				id: 1,
+				title: payload.title,
+				location: {
+					latitude: payload.latitude,
+					longitude: payload.longitude,
+					marker: payload.marker
+				},
+				host: {
+					uid: host.uid,
+					email: host.email,
+					nickname: host.nickname
+				},
+				guest: [
+						{
+							uid: "afadf",
+							nickname: "케로츄",
+							email: "eee@ndf.com"
+						},
+						{
+							uid: "afadf",
+							nickname: "슈슈밍",
+							email: "eee@ndf.com"
+						},
+						{
+							uid: "afadf",
+							nickname: "곽빛",
+							email: "eee@ndf.com"
+						},
+
+				],
+				chat: [
+
+				]
 			}
+			// Upload Firestore
+
+			state.commit('createChatRoom', {
+				host,
+				chatRoom
+			});
+			return;
 		},
-		async fetchRoomList(state){
-			try {
-				const result = await firebaseApi.fetchRoomList();
-		
-				return result;
-			} catch (error) {
+		async ramdomNickname(state){
+			try{
+				console.log("hit");
+				const result = await firebaseApi.emailRandomizeName();
+				console.log(result);
+				state.commit('setNicknameByDraw',result);
 				
-			}
-		},
-		async fetchGPS(state){
-			try {
-				const result = await firebaseApi.fetchGPS();
 				return result;
-			} catch (error) {
-				
+			} catch(error) {
+				throw error;
 			}
 		}
 
 		
 	}
-})
+});

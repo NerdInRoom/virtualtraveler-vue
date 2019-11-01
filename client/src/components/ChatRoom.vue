@@ -88,7 +88,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 	.room {
-		width: 300px;
 		display: flex;
 		flex-direction: column;
 		padding: 0;
@@ -112,7 +111,7 @@ export default {
 				}
 				.sendbtn {
 					margin-bottom: 5px;
-					margin-left: 9px;
+					margin-left: 6%;
 					margin-right: 5px;
 					color: #381e1f;
 					-webkit-transition: all 0.3s ease-in-out;
@@ -239,6 +238,7 @@ export default {
 				}
 				.room-traveler {
 					display: block;
+					margin-top: 5px;
 					font-size: 10px;
 				}
 			}
