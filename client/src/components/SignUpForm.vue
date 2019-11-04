@@ -112,6 +112,9 @@ export default {
 			//emailMatch: () => ('이메일 또는 비밀번호가 틀렸습니다.'),
 		}
 	}),
+	mounted() {
+		this.randomNickname()
+	},
 	methods: {
 		signupEnter() {
 			const signBtn = document.getElementById('btn-signup');
@@ -150,9 +153,6 @@ export default {
 				console.log("[" + code + "] " + msg);
 			}
 		}
-	},
-	created() {
-		this.randomNickname()
 	},
 }
 </script>

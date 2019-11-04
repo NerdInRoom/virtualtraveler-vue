@@ -59,13 +59,11 @@ export default {
 		}
 	},
 	async created() {
-		console.log('craeted');
 		this.unsubscribe = await this.$store.dispatch('fetchChatRoom', this.$store.getters.getSelectedId);
 		if(!this.isHost){
 			this.unwatch = this.$store.watch(
 				() => this.getOnlineChatRoom,
 				(chatRoom) => {
-					console.log(chatRoom)
 					kakaomapAPI.roadviewChangedEventHandler(this, chatRoom);
 				}
 			);

@@ -24,7 +24,6 @@ export default {
 				latitude: changedLocation.Ha,
 				longitude: changedLocation.Ga
 			}
-			console.log(_this.roadview.getViewpoint())
 			_this.$store.dispatch('setRoomLocation', changedLocationInfo);
 		});
 

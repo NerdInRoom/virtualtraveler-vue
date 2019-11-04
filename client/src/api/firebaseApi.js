@@ -21,9 +21,9 @@ const firestore = firebase.firestore();
 
 firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
-		console.log("Log ON");
+		//console.log("Log ON");
 	} else {
-		console.log("Log Off");
+		//console.log("Log Off");
 		storage.logout();
 		storage.clear();
 	}
@@ -136,20 +136,16 @@ export default {
 		return new Promise((resolve, reject) => {
 			const unsubscribe =
 				firestore.collection('chatRooms').onSnapshot((chatRoomsData) => {
-					console.log('onSnapShot Rooms')
 					chatRoomsData.docChanges().forEach(async function(change) {
 						const id = change.doc.id;
 						const chatRoom = change.doc.data();
 						if (change.type === "added") {
-							console.log("add chat room IN API");
 							state.dispatch('addChatRoom', {id, chatRoom});
 						}
 						if (change.type === "modified") {
-							console.log("edit chat room IN API");
 							state.dispatch('editChatRoom', {id, chatRoom});
 						}
 						if (change.type === "removed") {
-							console.log("delete chat room IN API");
 							state.dispatch('deleteChatRoom', id);
 						}
 					});

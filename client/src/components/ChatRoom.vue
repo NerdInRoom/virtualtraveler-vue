@@ -86,13 +86,8 @@ export default {
 		},
 	},
 	updated() {
+		con
 		this.scrollBottom();
-	},
-	created() {
-		if(!this.getOnlineChatRoom) {
-			this.$router.push('/');
-			alert("Host가 퇴장하여 방이 사라졌습니다.");
-		}
 	},
 	mounted() {
 		firebaseApi.fetchChatLog(this.getOnlineChatRoom.id, this);

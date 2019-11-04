@@ -251,9 +251,9 @@ export default {
 }
 .searchFrom{
 	left: 480px;
-    top: 25px;
+    top: 22px;
 	position: fixed;
-	height: 30px;
+	height: 40px;
 	width: 300px;
 	border-radius: 20px;
 	z-index: 9999;
