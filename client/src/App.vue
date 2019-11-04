@@ -1,32 +1,50 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+	<v-app>
+		<transition
+			name="fade"
+			mode="out-in"
+		>
+			<router-view></router-view>
+		</transition>
+	</v-app>
 </template>
 
+<script>
+export default {
+	name: 'App',
+	mounted() {
+		navigator.geolocation.getCurrentPosition(this.permision_granted, this.permision_denide);
+	},
+	methods: {
+		permision_denide() {
+			alert("방구석 여행 서비스는 위치 정보가 반드시 필요합니다. 위치 정보 수집을 허가해주세요.");
+		},
+		permision_granted() {
+			console.log("위치 정보 수집 허가");
+		}
+	}
+};
+</script>
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+	@font-face { 
+		font-family: 'yg-jalnan';
+		src:url( fonts/yg-jalnan.woff );
+	}
 
-#nav {
-  padding: 30px;
-}
+	* { 
+		font-family: 'yg-jalnan';
+	}
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+	/* 컴포넌트 변화시 트랜지션 */
+	.fade-enter-active,
+	.fade-leave-active {
+	transition-duration: 0.3s;
+	transition-property: opacity;
+	transition-timing-function: ease;
+	}
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+	.fade-enter,
+	.fade-leave-active {
+	opacity: 0
+	}
 </style>

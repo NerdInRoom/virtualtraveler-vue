@@ -1,6 +1,8 @@
 # FireBase
 
-> 2019-10-16 (작성자: 강민) , 2019-10-22 (작성자: 강민), 2019-10-23 (작성자: 강민)
+> 2019-10-16 (작성자: 강민), 2019-10-22 (작성자: 강민), 
+>
+> 2019-10-23 (작성자: 강민), 2019-10-31 (작성자: 강민)
 
 ### 환경 설정과정
 
@@ -195,7 +197,37 @@
     });
     ```
 
-    
+
+
+
+### Firestore Query
+
+- Firestore에서 특정한 데이터를 가져오는 쿼리기능을 제공한다
+
+- 앞서 데이터를 가져오는 get()과 onSnapshot()을 함께 사용이 가능하다
+
+- where("*fieldPath*", "*fillterOption*","*value*")
+
+  - 어떤 document의 '*field(Key)*'가 '*filterOption*'에 맞는 '*value*'인 것을 파악하고 query를 반환
+  - filterOption은 비교 연산자이며 총 6가지만 있다
+    - `<`, `<=`, `==`, `>=`, `>` : 단순 비교 연산자
+    - `array-contains` : field에 value가 포함되는지 확인하는 연산자, 배열 값 기준 필터링
+  - 위 6가지 의외 다른 연산자 사용( !=, OR 등)은 지원되지 않는다.
+
+  ```javascript
+  firestore.collection('nicknamePool').where('user', '==', email).get().then(
+  	(doc) => {
+  		if(doc.empty){
+  			confirm = true
+  		}else{
+  			confirm = false
+  		}
+  		return confirm
+  	}
+  )
+  ```
+
+  
 
 
 
@@ -203,10 +235,4 @@
 
 - https://www.youtube.com/watch?v=ifOzAyR1cG4 
 - https://firebase.google.com/docs/reference/js?hl=ko 
-
-
-
-(!!) 참여 중인 방이 폭파 될때는?
-
-(!!) timestamp를 원하는 date format으로 => util.js
 
