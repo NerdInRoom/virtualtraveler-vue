@@ -30,9 +30,9 @@ import { mapGetters } from "vuex";
 
 export default {
 	computed: {
-		...mapGetters(['getSelectedChatRoom', 'getSelectedId', 'getLoginUser']),
+		...mapGetters(['getOnlineChatRoom', 'getSelectedId', 'getLoginUser']),
 		isHost(){
-			return this.getSelectedChatRoom.host.email === this.getLoginUser.email;
+			return this.getOnlineChatRoom.host.email === this.getLoginUser.email;
 		}
 	},
 	methods: {
@@ -63,7 +63,7 @@ export default {
 		this.unsubscribe = await this.$store.dispatch('fetchChatRoom', this.$store.getters.getSelectedId);
 		if(!this.isHost){
 			this.unwatch = this.$store.watch(
-				() => this.getSelectedChatRoom,
+				() => this.getOnlineChatRoom,
 				(chatRoom) => {
 					console.log(chatRoom)
 					kakaomapAPI.roadviewChangedEventHandler(this, chatRoom);

@@ -188,7 +188,7 @@ export default {
 				const room = {
 					title: this.title,
 					location: this.location,
-					// viewPoint: this.viewPoint
+					viewPoint: this.viewPoint
 				};
 				await this.$store.dispatch('createChatRoom', room);
 				storage.join(this.getOnlineChatRoom);

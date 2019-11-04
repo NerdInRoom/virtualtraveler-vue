@@ -78,15 +78,15 @@ export default {
 	/* Chat Room */
 	async createChatRoom(chatRoom) {
 		try {
-			const docRef = await firestore.collection('chatRoomList').add(chatRoom);
-			await firestore.collection('chatRoomList').doc(docRef.id).update({id: docRef.id});
+			const docRef = await firestore.collection('chatRooms').add(chatRoom);
+			await firestore.collection('chatRooms').doc(docRef.id).update({id: docRef.id});
 			return docRef.id;
 		} catch (error) {
 			throw error;
 		}
 	},
 	async setRoomLocation(roomId, changedInfo){
-		await firestore.collection('chatRoomList').doc(roomId).update({
+		await firestore.collection('chatRooms').doc(roomId).update({
 			location: {
 				latitude: changedInfo.latitude,
 				longitude: changedInfo.longitude
@@ -94,12 +94,12 @@ export default {
 		});
 	},
 	async setViewPoint(roomId, changedViewPoint){
-		await firestore.collection('chatRoomList').doc(roomId).update({
+		await firestore.collection('chatRooms').doc(roomId).update({
 			viewPoint: changedViewPoint
 		});
 	},
 	async joinChatRoom(chatRoom, user) {
-		await firestore.collection('chatRoomList').doc(chatRoom.id).set(
+		await firestore.collection('chatRooms').doc(chatRoom.id).set(
 			{ guest: [
 						user
 					]
@@ -113,7 +113,7 @@ export default {
 			});
 		},
 	async outChatRoom(chatRoom, user){
-		await firestore.collection('chatRoomList').doc(chatRoom.id).update({
+		await firestore.collection('chatRooms').doc(chatRoom.id).update({
 			guest: firebase.firestore.FieldValue.arrayRemove({
 				...user
 			})
@@ -128,7 +128,7 @@ export default {
 	fetchChatRooms(state) {
 		return new Promise((resolve, reject) => {
 			const unsubscribe =
-				firestore.collection('chatRoomList').onSnapshot((chatRoomsData) => {
+				firestore.collection('chatRooms').onSnapshot((chatRoomsData) => {
 					console.log('onSnapShot Rooms')
 					chatRoomsData.docChanges().forEach(async function(change) {
 						const id = change.doc.id;
@@ -153,7 +153,7 @@ export default {
 	fetchChatRoom(state, id) {
 		return new Promise((resolve, reject) => {
 			const unsubscribe =
-				firestore.collection('chatRoomList').doc(id).onSnapshot((chatRoomData) => {
+				firestore.collection('chatRooms').doc(id).onSnapshot((chatRoomData) => {
 					const id = chatRoomData.id;
 					const chatRoom = chatRoomData.data();
 					state.commit('updateOnlineChatRoom', chatRoom);

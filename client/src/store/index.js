@@ -300,7 +300,7 @@ export default new Vuex.Store({
 			// Upload Firestore
 			const id = await firebaseApi.createChatRoom(chatRoom);
 			state.commit('updateSelectedId', id);
-			state.commit('updateOnlineChatRoom', state.chatRooms.get(id));
+			state.commit('updateOnlineChatRoom', state.getters.getChatRooms.get(id));
 			return;
 		}
 	}
