@@ -30,11 +30,11 @@ import { mapGetters } from "vuex";
 
 export default {
 	computed: {
-		...mapGetters(['getSelectedChatRoom', 'getSelectedId', 'getLoginUser'])
+		...mapGetters(['getOnlineChatRoom', 'getSelectedId', 'getLoginUser'])
 	},
 	methods: {
 			checkControlAuthority(){
-				if (this.getSelectedChatRoom.host.email !== this.getLoginUser.email) {
+				if (this.getOnlineChatRoom.host.email !== this.getLoginUser.email) {
 					this.roadviewContainer.style.pointerEvents = 'none';
 					document.getElementById('roadviewWrapper').addEventListener('click', () => {
 						this.dialog=true;
@@ -55,17 +55,16 @@ export default {
 		}
 	},
 	async created() {
-		console.log('craeted');
-		this.unsubscribe = await this.$store.dispatch('fetchChatRoom', this.$store.getters.getSelectedId);
+		this.unsubscribe = await this.$store.dispatch('fetchChatRoom', this.getSelectedId);
 		this.unwatch = this.$store.watch(
-			() => this.getSelectedChatRoom,
+			() => this.getOnlineChatRoom,
 			(chatRoom) => {
 				// kakaomapAPI.roadviewChangedEventHandler(this, chatRoom);
 			}
 		);
 	},
 	async mounted () {
-		this.roomInfo = this.$store.getters.getSelectedChatRoom;
+		this.roomInfo = this.$store.getters.getOnlineChatRoom;
 		this.roadviewContainer = document.getElementById('roadview');
 		await kakaomapAPI.initRoadview(this);
 		this.checkControlAuthority(); // 방장만 로드뷰 조작

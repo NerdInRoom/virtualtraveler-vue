@@ -49,12 +49,12 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['getLoginUser', 'getSelectedChatRoom']),
+		...mapGetters(['getLoginUser', 'getOnlineChatRoom']),
 	},
 	methods: {
 		async exit(){
 			const user = this.getLoginUser;
-			const chatRoom = this.getSelectedChatRoom;
+			const chatRoom = this.getOnlineChatRoom;
 			if(user.uid === chatRoom.host.uid){
 				// 호스트가 나갈 때
 			} else {

@@ -156,7 +156,7 @@ export default {
 				firestore.collection('chatRoomList').doc(id).onSnapshot((chatRoomData) => {
 					const id = chatRoomData.id;
 					const chatRoom = chatRoomData.data();
-					state.commit('updateSelectedId', id);
+					state.commit('updateOnlineChatRoom', chatRoom);
 					state.commit('editChatRoom', {id, chatRoom});
 				});
 			resolve(unsubscribe);

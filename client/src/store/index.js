@@ -19,6 +19,7 @@ export default new Vuex.Store({
 		chatRooms: new HashMap(),
 		markers: new HashMap(),
 		selectedId: null,
+		onlineChatRoom: storage.fetchOnlineChatRoom(),
 
 		chatMessages: null
 	},
@@ -52,8 +53,8 @@ export default new Vuex.Store({
 		},
 
 
-		getSelectedChatRoom(state) {
-			return state.chatRooms.get(state.selectedId);
+		getOnlineChatRoom(state) {
+			return state.onlineChatRoom;
 		},
 		getSelectedId(state) {
 			return state.selectedId;
@@ -111,10 +112,12 @@ export default new Vuex.Store({
 			
 			state.markers.put(marker.title, marker);
 		},
-
-		
+		updateOnlineChatRoom(state, chatRoom){
+			state.onlineChatRoom = chatRoom;
+		},
 		updateSelectedId(state, id){
 			state.selectedId = id;
+			state.onlineChatRoom = state.chatRooms.get(id);
 		}
 	},
 	actions: {
@@ -297,6 +300,7 @@ export default new Vuex.Store({
 			// Upload Firestore
 			const id = await firebaseApi.createChatRoom(chatRoom);
 			state.commit('updateSelectedId', id);
+			state.commit('updateOnlineChatRoom', state.chatRooms.get(id));
 			return;
 		}
 	}

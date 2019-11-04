@@ -12,19 +12,11 @@ import RoadView from '@/components/RoadView.vue';
 import BackButton from '@/components/BackButton.vue';
 
 export default {
-  components: {
-	ChatRoom,
-	RoadView,
-	BackButton
-  },
-  created() {
-	  window.onpageshow = (event) => {
-		  if(event.persisted) {
-				console.log("뒤로가기 눌렀음!");
-	  			// await firebaseapi.outChatRoom(chatRoom, user);
-		  }
-	  }
-  }
+	components: {
+		ChatRoom,
+		RoadView,
+		BackButton
+	},
 }
 </script>
 <style scoped>

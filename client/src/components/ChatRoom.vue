@@ -2,10 +2,10 @@
 <div class="room">
 	<div class="panel"></div>
 	<div class="chat-header">
-		<h1 class="room-title ya"> {{ this.getSelectedChatRoom.title }} </h1>
+		<h1 class="room-title ya"> {{ this.getOnlineChatRoom.title }} </h1>
 		<div class="room-info">
 			<span class="room-master">
-				<span class="ya">운전자</span> {{ this.getSelectedChatRoom.host.nickname }} <span class="ya">님</span>
+				<span class="ya">운전자</span> {{ this.getOnlineChatRoom.host.nickname }} <span class="ya">님</span>
 			</span>
 			<span class="room-traveler">
 				<span class="ya">동승자</span> {{ this.guests }} <span class="ya">님</span>
@@ -67,8 +67,7 @@
 <script>
 import { mapGetters } from "vuex";
 import firebaseApi from "../api/firebaseApi.js";
-import time from "../utils/time.js";
-
+import storage from "../utils/storage.js";
 
 export default {
 	data: () => ({
@@ -76,10 +75,10 @@ export default {
 		chatLog: null
 	}),
 	computed: {
-		...mapGetters(['getSelectedChatRoom','getLoginUser', 'getChatLog']),
+		...mapGetters(['getOnlineChatRoom','getLoginUser', 'getChatLog']),
 		guests: function() {
 			const people = new Array();
-			const guest = this.getSelectedChatRoom.guest;
+			const guest = this.getOnlineChatRoom.guest;
 			for(let i in guest){
 				people.push(guest[i].nickname);
 			}
@@ -90,7 +89,11 @@ export default {
 		this.scrollBottom();
 	},
 	mounted() {
-		firebaseApi.fetchChatLog(this.getSelectedChatRoom.id, this);
+		firebaseApi.fetchChatLog(this.getOnlineChatRoom.id, this);
+	},
+	beforeDestroy() {
+		storage.disJoin();
+		firebaseApi.outChatRoom(this.getOnlineChatRoom, this.getLoginUser);
 	},
 	methods: {
 		isMine(sender){
@@ -107,7 +110,7 @@ export default {
 				content: this.inputText,
 				createdAt: ""
 			}
-			firebaseApi.sendMessage(this.getSelectedChatRoom.id, message);
+			firebaseApi.sendMessage(this.getOnlineChatRoom.id, message);
 			this.clearInput();
 		},
 		scrollBottom(){
