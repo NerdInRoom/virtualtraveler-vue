@@ -109,8 +109,7 @@ export default new Vuex.Store({
 		},
 		editMarker(state, marker) {
 			// 	marker: marker object
-			
-			state.markers.put(marker.title, marker);
+			state.markers.put(marker.getTitle(), marker);
 		},
 		updateOnlineChatRoom(state, chatRoom){
 			state.onlineChatRoom = chatRoom;
@@ -227,11 +226,9 @@ export default new Vuex.Store({
 			// 	id: chatRoomId,
 			// 	chatRoom: chatRoom obj
 			// }
-			//const marker = state.getters.getMarker(payload.id);
 			await state.commit('editChatRoom', payload);
-			// await state.dispatch('editMarker', marker);
+			await state.dispatch('editMarker', payload);
 		},
-		
 		
 		//Marker Actions
 		async addMarker(state, payload){
@@ -257,13 +254,16 @@ export default new Vuex.Store({
 
 			}
 		},
-		async editMarker(state, marker){
+		async editMarker(state, payload){
 			// payload: {
 			// 	id: 
 			// 	chatRoom: chatRoom object
 			// }
-			
 			try {
+				const latitude = payload.chatRoom.location.latitude;
+				const longitude = payload.chatRoom.location.longitude;
+				const marker = state.getters.getMarkers.get(payload.id);
+				marker.setPosition(new kakao.maps.LatLng(latitude, longitude));
 				state.commit('editMarker', marker);
 			} catch (error) {
 
