@@ -60,7 +60,7 @@ export default {
 		this.unwatch = this.$store.watch(
 			() => this.getSelectedChatRoom,
 			(chatRoom) => {
-				kakaomapAPI.roadviewChangedEventHandler(this, chatRoom);
+				// kakaomapAPI.roadviewChangedEventHandler(this, chatRoom);
 			}
 		);
 	},
