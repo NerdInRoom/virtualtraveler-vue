@@ -133,7 +133,7 @@ export default new Vuex.Store({
 		},
 		async signup(state, payload){
 			try {
-				const result = await firebaseApi.signup(payload.email, payload.password);
+				const result = await firebaseApi.signup(payload.email, payload.password, payload.nickname);
 				const loginUser = {
 					uid: result.user.uid,
 					email: result.user.email,

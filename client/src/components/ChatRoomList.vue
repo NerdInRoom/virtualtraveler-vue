@@ -9,10 +9,10 @@
 				color="indigo"
 			>
 				<v-list-item
-					:key="room.id"
 					v-for="room in getChatRooms.values()"
 				>
 					<v-list-item-content
+						v-if="room"
 						@click="selectRoom(room.id)"
 						
 					> 
