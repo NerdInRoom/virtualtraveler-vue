@@ -53,14 +53,6 @@ export default {
 	},
 	methods: {
 		async exit(){
-			const user = this.getLoginUser;
-			const chatRoom = this.getOnlineChatRoom;
-			if(user.uid === chatRoom.host.uid){
-				// 호스트가 나갈 때
-			} else {
-				// 게스트가 나갈 때
-				await firebaseapi.outChatRoom(chatRoom, user);
-			}
 			this.$router.push('/');
 		}
 	}

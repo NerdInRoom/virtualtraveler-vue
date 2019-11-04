@@ -45,7 +45,6 @@ export default {
 	computed: {
         ...mapGetters(['getSelectedId','getChatRooms']),
 	},
-	
 	methods: {
 		selectRoom(key){
 			this.$store.commit('updateSelectedId', key);
