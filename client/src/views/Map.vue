@@ -70,6 +70,7 @@
 			class="logout"
 			@click="logout()"
 		/>
+		{{this.setAddress}}
 	</div>
 </template>
 
@@ -104,6 +105,21 @@ export default {
 	},
     computed: {
 		...mapGetters(['getChatRooms', 'getMarkers', 'getLoginUser', 'getOnlineChatRoom']),
+		setAddress : function(){
+			const _this = this;
+			if(this.getOnlineChatRoom==null) return;
+			const result = kakaomapApi.getAddress(this.getOnlineChatRoom.location);
+			result.then(data=>{
+				var geocoder = new kakao.maps.services.Geocoder();
+				geocoder.addressSearch(data, function(result, status) {
+					if (status === kakao.maps.services.Status.OK) {
+						var bounds = new kakao.maps.LatLngBounds();
+						bounds.extend(new kakao.maps.LatLng(result[0].y, result[0].x));
+						_this.map.setBounds(bounds);
+					} 
+				});    
+			});
+		},
 	},
 	mounted() {
 		if (navigator.geolocation) {
