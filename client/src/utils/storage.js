@@ -1,7 +1,17 @@
 export default {
-	fetchSelectedChatRoom() {
-		const selectedChatRoom = sessionStorage.getItem('selectedChatRoom');
-		return JSON.parse(selectedChatRoom);
+	fetchOnlineChatRoom() {
+		const onlineChatRoom = sessionStorage.getItem('onlineChatRoom');
+		if(onlineChatRoom){
+			return JSON.parse(onlineChatRoom);
+		} else {
+			return null;
+		}
+	},
+	join(chatRoom) {
+		sessionStorage.setItem('onlineChatRoom', JSON.stringify(chatRoom));
+	},
+	disJoin() {
+		sessionStorage.setItem('onlineChatRoom', null);
 	},
     fetchLoginState() {
         const loginState = sessionStorage.getItem('loginState');
@@ -10,7 +20,7 @@ export default {
     },
     fetchLoginUser() {
         return JSON.parse(sessionStorage.getItem('loginUser'));
-    },
+	},
     login(loginUser) {
         sessionStorage.setItem('loginUser', JSON.stringify(loginUser));
 		sessionStorage.setItem('loginState', true);
@@ -23,7 +33,7 @@ export default {
         if(sessionStorage.length > 0) {
             for(let i = 0 ; i < sessionStorage.length ; ++i){
                 const name = sessionStorage.key(i);
-                if(name === 'loginUser' || name === 'loginState' || name === 'selectedChatRoom') continue;
+                if(name === 'loginUser' || name === 'loginState' || name === 'selectedId') continue;
                 sessionStorage.removeItem(name);
             }
         }

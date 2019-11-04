@@ -102,7 +102,7 @@ export default {
 		}
 	},
     computed: {
-		...mapGetters(['getChatRooms', 'getMarkers', 'getLoginUser', 'getSelectedChatRoom']),
+		...mapGetters(['getChatRooms', 'getMarkers', 'getLoginUser', 'getOnlineChatRoom']),
 	},
 	mounted() {
 		if (navigator.geolocation) {
@@ -157,6 +157,11 @@ export default {
 							latitude: _this.marker.getPosition().Ha,
 							longitude: _this.marker.getPosition().Ga
 						}
+						_this.viewPoint = {
+							pan: 30,
+							tilt: -10,
+							zoom: 1
+						}
 						_this.createDialog = true;
 					}
 				});
@@ -203,11 +208,13 @@ export default {
 					viewPoint: this.viewPoint
 				};
 				await this.$store.dispatch('createChatRoom', room);
+				storage.join(this.getOnlineChatRoom);
 				this.$router.push('/travel');
 			}
 		},
 		async join() {
-			await firebaseApi.joinChatRoom(this.getSelectedChatRoom, this.getLoginUser);
+			await firebaseApi.joinChatRoom(this.getOnlineChatRoom, this.getLoginUser);
+			storage.join(this.getOnlineChatRoom);
 			this.$router.push('/travel');
 		},
         async logout() {
