@@ -1,9 +1,9 @@
 <template>
 	<div class="chat-detail">
 		<div class="room-info" v-if='isSelected'>
-			<h2 class="room-title"> {{ this.getSelectedChatRoom.title }} </h2>
+			<h2 class="room-title"> {{ this.getOnlineChatRoom.title }} </h2>
 			<h3>🙋‍방장</h3>
-			<h4 class="room-host"> {{ this.getSelectedChatRoom.host.nickname }} </h4>
+			<h4 class="room-host"> {{ this.getOnlineChatRoom.host.nickname }} </h4>
 			<h3>🏃‍♀️참가자‍</h3>
 			<h4 class="room-guest"> {{ this.guests }} </h4>
 			<h3>🧭현재위치</h3>
@@ -33,15 +33,15 @@ export default {
 		}
 	},
     computed: {
-		...mapGetters(['getSelectedChatRoom','getSelectedId']),
+		...mapGetters(['getOnlineChatRoom','getSelectedId']),
 		setAddress : function(){
 			let address = '';
-			const result = kakaomapApi.getAddress(this.getSelectedChatRoom.location);
+			const result = kakaomapApi.getAddress(this.getOnlineChatRoom.location);
 			result.then(data=>{ this.address = data; });
 		},
 		guests: function() {
 			const people = new Array();
-			const guest = this.getSelectedChatRoom.guest;
+			const guest = this.getOnlineChatRoom.guest;
 			for(let i in guest){
 				people.push(guest[i].nickname);
 			}
