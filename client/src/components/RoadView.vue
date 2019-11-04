@@ -30,11 +30,14 @@ import { mapGetters } from "vuex";
 
 export default {
 	computed: {
-		...mapGetters(['getOnlineChatRoom', 'getSelectedId', 'getLoginUser'])
+		...mapGetters(['getSelectedChatRoom', 'getSelectedId', 'getLoginUser']),
+		isHost(){
+			return this.getSelectedChatRoom.host.email === this.getLoginUser.email;
+		}
 	},
 	methods: {
 			checkControlAuthority(){
-				if (this.getOnlineChatRoom.host.email !== this.getLoginUser.email) {
+				if (!this.isHost) {
 					this.roadviewContainer.style.pointerEvents = 'none';
 					document.getElementById('roadviewWrapper').addEventListener('click', () => {
 						this.dialog=true;
@@ -51,17 +54,22 @@ export default {
 			roadviewContainer: null,
 			dialog: false,
 			unwatch: null,
-			unsubscribe: null
+			unsubscribe: null,
+			viewpoint: 0
 		}
 	},
 	async created() {
-		this.unsubscribe = await this.$store.dispatch('fetchChatRoom', this.getSelectedId);
-		this.unwatch = this.$store.watch(
-			() => this.getOnlineChatRoom,
-			(chatRoom) => {
-				// kakaomapAPI.roadviewChangedEventHandler(this, chatRoom);
-			}
-		);
+		console.log('craeted');
+		this.unsubscribe = await this.$store.dispatch('fetchChatRoom', this.$store.getters.getSelectedId);
+		if(!this.isHost){
+			this.unwatch = this.$store.watch(
+				() => this.getSelectedChatRoom,
+				(chatRoom) => {
+					console.log(chatRoom)
+					kakaomapAPI.roadviewChangedEventHandler(this, chatRoom);
+				}
+			);
+		}
 	},
 	async mounted () {
 		this.roomInfo = this.$store.getters.getOnlineChatRoom;
@@ -70,8 +78,12 @@ export default {
 		this.checkControlAuthority(); // 방장만 로드뷰 조작
 	},
 	beforeDestroy () {
-		if(this.unwatch!==null) this.unwatch();
-		if(this.unsubscribe!==null) this.unsubscribe();
+		if(this.unwatch!==null){
+			this.unwatch();
+		}	
+		if(this.unsubscribe!==null){ 
+			this.unsubscribe();
+		}
 	}
 }
 </script>

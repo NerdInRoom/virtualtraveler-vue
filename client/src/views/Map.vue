@@ -140,6 +140,11 @@ export default {
 							latitude: _this.marker.getPosition().Ha,
 							longitude: _this.marker.getPosition().Ga
 						}
+						_this.viewPoint = {
+							pan: 30,
+							tilt: -10,
+							zoom: 1
+						}
 						_this.createDialog = true;
 					}
 				});
