@@ -86,19 +86,20 @@ export default {
 		},
 	},
 	updated() {
-		con
 		this.scrollBottom();
 	},
 	mounted() {
 		firebaseApi.fetchChatLog(this.getOnlineChatRoom.id, this);
 	},
 	beforeDestroy() {
-		if(this.getOnlineChatRoom.host.uid === this.getLoginUser.uid){
-			storage.disJoin();
-			firebaseApi.breakRoom(this.getOnlineChatRoom);
-		} else {
-			storage.disJoin();
-			firebaseApi.outChatRoom(this.getOnlineChatRoom, this.getLoginUser);
+		if(this.getOnlineChatRoom){
+			if(this.getOnlineChatRoom.host.uid === this.getLoginUser.uid){
+				storage.disJoin();
+				firebaseApi.breakRoom(this.getOnlineChatRoom);
+			} else {
+				storage.disJoin();
+				firebaseApi.outChatRoom(this.getOnlineChatRoom, this.getLoginUser);
+			}
 		}
 	},
 	methods: {

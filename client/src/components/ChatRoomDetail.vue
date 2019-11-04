@@ -1,6 +1,6 @@
 <template>
 	<div class="chat-detail">
-		<div class="room-info" v-if='isSelected'>
+		<div class="room-info" v-if='isSelected && this.getOnlineChatRoom'>
 			<h2 class="room-title"> {{ this.getOnlineChatRoom.title }} </h2>
 			<h3>🙋‍방장</h3>
 			<h4 class="room-host"> {{ this.getOnlineChatRoom.host.nickname }} </h4>

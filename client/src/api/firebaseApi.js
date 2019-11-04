@@ -112,6 +112,15 @@ export default {
 				createdAt: ""
 			});
 		},
+	// 현재는 컬렉션으로 되어있어서 지우기 힘듬, array로 바꾼후 시도할 예정
+	// deleteChat(chatRoom) {
+	// 	firestore.collection('room').doc(chatRoom.id)
+	// 			 .collection('chatLog').doc(chatRoom.id).delete().then(function() {
+	// 		console.log("Document successfully deleted!");
+	// 	}).catch(function(error) {
+	// 		console.error("Error removing document: ", error);
+	// 	});
+	// },
 	async outChatRoom(chatRoom, user){
 		await firestore.collection('chatRooms').doc(chatRoom.id).update({
 			guest: firebase.firestore.FieldValue.arrayRemove({
