@@ -24,7 +24,6 @@ export default {
 				latitude: changedLocation.Ha,
 				longitude: changedLocation.Ga
 			}
-			console.log(_this.roadview.getViewpoint())
 			_this.$store.dispatch('setRoomLocation', changedLocationInfo);
 		});
 
@@ -48,7 +47,6 @@ export default {
 		});
 	},
 	roadviewChangedEventHandler(_this, chatRoom) {
-		console.log('Roadview Changed Event!!!')
 		_this.roadview.setViewpoint(chatRoom.viewPoint);
 		const roadviewPosition = new kakao.maps.LatLng(
 			chatRoom.location.latitude,

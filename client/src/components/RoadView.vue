@@ -65,7 +65,6 @@ export default {
 			this.unwatch = this.$store.watch(
 				() => this.getOnlineChatRoom,
 				(chatRoom) => {
-					console.log(chatRoom)
 					kakaomapAPI.roadviewChangedEventHandler(this, chatRoom);
 				}
 			);
