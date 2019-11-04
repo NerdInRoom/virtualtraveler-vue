@@ -10,19 +10,7 @@ export default {
     },
     fetchLoginUser() {
         return JSON.parse(sessionStorage.getItem('loginUser'));
-	},
-	joinChatRoom(selectedChatRoom) {
-		sessionStorage.setItem('selectedChatRoom', JSON.stringify(selectedChatRoom));
-	},
-	outChatRoom(){
-		const selectedChatRoom = {
-			title: '',
-			host:{
-				nickname: ''
-			}
-		};
-		sessionStorage.setItem('selectedChatRoom', JSON.stringify(selectedChatRoom));
-	},
+    },
     login(loginUser) {
         sessionStorage.setItem('loginUser', JSON.stringify(loginUser));
 		sessionStorage.setItem('loginState', true);

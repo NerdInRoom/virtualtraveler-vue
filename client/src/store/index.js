@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 import firebaseApi from '../api/firebaseApi.js';
 import storage from '../utils/storage.js';
 import { HashMap } from '../utils/hashMap.js';
+import kakaomapApi from '../api/kakaomapApi.js';
 
 
 Vue.use(Vuex);
@@ -15,8 +16,8 @@ export default new Vuex.Store({
 		loginState: storage.fetchLoginState(),
 		loginUser: storage.fetchLoginUser(),
 
-		chatRoomList: new HashMap(),
-		markerList: new Hashmap(),
+		chatRooms: new HashMap(),
+		markers: new HashMap(),
 		selectedId: null,
 
 		chatMessages: null
@@ -29,16 +30,33 @@ export default new Vuex.Store({
 		getLoginUser(state) {
 			return state.loginUser;
 		},
-
-		// Chat Room Getters
-		getChatRoomList(state) {
-			return state.chatRoomList;
-		},
-		getSelectedChatRoom(state) {
-			return state.selectedChatRoom;
-		},
 		getNicknameByDraw(state){
 			return state.nicknameByDraw;
+		},
+
+		// Chat Room Getters
+		getChatRooms(state) {
+			return state.chatRooms;
+		},
+		getMarkers(state) {
+			return state.markers;
+		},
+		getMarker(state, id){
+			// id: marker id (=chatRoom id)
+			return state.markers.get(id);
+		},
+
+		// TODO: 제거 후 getRoomIdList가 필요한 부분에 직접 구현하기
+		getRoomIdList(state) {
+			return state.chatRooms.keys();
+		},
+
+
+		getSelectedChatRoom(state) {
+			return state.chatRooms.get(state.selectedId);
+		},
+		getSelectedId(state) {
+			return state.selectedId;
 		}
 	},
 	mutations: {
@@ -53,37 +71,64 @@ export default new Vuex.Store({
 		updateLoginUser(state, payload){
 			state.loginUser = payload;
 		},
+		// Room Mutations
+		addChatRoom(state, payload) {
+			// payload: {
+			// 	id: chatRoomId,
+			//	chatRoom: chatRoom obj
+			// }
+			const map = state.chatRooms.getAll();
+			const addedMap = { ...map, [payload.id]: payload.chatRoom};
+			state.chatRooms.map = addedMap;
+		},
+		editChatRoom(state, payload) {
+			// payload: {
+			// 	id: chatRoomId,
+			//	chatRoom: chatRoom obj
+			// }
+			state.chatRooms.put(payload.id, payload.chatRoom);
+		},
+		deleteChatRoom(state, id) {
+			state.chatRooms.remove(id);
+		},
 
-		// Chat Room Mutations
-		createChatRoom(state, payload) {
-			const chatRoom = payload.chatRoom;
-			const id = payload.id;
-			const map = state.chatRoomList.getAll();
-			// ES6 문법
-			const addedMap = { ...map, [id]: chatRoom};
+		// Marker Mutations
+		addMarker(state, marker){
+			// payload: {
+			// 	id: chatRoomid,
+			// 	marker: marker object
+			// }
+			const origin = state.markers.getAll();
+			const updated = {...origin, [marker.getTitle()]: marker};
+			state.markers.map = updated;
+		},
+		deleteMarker(state, id){
+			// id: marker id (= chatRoom id)
+			state.markers.remove(id);
+		},
+		editMarker(state, marker) {
+			// 	marker: marker object
+			
+			state.markers.put(marker.title, marker);
+		},
 
-			state.chatRoomList.map = addedMap;
-		},
-		setRoomLocation (state, changedInfo) {
-			state.roomList.forEach((room, index) => {
-				if (room.roomId === changedInfo.roomId) {
-					state.roomList[index].roomGPS.latitude = changedInfo.latitude
-					state.roomList[index].roomGPS.longitude = changedInfo.longitude
-				}
-			})
-		},
-		deleteChatRoom(state, payload){
-
-		},
-		selectChatRoom(state, payload){
-			state.selectedChatRoom = payload;
-		},
-		updateRoomList(state, payload) {
-			state.chatRoomList = payload;
+		
+		updateSelectedId(state, id){
+			state.selectedId = id;
 		}
 	},
 	actions: {
 		// User Auth Actions
+		async ramdomNickname(state){
+			try{
+				const result = await firebaseApi.emailRandomizeName();
+				state.commit('setNicknameByDraw',result);
+				
+				return result;
+			} catch(error) {
+				throw error;
+			}
+		},
 		async signup(state, payload){
 			try {
 				const result = await firebaseApi.signup(payload.email, payload.password);
@@ -138,97 +183,121 @@ export default new Vuex.Store({
 				const loginUser = null;
 				state.commit('updateLoginUser', loginUser);
 				state.commit('updateLoginState', false);
+				storage.logout();
 				return;
 			} catch (error) {
 				throw error;
 			}
 		},
-		async joinRoom(state, payload){
+		async fetchChatRooms(state){
 			try {
-				const result = await firebaseApi.joinRoom(payload.id);
-				state.commit('selectChatRoom', result);
+				const unsubscribe = await firebaseApi.fetchChatRooms(state);
+				return unsubscribe;
+			} catch (error) {
+				
+			}
+		},
+		async fetchChatRoom(state, id){
+			try {
+				const unsubscribe = await firebaseApi.fetchChatRoom(state, id);
+				return unsubscribe;
+			} catch (error) {
+				
+			}
+		},
+		async addChatRoom(state, payload) {
+			// payload: {
+			// 	id: chatRoomId,
+			// 	chatRoom: chatRoom obj
+			// }
+			await state.dispatch('addMarker', payload);
+			await state.commit('addChatRoom', payload);
+		},
 
-				return result;
+		async deleteChatRoom(state, id) {
+			await state.commit('deleteChatRoom', id);
+			await state.dispatch('deleteMarker', id);
+		},
+
+		async editChatRoom(state, payload) {
+			// payload: {
+			// 	id: chatRoomId,
+			// 	chatRoom: chatRoom obj
+			// }
+			//const marker = state.getters.getMarker(payload.id);
+			await state.commit('editChatRoom', payload);
+			// await state.dispatch('editMarker', marker);
+		},
+		
+		
+		//Marker Actions
+		async addMarker(state, payload){
+			// payload: {
+			// 	id: chatRoomid
+			// 	chatRoom: chatRoom object
+			// }
+			
+			try {
+				const marker = await kakaomapApi.createMarker(payload.chatRoom.location);
+				marker.setTitle(payload.id);
+				state.commit('addMarker', marker);
 			} catch (error) {
-				
+
 			}
 		},
-		async fetchRoomList(state){
+		async deleteMarker(state, id){
+			// id: marker id (= chatRoom id)
+
 			try {
-				const result = await firebaseApi.fetchRoomList();
-				return result;
+				state.commit('deleteMarker', id);
 			} catch (error) {
-				
+
 			}
 		},
-		async fetchGPS(state){
+		async editMarker(state, marker){
+			// payload: {
+			// 	id: 
+			// 	chatRoom: chatRoom object
+			// }
+			
 			try {
-				const result = await firebaseApi.fetchGPS();
-				return result;
+				state.commit('editMarker', marker);
 			} catch (error) {
-				
+
 			}
+		},
+
+		async setRoomLocation({getters},changedInfo){
+			await firebaseApi.setRoomLocation(getters.getSelectedId, changedInfo);
+		},
+		async setViewPoint(state, changedViewPoint) {
+			await firebaseApi.setViewPoint(state.getters.getSelectedId, changedViewPoint);
 		},
 		// Chat Room Actions
 		async createChatRoom(state, payload) {
-			const host = state.getters.getLoginUser;
+			// payload: {
+			// 	title:
+			// 	location:{
+			// 		latitude:
+			// 		longitude:
+			// 	 },
+			//   viewPoint:
+			// }
 			const chatRoom = {
-				id: 1,
+				id: '',
 				title: payload.title,
 				location: {
-					latitude: payload.latitude,
-					longitude: payload.longitude,
-					marker: payload.marker
+					latitude: payload.location.latitude,
+					longitude: payload.location.longitude
 				},
-				host: {
-					uid: host.uid,
-					email: host.email,
-					nickname: host.nickname
-				},
-				guest: [
-						{
-							uid: "afadf",
-							nickname: "케로츄",
-							email: "eee@ndf.com"
-						},
-						{
-							uid: "afadf",
-							nickname: "슈슈밍",
-							email: "eee@ndf.com"
-						},
-						{
-							uid: "afadf",
-							nickname: "곽빛",
-							email: "eee@ndf.com"
-						},
-
-				],
-				chat: [
-
-				]
+				viewPoint: payload.viewPoint,
+				host: state.getters.getLoginUser,
+				guest: []
 			}
 			// Upload Firestore
-			await firebaseApi.createChatRoom(chatRoom);
-			let id = chatRoom.id;
-			state.commit('createChatRoom', {
-				id,
-				chatRoom
-			});
+			const id = await firebaseApi.createChatRoom(chatRoom);
+			state.commit('updateSelectedId', id);
 			return;
-		},
-		async ramdomNickname(state){
-			try{
-				console.log("hit");
-				const result = await firebaseApi.emailRandomizeName();
-				console.log(result);
-				state.commit('setNicknameByDraw',result);
-				
-				return result;
-			} catch(error) {
-				throw error;
-			}
 		}
-
-		
 	}
 });

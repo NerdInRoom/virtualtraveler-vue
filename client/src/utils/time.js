@@ -1,21 +1,12 @@
-export const time = {
-    getNow() {
-        const now = new Date();
+export default {
+    getDate(timestamp) {
+        const date = new Date(timestamp);
         const week = ['일', '월', '화', '수', '목', '금', '토'];
         const current = {
-            date: `${now.getMonth()}월 ${now.getDate()}일 ${week[now.getDay()]}요일`,
-            time: `${now.getHours()} : ${now.getMinutes()}`,
-            detailTime: `${now.getHours()} : ${now.getMinutes()} : ${now.getSeconds()}`
+            date: `${date.getMonth()}월 ${date.getDate()}일 ${week[date.getDay()]}요일`,
+            time: `${date.getHours()} : ${date.getMinutes()}`,
+            detailTime: `${date.getHours()} : ${date.getMinutes()} : ${date.getSeconds()}`
         };
         return current;
     },
-    // fetch() {
-    //     const arr = [];
-    //     if (sessionStorage.length > 0) {
-    //         for (let i = 0; i < sessionStorage.length; ++i) {
-    //             arr.push(JSON.parse(sessionStorage.getItem(sessionStorage.key(i))));
-    //         }
-    //     }
-    //     return arr;
-    // },
 };

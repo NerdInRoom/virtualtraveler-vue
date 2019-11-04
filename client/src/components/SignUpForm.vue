@@ -24,6 +24,7 @@
 				></v-text-field>
 				<v-text-field
 					v-model="password"
+					@keyup.enter="signupEnter"
 					:rules="[passwordRules.required, passwordRules.min]"
 					:type="show ? 'text' : 'password'"
 					label="비밀번호"
@@ -66,6 +67,7 @@
 		>
 			<v-col cols="4">
 				<v-btn
+					id="btn-signup"
 					@click="signup"
 					:disabled="!valid"
 					class="btn-signup white--text title"
@@ -111,6 +113,10 @@ export default {
 		}
 	}),
 	methods: {
+		signupEnter() {
+			const loginBtn = document.getElementById('btn-signup');
+			loginBtn.click();
+		},
 		async signup(){
 			try {
 				const result = await this.$store.dispatch('signup', {

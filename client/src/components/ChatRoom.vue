@@ -16,20 +16,27 @@
 		<transition-group class="text-area" tag="div">
 			<div
 				class="message"
-				v-for="chat in storedChatLog"
-				:key="chat.id"
+				v-for="msg in this.chatLog"
+				:key="msg.id"
 			>	
 				<p
-					v-bind:class="[isMine(chat.sender) ? 'me' : 'others']"
+					class="system"
+					v-if="msg.sender === 'system'"
 				>
-					{{ chat.content }}	
+					{{ msg.content }}
+				</p>
+				<p
+					v-else-if="msg.sender !== 'system'"
+					v-bind:class="[isMine(msg.sender) ? 'me' : 'others']"
+				>
+					{{ msg.content }}	
 					<span class="name"
-							v-bind:class="[isMine(chat.sender) ? 'me' : 'others']">
-						{{ chat.sender }}
+							v-bind:class="[isMine(msg.sender) ? 'me' : 'others']">
+						{{ msg.sender }}
 					</span>
 					<span class="time"
-							v-bind:class="[isMine(chat.sender) ? 'me' : 'others']">
-						{{ chat.createdAt }}
+							v-bind:class="[isMine(msg.sender) ? 'me' : 'others']">
+						{{ timestampToTime(msg.createdAt) }}
 					</span>
 				</p>
 			</div>
@@ -59,20 +66,18 @@
 
 <script>
 import { mapGetters } from "vuex";
-import {time} from "../utils/time.js";
+import firebaseApi from "../api/firebaseApi.js";
+import time from "../utils/time.js";
+
 
 export default {
 	data: () => ({
 		inputText: '',
-		storedChatLog: [
-							{ id:"0x1231", roomid:"1", sender:"슈슈미밍", content:"안녕하세요.", createdAt: time.getNow().detailTime },
-							{ id:"0x1232", roomid:"1", sender:"민강강수월래미콘", content:"네 반갑습니다.", createdAt: time.getNow().detailTime},
-							{ id:"0x1233", roomid:"1", sender:"슈슈미밍", content:"안녕히가세요.", createdAt: time.getNow().detailTime},
-							{ id:"0x1234", roomid:"1", sender:"민강", content:"네 잘지내요.", createdAt: time.getNow().detailTime},
-						]
+		chatLog: null,
+		joinTime: null
 	}),
 	computed: {
-		...mapGetters(['getSelectedChatRoom','getLoginUser']),
+		...mapGetters(['getSelectedChatRoom','getLoginUser', 'getChatLog']),
 		guests: function() {
 			const people = new Array();
 			const guest = this.getSelectedChatRoom.guest;
@@ -85,6 +90,10 @@ export default {
 	updated() {
 		this.scrollBottom();
 	},
+	mounted() {
+		firebaseApi.fetchChatLog(this.getSelectedChatRoom.id, this);
+		this.joinTime = new Date().getTime();
+	},
 	methods: {
 		isMine(sender){
 			if(sender === this.getLoginUser.nickname) return true;
@@ -95,12 +104,37 @@ export default {
 		},
 		sendChat() {
 			if(this.inputText === '') return;
-			// Sending Chat logic
+			const message = {
+				sender: this.getLoginUser.nickname,
+				content: this.inputText,
+				createdAt: ""
+			}
+			firebaseApi.sendMessage(this.getSelectedChatRoom.id, message);
+			this.clearInput();
 		},
 		scrollBottom(){
 			const mainTextArea = document.querySelector('.text-area');
 			mainTextArea.scrollTop = mainTextArea.scrollHeight;
 		},
+		timestampToTime(timestamp){
+			let date = new Date(timestamp),
+				year = date.getFullYear(),
+				month = date.getMonth()+1,
+				day = date.getDate(),
+				hour = date.getHours(),
+				minute = date.getMinutes();
+				
+			let nowDate = new Date(),
+				nowYear = nowDate.getFullYear(),
+				nowMonth = nowDate.getMonth()+1,
+				nowDay = nowDate.getDate(),
+				nowHour = nowDate.getHours(),
+				nowMinute = nowDate.getMinutes();
+				
+			const result = hour + " : " + minute;
+			
+			return result;
+		}
 	}
 };
 </script>
@@ -113,6 +147,7 @@ export default {
 		font-size: 15px;
 	}
 	.panel {
+		z-index: -1;
 		position: fixed;
 		opacity: 0.18;
 		right: 0;
@@ -220,6 +255,17 @@ export default {
 						background-color: white;
 						float: left;
 					}
+					&.system {
+						font-family: 'yg-jalnan';
+						color: #FDD835;
+						background-color: black;
+						text-align: center;
+						border-radius: 30px;
+						margin-top: 5px;
+						margin-bottom: 5px;
+						font-size: 15px;
+						font-weight: bold;
+					}
 				}
 				.name {
 					overflow: visible;
@@ -237,6 +283,7 @@ export default {
 					}
 				}
 				.time {
+					width: max-content;
 					color: white;
 					font-size: 12px;
 					bottom: -17px;

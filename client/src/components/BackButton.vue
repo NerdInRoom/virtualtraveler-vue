@@ -37,6 +37,8 @@
 	</div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
+import firebaseapi from '../api/firebaseApi.js';
 import storage from '../utils/storage.js';
 
 export default {
@@ -46,10 +48,20 @@ export default {
 			dialog: false
 		}
 	},
+	computed: {
+		...mapGetters(['getLoginUser', 'getSelectedChatRoom']),
+	},
 	methods: {
-		exit(){
-			// 방장이면 나가기전에 뭔가 해야 될 듯...
-			this.$router.go(-1);
+		async exit(){
+			const user = this.getLoginUser;
+			const chatRoom = this.getSelectedChatRoom;
+			if(user.uid === chatRoom.host.uid){
+				// 호스트가 나갈 때
+			} else {
+				// 게스트가 나갈 때
+				await firebaseapi.outChatRoom(chatRoom, user);
+			}
+			this.$router.push('/');
 		}
 	}
 }

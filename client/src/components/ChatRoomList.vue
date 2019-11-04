@@ -4,16 +4,17 @@
 		<v-list class="chat-list">
 			<v-list-item-group
 				v-model="model"
-				v-if="this.getChatRoomList"
+				v-if="getChatRooms"
 				mandatory
 				color="indigo"
 			>
 				<v-list-item
 					:key="room.id"
-					v-for="room in this.getChatRoomList.map"
+					v-for="room in getChatRooms.values()"
 				>
 					<v-list-item-content
-						@click="selectRoom(room.host.email)"
+						@click="selectRoom(room.id)"
+						
 					> 
 						<v-list-item-title>
 							{{ room.title }}
@@ -21,7 +22,10 @@
 						<v-list-item-title>
 							{{ room.host.nickname }}
 						</v-list-item-title>
-						<v-list-item-title>
+						<v-list-item-title v-if="room.guest.length == 0">
+							혼자 여행중입니다.
+						</v-list-item-title>
+						<v-list-item-title v-else>
 							{{ room.guest.length }} 명이 함께 여행중입니다.
 						</v-list-item-title>
 					</v-list-item-content>
@@ -39,12 +43,12 @@ export default {
 		model: 1,
 	}),
 	computed: {
-        ...mapGetters(['getChatRoomList']),
-    },
+        ...mapGetters(['getSelectedId','getChatRooms']),
+	},
+	
 	methods: {
-		selectRoom(email){
-			const selectedRoom = this.getChatRoomList.get(email);
-			this.$store.commit('selectChatRoom', selectedRoom);
+		selectRoom(key){
+			this.$store.commit('updateSelectedId', key);
 		}
 	}
 }
@@ -59,6 +63,9 @@ export default {
 		}
 
 		.chat-list {
+			margin-top: 7px;
+			border-radius: 20px;
+			height: 90%;
 			overflow-y: scroll;
 			-ms-overflow-style: none;
 			&::-webkit-scrollbar {

@@ -25,31 +25,54 @@
 <script>
 /* global kakao */
 import kakaomapAPI from '@/api/kakaomapApi.js';
+import firebaseAPI from '@/api/firebaseApi.js';
+import { mapGetters } from "vuex";
 
 export default {
-	data() {
-		return {
-			roomInfo: null,
-			roadviewContainer: null,
-			dialog: false
-		}
-	},
-	mounted () {
-		this.roomInfo = this.$store.getters.getSelectedChatRoom;
-		this.roadviewContainer = document.getElementById('roadview');
-		
-		kakaomapAPI.initRoadview(this);
-		this.checkControlAuthority(); // 방장만 로드뷰 조작
+	computed: {
+		...mapGetters(['getSelectedChatRoom', 'getSelectedId', 'getLoginUser'])
 	},
 	methods: {
-		checkControlAuthority(){
-			if (this.roomInfo.host.email !== this.$store.getters.getLoginUser.email) {
-				this.roadviewContainer.style.pointerEvents = 'none';
-				document.getElementById('roadviewWrapper').addEventListener('click', () => {
-					this.dialog=true;
-				});
+			checkControlAuthority(){
+				if (this.getSelectedChatRoom.host.email !== this.getLoginUser.email) {
+					this.roadviewContainer.style.pointerEvents = 'none';
+					document.getElementById('roadviewWrapper').addEventListener('click', () => {
+						this.dialog=true;
+					});
+				}
 			}
+	},
+	data() {
+		return {
+			roadview: null,
+			roadviewPosition: null,
+			roadviewClient: null,
+			roomInfo: null,
+			roadviewContainer: null,
+			dialog: false,
+			unwatch: null,
+			unsubscribe: null
 		}
+	},
+	async created() {
+		console.log('craeted');
+		this.unsubscribe = await this.$store.dispatch('fetchChatRoom', this.$store.getters.getSelectedId);
+		this.unwatch = this.$store.watch(
+			() => this.getSelectedChatRoom,
+			(chatRoom) => {
+				kakaomapAPI.roadviewChangedEventHandler(this, chatRoom);
+			}
+		);
+	},
+	async mounted () {
+		this.roomInfo = this.$store.getters.getSelectedChatRoom;
+		this.roadviewContainer = document.getElementById('roadview');
+		await kakaomapAPI.initRoadview(this);
+		this.checkControlAuthority(); // 방장만 로드뷰 조작
+	},
+	beforeDestroy () {
+		if(this.unwatch!==null) this.unwatch();
+		if(this.unsubscribe!==null) this.unsubscribe();
 	}
 }
 </script>

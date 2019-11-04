@@ -16,6 +16,14 @@ export default {
 	ChatRoom,
 	RoadView,
 	BackButton
+  },
+  created() {
+	  window.onpageshow = (event) => {
+		  if(event.persisted) {
+				console.log("뒤로가기 눌렀음!");
+	  			// await firebaseapi.outChatRoom(chatRoom, user);
+		  }
+	  }
   }
 }
 </script>

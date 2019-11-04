@@ -2,15 +2,66 @@
 	<div class="map-wrapper">
 		<div class="map" id="mapContainer"></div>
 		<ChatRoomInfo />
+		<v-dialog v-model="joinDialog" max-width="390" >
+			<v-card>
+			<v-card-title class="mb-5">🎈 채팅방에 참여하시겠습니까?</v-card-title>
+			<v-card-actions>
+				<v-spacer></v-spacer>
+				<v-btn
+					color="primary darken-1"
+					text
+					@click="join()"
+				>
+					Yes
+				</v-btn>
+				<v-btn
+					color="warning"
+					text
+					@click="joinDialog = false"
+				>
+					No
+				</v-btn>
+			</v-card-actions>
+			</v-card>
+		</v-dialog>
+		<v-dialog v-model="createDialog" persistent max-width="390px">
+			<template v-slot:activator="{ on }">
+			<v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
+			</template>
+			<v-card>
+			<v-card-title>🚀 채팅방 이름을 입력하세요.</v-card-title>
+			<v-card-text>
+				<v-container>
+					<v-row>
+						<v-col cols="12">
+							<v-text-field v-model="title" label="Title" required />
+						</v-col>
+					</v-row>
+				</v-container>
+			</v-card-text>
+			<v-card-actions>
+				<v-spacer></v-spacer>
+				<v-btn color="red darken-1" text @click="createDialog = false">Cancel</v-btn>
+				<v-btn color="blue darken-1" text @click="createChatRoom()">Create</v-btn>
+			</v-card-actions>
+			</v-card>
+		</v-dialog>
         <img
 			src="@/images/scooter.png"
 			class="start"
-			@click="start()"
+			@click="drawMarker()"
 		/>
 		<img
+			v-if="!isPresent"
 			src="@/images/location.png"
 			class="marker"
 			@click="create()"
+		/>
+		<img
+			v-if="isPresent"
+			src="@/images/cancel.png"
+			class="marker"
+			@click="cancel()"
 		/>
 		<img
 			src="@/images/unlocked.png"
@@ -23,71 +74,123 @@
 <script>
 
 import ChatRoomInfo from '@/components/ChatRoomInfo.vue';
+import firebaseApi from '@/api/firebaseApi.js';
 import kakaomapApi from '@/api/kakaomapApi.js';
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import { HashMap } from '../utils/hashMap.js';
 import storage from '../utils/storage.js';
 
-
 export default {
     components: {
-        ChatRoomInfo
+		ChatRoomInfo
     },
     data() {
         return {
             map: '',
-            currentLocation: ''
-        }
-    },
+			currentLocation: '',
+			isPresent: false,
+			joinDialog: false,
+			createDialog: false,
+			marker: null,
+			title: '',
+			location: null,
+			unsubscribe: null,
+			viewPoint: null
+		}
+	},
     computed: {
-        ...mapGetters(['getChatRoomList', 'getLoginUser', 'getSelectedChatRoom']),
-    },
-    mounted() {
-        navigator.geolocation.getCurrentPosition(position => { this.init(position) }, this.failToGetGeoInfo);
-        this.$store.watch(() => this.getChatRoomList.map, n => { this.drawMarker(); })
-    },
+		...mapGetters(['getChatRooms', 'getMarkers', 'getLoginUser', 'getSelectedChatRoom']),
+	},
+	mounted() {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(position => { this.init(position); }, this.failToGetGeoInfo);
+		} else {
+			console.log('지형정보를 지원하지 않는 환경입니다.');
+		}
+		//this.$store.watch(() => { this.getMarkers.values() }, () => { this.drawMarker(); });
+	},
+	beforeDestroy() {
+		if(this.unsubscribe!==null){
+			this.unsubscribe();
+		}
+	},
     methods: {
-        async init(position) {
-            const mapContainer = document.getElementById("mapContainer");
-            // 맵 초기화
-            this.map = await kakaomapApi.drawMap(mapContainer, position, this.currentLocation);
-            // 마커 그리기
-            await this.drawMarker();
+		async init(position) {
+			const mapContainer = document.getElementById("mapContainer");
+			this.map = await kakaomapApi.drawMap(mapContainer, position);
+			this.unsubscribe = await this.$store.dispatch('fetchChatRooms');
         },
         failToGetGeoInfo() {
             // 위치 정보 수집 실패 핸들링
             alert("위치 정보를 받아오는데 실패하였습니다.");
-        },
-        async create() {
-            const loginUserEmail = this.getLoginUser.email;
-            if(this.getChatRoomList.containsKey(loginUserEmail)){
-                alert("이미 생성하였습니다.");
-                return;
-            }
-            const center = this.map.getCenter();
-            const marker = await kakaomapApi.createMarker(center);
-            await this.$store.dispatch('createChatRoom', {
-                title: "일단 아무거나",
-                latitude: center.Ha,
-                longitude: center.Ga,
-                marker
-            });
-        },
-        async drawMarker() {
-            const markers = new Array();
-            const values = this.getChatRoomList.values();
-
-            for(let room in values){
-                markers.push(values[room].location.marker);
-            }
-
-            const promises = markers.map(marker => kakaomapApi.drawMarker(this.map, marker));
-
-			await Promise.all(promises);
-			
-			return;
 		},
-		start() {
+        async create() {
+			this.isPresent = true;
+			this.map.addOverlayMapTypeId(kakao.maps.MapTypeId.ROADVIEW);
+            const center = this.map.getCenter();
+			this.marker = await kakaomapApi.createSelectionMarker(center);
+			const _this = this;
+			kakao.maps.event.addListener(this.marker, 'click', function() {
+				const rvClient = new kakao.maps.RoadviewClient();
+				rvClient.getNearestPanoId(_this.marker.getPosition(), 50, function(panoId){
+					if(panoId===null){
+						alert('🛸 로드뷰가 지원되지 않는 지역입니다.')
+					} else {
+						_this.location = {
+							latitude: _this.marker.getPosition().Ha,
+							longitude: _this.marker.getPosition().Ga
+						}
+						_this.createDialog = true;
+					}
+				});
+			});
+			this.marker.setMap(this.map);
+		},
+		cancel() {
+			this.isPresent = false;
+			this.map.removeOverlayMapTypeId(kakao.maps.MapTypeId.ROADVIEW);
+			this.marker.setMap(null);
+		},
+		updateMarker() {
+			console.log("call updateMarker");
+			if(this.markerList.length > 0) {
+				this.removeMarker();
+			}
+			this.drawMarker();
+		},
+		removeMarker() {
+			console.log("call removeMarker");
+			this.markerList.forEach((marker)=>{
+				marker.setMap(null);
+			});
+			this.markerList = [];
+		},
+        drawMarker() {
+			console.log("draw");
+			this.getMarkers.values().forEach((marker) => {
+				marker.setMap(null);
+				marker.setMap(this.map);
+				kakao.maps.event.addListener(marker, 'click', () => {
+					this.$store.commit('updateSelectedId', marker.getTitle());
+					this.joinDialog = true;
+				});
+			})
+		},
+		async createChatRoom() {
+			if(this.title===''||this.title===null){
+				alert('☠ 채팅방 이름을 입력하세요.');
+			}else{
+				const room = {
+					title: this.title,
+					location: this.location,
+					viewPoint: this.viewPoint
+				};
+				await this.$store.dispatch('createChatRoom', room);
+				this.$router.push('/travel');
+			}
+		},
+		async join() {
+			await firebaseApi.joinChatRoom(this.getSelectedChatRoom, this.getLoginUser);
 			this.$router.push('/travel');
 		},
         async logout() {

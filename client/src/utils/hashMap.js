@@ -12,12 +12,15 @@ HashMap.prototype = {
     getAll: function(){
         return this.map;
     },
+    remove: function (key) {
+        delete this.map[key];
+    },
     clear: function(){
         this.map = new Array();
     },
-    getKeys: function(){
+    keys: function(){
         const keys = new Array();
-        for(i in this.map){
+        for(let i in this.map){
             keys.push(i);
         }
         return keys;

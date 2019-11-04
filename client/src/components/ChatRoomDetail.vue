@@ -7,7 +7,9 @@
 			<h3>🏃‍♀️참가자‍</h3>
 			<h4 class="room-guest"> {{ this.guests }} </h4>
 			<h3>🧭현재위치</h3>
-			<h4 class="address">강남대로94번길 73</h4>
+			<!-- TODO: 주소 넣기 -->
+			{{ this.setAddress }}
+			<h4 class="address">{{ this.address }}</h4>
 		</div>
 		
 		<div class="service-info" v-else>
@@ -21,11 +23,22 @@
 </template>
 
 <script>
+import kakaomapApi from '@/api/kakaomapApi.js';
 import { mapGetters } from 'vuex'
 
 export default {
+	data() {
+        return {
+			address: ''
+		}
+	},
     computed: {
-		...mapGetters(['getSelectedChatRoom']),
+		...mapGetters(['getSelectedChatRoom','getSelectedId']),
+		setAddress : function(){
+			let address = '';
+			const result = kakaomapApi.getAddress(this.getSelectedChatRoom.location);
+			result.then(data=>{ this.address = data; });
+		},
 		guests: function() {
 			const people = new Array();
 			const guest = this.getSelectedChatRoom.guest;
@@ -35,24 +48,13 @@ export default {
 			return people.join(', ');
 		},
 		isSelected: function() {
-			const room = this.getSelectedChatRoom;
+			const room = this.getSelectedId;
 			if(room){
 				return true;
 			} else {
 				return false;
 			}
 		}
-    },
-    methods: {
-        
-        startChatting(roomId) {
-            this.$router.push({
-                name: 'travel',
-                params: {
-                    roomId
-                }
-            });
-        }
     }
 }
 </script>

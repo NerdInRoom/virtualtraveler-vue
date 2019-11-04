@@ -75,57 +75,112 @@ export default {
 		}
 	},
 
-	/* FireStore */
+	/* Chat Room */
 	async createChatRoom(chatRoom) {
 		try {
 			const docRef = await firestore.collection('chatRoomList').add(chatRoom);
-			chatRoom.id = docRef.id;
-			return chatRoom;
+			await firestore.collection('chatRoomList').doc(docRef.id).update({id: docRef.id});
+			return docRef.id;
 		} catch (error) {
 			throw error;
 		}
 	},
-	async joinRoom(roomId) {
-		const user = store.getters.getLoginUser;
-		await firestore.collection('chatRoomList').doc(roomId).collection('guest').add(user);
-		const doc = await firestore.collection('chatRoomList').doc(roomId).get();
-		let data = doc.data();
-		data.roomId = roomId;
-		return data;
-	
+	async setRoomLocation(roomId, changedInfo){
+		await firestore.collection('chatRoomList').doc(roomId).update({
+			location: {
+				latitude: changedInfo.latitude,
+				longitude: changedInfo.longitude
+			}
+		});
 	},
-	fetchRoomList() {
+	async setViewPoint(roomId, changedViewPoint){
+		await firestore.collection('chatRoomList').doc(roomId).update({
+			viewPoint: changedViewPoint
+		});
+	},
+	async joinChatRoom(chatRoom, user) {
+		await firestore.collection('chatRoomList').doc(chatRoom.id).set(
+			{ guest: [
+						user
+					]
+				},
+			{ merge: true }			
+			);
+			await this.sendMessage(chatRoom.id, {
+				sender: "system",
+				content: user.nickname + "님이 입장했어요!",
+				createdAt: ""
+			});
+		},
+	async outChatRoom(chatRoom, user){
+		await firestore.collection('chatRoomList').doc(chatRoom.id).update({
+			guest: firebase.firestore.FieldValue.arrayRemove({
+				...user
+			})
+		});
+
+		await this.sendMessage(chatRoom.id, {
+			sender: "system",
+			content: user.nickname + "님이 퇴장했어요!",
+			createdAt: ""
+		});
+	},
+	fetchChatRooms(state) {
 		return new Promise((resolve, reject) => {
-			const querySnapshot = firestore.collection('chatRoomList').onSnapshot((querySnapshot)=>{
-				let roomList = new HashMap();
-				querySnapshot.forEach(function (doc) {
-					let data = doc.data();
-					data.roomId = doc.id;
-					roomList.put(roomId, data);
+			const unsubscribe =
+				firestore.collection('chatRoomList').onSnapshot((chatRoomsData) => {
+					console.log('onSnapShot Rooms')
+					chatRoomsData.docChanges().forEach(async function(change) {
+						const id = change.doc.id;
+						const chatRoom = change.doc.data();
+						if (change.type === "added") {
+							console.log("add chat room IN API");
+							state.dispatch('addChatRoom', {id, chatRoom});
+						}
+						if (change.type === "modified") {
+							console.log("edit chat room IN API");
+							state.dispatch('editChatRoom', {id, chatRoom});
+						}
+						if (change.type === "removed") {
+							console.log("delete chat room IN API");
+							state.dispatch('deleteChatRoom', id);
+						}
+					});
 				});
-				store.commit('updateRoomList', roomList);
-				resolve(roomList);
-			}, reject);
+			resolve(unsubscribe);
 		});
 	},
-	sendMessage(roomId, message){
-        firestore.collection('room').doc(roomId).collection('chatMessages').add(message);
-	},
-	fetchMessage(roomId){
+	fetchChatRoom(state, id) {
 		return new Promise((resolve, reject) => {
-			firestore.collection('room').doc(roomId).collection('chatMessages').orderBy('createdAt').onSnapshot((querySnapshot) => {
-				let allMessages = [];
-				querySnapshot.forEach(doc => {
-					let data = doc.data();
-					data.id = doc.id;
-					allMessages.push(data);
-				}),
-				store.commit('setMessages', allMessages);
-				resolve(allMessages);
-			}, reject);
+			const unsubscribe =
+				firestore.collection('chatRoomList').doc(id).onSnapshot((chatRoomData) => {
+					const id = chatRoomData.id;
+					const chatRoom = chatRoomData.data();
+					state.commit('updateSelectedId', id);
+					state.commit('editChatRoom', {id, chatRoom});
+				});
+			resolve(unsubscribe);
 		});
 	},
-	/* FireStore */
+
+	/* Chatting */
+	sendMessage(id, message){
+		message.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        firestore.collection('room').doc(id).collection('chatLog').add(message);
+	},
+	fetchChatLog(id, _this){
+		firestore.collection('room').doc(id).collection('chatLog').orderBy('createdAt').onSnapshot((querySnapshot) => {
+			let chatLog = [];
+			querySnapshot.forEach(doc => {
+				let data = doc.data();
+				data.id = doc.id;
+				chatLog.push(data);
+			});
+			_this.chatLog = chatLog;
+		});
+	},
+
+	/* User Nickname */
 	async emailRandomizeName(){
 		while(true){
             const randomNickname = randomName.randomizeName()
@@ -151,7 +206,7 @@ export default {
 			user : firebase.auth().currentUser.email
 		})
 		.then( () => {
-			console.log("nickname setting complete")
+			// console.log("nickname setting complete")
 		}).catch( (error) => {
 			console.log(error)
 		})
@@ -183,5 +238,9 @@ export default {
 			}
 		)
 		return confirm
+	},
+	getTimestamp(){
+		const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+		return timestamp;
 	}
 }
