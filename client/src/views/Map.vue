@@ -99,6 +99,7 @@ export default {
 			unsubscribe: null,
 			viewPoint: null,
 			searchdata : '',
+			markers: []
 		}
 	},
     computed: {
@@ -110,7 +111,7 @@ export default {
 		} else {
 			console.log('지형정보를 지원하지 않는 환경입니다.');
 		}
-		//this.$store.watch(() => { this.getMarkers.values() }, () => { this.drawMarker(); });
+		this.$store.watch(() => { this.getMarkers.values() }, () => { this.updateMarker(); console.log('watching') }, {deep: true});
 	},
 	beforeDestroy() {
 		if(this.unsubscribe!==null){
@@ -174,24 +175,19 @@ export default {
 			this.marker.setMap(null);
 		},
 		updateMarker() {
-			console.log("call updateMarker");
-			if(this.markerList.length > 0) {
-				this.removeMarker();
-			}
+			this.removeMarker();
 			this.drawMarker();
 		},
 		removeMarker() {
-			console.log("call removeMarker");
-			this.markerList.forEach((marker)=>{
+			this.markers.forEach((marker)=>{
 				marker.setMap(null);
 			});
-			this.markerList = [];
+			this.markers = [];
 		},
         drawMarker() {
-			console.log("draw");
 			this.getMarkers.values().forEach((marker) => {
-				marker.setMap(null);
 				marker.setMap(this.map);
+				this.markers.push(marker);
 				kakao.maps.event.addListener(marker, 'click', () => {
 					this.$store.commit('updateSelectedId', marker.getTitle());
 					this.joinDialog = true;
