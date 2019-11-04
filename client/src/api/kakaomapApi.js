@@ -1,6 +1,5 @@
 /* global kakao */
 export default {
-
 	// RoadView API
 	initRoadview (_this) {
 		_this.roadview = new kakao.maps.Roadview(_this.roadviewContainer);
@@ -15,22 +14,41 @@ export default {
 		_this.roadviewClient.getNearestPanoId(roadviewPosition, 50, function (panoId) {
 			_this.roadview.setPanoId(panoId, roadviewPosition); // panoId와 중심좌표를 통해 로드뷰 실행
 		});
-	
+		_this.roadview.setViewpoint(_this.roomInfo.viewPoint);
+
+		if(!_this.isHost) return;
+
 		kakao.maps.event.addListener(_this.roadview, 'position_changed', () => {
 			const changedLocation = _this.roadview.getPosition();
 			const changedLocationInfo = {
 				latitude: changedLocation.Ha,
 				longitude: changedLocation.Ga
 			}
+			console.log(_this.roadview.getViewpoint())
 			_this.$store.dispatch('setRoomLocation', changedLocationInfo);
 		});
 
-		kakao.maps.event.addListener(_this.roadview, 'viewpoint_changed', function() {
-			const changedViewPoint = _this.roadview.getViewPoint();
-			_this.$store.dispatch('setViewPoint', changedViewPoint);
+		kakao.maps.event.addListener(_this.roadview, 'viewpoint_changed', () => {
+			const changedViewPoint = _this.roadview.getViewpoint();
+			const viewPoint = {
+				pan: changedViewPoint.pan,
+				tilt: changedViewPoint.tilt,
+				zoom: changedViewPoint.zoom
+			}
+
+			const threshold = 5; //이미지가 변화되어야 되는(각도가 변해야되는) 임계 값
+			for(let i=0; i<72; i++){ //각도에 따라 변화되는 앵글 이미지의 수가 16개
+				if(viewPoint.pan > (threshold * i) && viewPoint.pan < (threshold * (i + 1))){
+					if(_this.viewpoint!==i){
+						_this.viewpoint = i;
+						_this.$store.dispatch('setViewPoint', viewPoint);
+					}
+				}
+			}
 		});
 	},
 	roadviewChangedEventHandler(_this, chatRoom) {
+		console.log('Roadview Changed Event!!!')
 		_this.roadview.setViewpoint(chatRoom.viewPoint);
 		const roadviewPosition = new kakao.maps.LatLng(
 			chatRoom.location.latitude,
