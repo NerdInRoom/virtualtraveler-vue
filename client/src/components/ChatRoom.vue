@@ -88,12 +88,23 @@ export default {
 	updated() {
 		this.scrollBottom();
 	},
+	created() {
+		if(!this.getOnlineChatRoom) {
+			this.$router.push('/');
+			alert("Host가 퇴장하여 방이 사라졌습니다.");
+		}
+	},
 	mounted() {
 		firebaseApi.fetchChatLog(this.getOnlineChatRoom.id, this);
 	},
 	beforeDestroy() {
-		storage.disJoin();
-		firebaseApi.outChatRoom(this.getOnlineChatRoom, this.getLoginUser);
+		if(this.getOnlineChatRoom.host.uid === this.getLoginUser.uid){
+			storage.disJoin();
+			firebaseApi.breakRoom(this.getOnlineChatRoom);
+		} else {
+			storage.disJoin();
+			firebaseApi.outChatRoom(this.getOnlineChatRoom, this.getLoginUser);
+		}
 	},
 	methods: {
 		isMine(sender){
