@@ -239,8 +239,4 @@ export default {
 		)
 		return confirm
 	},
-	getTimestamp(){
-		const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-		return timestamp;
-	}
 }

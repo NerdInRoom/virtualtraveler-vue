@@ -73,8 +73,7 @@ import time from "../utils/time.js";
 export default {
 	data: () => ({
 		inputText: '',
-		chatLog: null,
-		joinTime: null
+		chatLog: null
 	}),
 	computed: {
 		...mapGetters(['getSelectedChatRoom','getLoginUser', 'getChatLog']),
@@ -92,7 +91,6 @@ export default {
 	},
 	mounted() {
 		firebaseApi.fetchChatLog(this.getSelectedChatRoom.id, this);
-		this.joinTime = new Date().getTime();
 	},
 	methods: {
 		isMine(sender){
@@ -117,23 +115,11 @@ export default {
 			mainTextArea.scrollTop = mainTextArea.scrollHeight;
 		},
 		timestampToTime(timestamp){
-			let date = new Date(timestamp),
-				year = date.getFullYear(),
-				month = date.getMonth()+1,
-				day = date.getDate(),
-				hour = date.getHours(),
-				minute = date.getMinutes();
-				
-			let nowDate = new Date(),
-				nowYear = nowDate.getFullYear(),
-				nowMonth = nowDate.getMonth()+1,
-				nowDay = nowDate.getDate(),
-				nowHour = nowDate.getHours(),
-				nowMinute = nowDate.getMinutes();
-				
-			const result = hour + " : " + minute;
-			
-			return result;
+			if(timestamp){
+				let date = timestamp.toDate();
+				const result = date.getHours() + " : " + date.getMinutes();
+				return result;
+			}
 		}
 	}
 };
