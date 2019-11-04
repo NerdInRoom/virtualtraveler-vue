@@ -125,6 +125,13 @@ export default {
 			createdAt: ""
 		});
 	},
+	breakRoom(chatRoom){
+		firestore.collection('chatRooms').doc(chatRoom.id).delete().then(function() {
+			console.log("Document successfully deleted!");
+		}).catch(function(error) {
+			console.error("Error removing document: ", error);
+		});
+	},
 	fetchChatRooms(state) {
 		return new Promise((resolve, reject) => {
 			const unsubscribe =

@@ -114,8 +114,8 @@ export default {
 	}),
 	methods: {
 		signupEnter() {
-			const loginBtn = document.getElementById('btn-signup');
-			loginBtn.click();
+			const signBtn = document.getElementById('btn-signup');
+			signBtn.click();
 		},
 		async signup(){
 			try {
