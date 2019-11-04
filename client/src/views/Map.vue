@@ -2,6 +2,7 @@
 	<div class="map-wrapper">
 		<div class="map" id="mapContainer"></div>
 		<ChatRoomInfo />
+		
 		<v-dialog v-model="joinDialog" max-width="390" >
 			<v-card>
 			<v-card-title class="mb-5">🎈 채팅방에 참여하시겠습니까?</v-card-title>
@@ -46,6 +47,7 @@
 			</v-card-actions>
 			</v-card>
 		</v-dialog>
+		<input class="searchFrom" v-model="searchdata" placeholder="검색" @keydown.enter="search()"/>
         <img
 			src="@/images/scooter.png"
 			class="start"
@@ -95,7 +97,8 @@ export default {
 			title: '',
 			location: null,
 			unsubscribe: null,
-			viewPoint: null
+			viewPoint: null,
+			searchdata : '',
 		}
 	},
     computed: {
@@ -115,6 +118,20 @@ export default {
 		}
 	},
     methods: {
+		search(){
+			const _this = this;
+			var ps = new kakao.maps.services.Places(); 
+			ps.keywordSearch(this.searchdata, (data, status, pagination) =>{
+				if (status === kakao.maps.services.Status.OK) {
+					var bounds = new kakao.maps.LatLngBounds();
+					bounds.extend(new kakao.maps.LatLng(data[0].y, data[0].x));
+					_this.map.setBounds(bounds);
+					_this.searchdata ='';
+				} else{ //검색이 안됐을 때
+					_this.searchdata ='';
+				}
+			}); 
+		},
 		async init(position) {
 			const mapContainer = document.getElementById("mapContainer");
 			this.map = await kakaomapApi.drawMap(mapContainer, position);
@@ -224,6 +241,21 @@ export default {
 		opacity: 0.7;
 		cursor: pointer;
 	}
+}
+.searchFrom{
+	left: 480px;
+    top: 25px;
+	position: fixed;
+	height: 30px;
+	width: 300px;
+	border-radius: 20px;
+	z-index: 9999;
+	background-color: white;
+	opacity: 0.9;
+	padding-left: 10px;
+}
+.searchFrom:focus {
+	outline: none;
 }
 .marker {
 	left: 400px;
