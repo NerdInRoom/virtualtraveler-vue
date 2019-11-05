@@ -7,6 +7,7 @@ deploy-to-server:
         - echo 'DEPLOY RUNNING'
         - npm install --progress=false
         - npm run build
+        - pwd
         - firebase deploy
 
     tags:
