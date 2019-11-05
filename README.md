@@ -64,6 +64,8 @@
   
   - <a href="./wiki/ESlint.md">ESlint</a>
   
+  - <a href="./wiki/about_MVVMpattern.md">MVVM패턴</a>
+  
     
   
 - Chatting
@@ -93,6 +95,8 @@
   - <a href="./wiki/var_let_const.md">JavaScript의 변수선언(var, let, const)</a>
   - <a href="./wiki/this.md">상황에 따른 this</a>
   - <a href="./wiki/about_callback_function.md">Javascript의 callback 개념</a>
+  - <a href="./wiki/exception_handling.md">예외 처리</a>
+  - <a href="./wiki/JSON.md">JSON</a>
 
   
 
