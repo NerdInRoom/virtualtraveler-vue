@@ -1,4 +1,4 @@
-<img src="./deliverables/logo.png">
+<center><img src="./deliverables/logo.png"></center>
 
 ## 🌎 웹으로 여행하자!
 
