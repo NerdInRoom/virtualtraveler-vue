@@ -5,11 +5,10 @@ deploy-to-server:
         - master
     script:
         - echo 'DEPLOY RUNNING'
-        - cd client
         - npm install --progress=false
         - npm run build
-        - cd ../server
-        - npm install
+        - firebase deploy
+
     tags:
         - deploy
         
@@ -18,9 +17,7 @@ build-test:
     stage: build
     script:
         - echo 'BUILD TEST RUNNING'
-        - cd client
         - npm install --progress=false
         - npm run build
-        - whoami
     tags:
         - build

@@ -5,7 +5,7 @@
 			align="center"
 			justify="center"
 		>
-			<h1>로그인</h1>
+			<h1>😎 방구석 여행 😎</h1>
 		</v-row>
 		<v-row
 			class="row"
