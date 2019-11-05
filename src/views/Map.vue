@@ -48,11 +48,6 @@
 			</v-card>
 		</v-dialog>
 		<input class="searchFrom" v-model="searchdata" placeholder="검색" @keydown.enter="search()"/>
-        <img
-			src="@/images/scooter.png"
-			class="start"
-			@click="drawMarker()"
-		/>
 		<img
 			v-if="!isPresent"
 			src="@/images/location.png"
@@ -127,7 +122,7 @@ export default {
 		} else {
 			console.log('지형정보를 지원하지 않는 환경입니다.');
 		}
-		this.$store.watch(() => { this.getMarkers.values() }, () => { this.updateMarker(); console.log('watching') }, {deep: true});
+		this.$store.watch(() => { this.getMarkers.values() }, () => { this.updateMarker(); }, {deep: true});
 	},
 	beforeDestroy() {
 		if(this.unsubscribe!==null){
@@ -242,27 +237,8 @@ export default {
 	height: 100vh;
 	width: 100vw;
 }
-.start {
-	left: 325px;
-	top: 10px;
-	position: fixed;
-	height: 64px;
-	width: 64px;
-	border-radius: 50px;
-	cursor: pointer;
-	z-index: 9999;
-
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
-	-ms-transition: all 0.3s ease-in-out;
-	&:hover {
-		opacity: 0.7;
-		cursor: pointer;
-	}
-}
 .searchFrom{
-	left: 480px;
+	left: 400px;
     top: 22px;
 	position: fixed;
 	height: 40px;
@@ -277,8 +253,8 @@ export default {
 	outline: none;
 }
 .marker {
-	left: 400px;
-    top: 10px;
+	left: 325px;
+	top: 10px;
 	position: fixed;
 	height: 64px;
 	width: 64px;
