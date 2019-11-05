@@ -1,4 +1,4 @@
-<img src="./deliverables/logo.png" style="zoom:60%;" >
+<img src="./deliverables/logo.png">
 
 ## 🌎 웹으로 여행하자!
 
@@ -124,7 +124,7 @@
 
 
 
-	## 🧱 프로젝트 아키텍쳐
+## 🧱 프로젝트 아키텍쳐
 
 <img src="./deliverables/service-architecture.png">
 
