@@ -208,7 +208,14 @@
 
 ## 🤘 회의록
 
-
-
- 
+- <a href="./meeting-log/20191015.md">2019년 10월 15일</a>
+- <a href="./meeting-log/20191016.md">2019년 10월 16일</a>
+- <a href="./meeting-log/20191021.md">2019년 10월 21일</a>
+- <a href="./meeting-log/20191022.md">2019년 10월 22일</a>
+- <a href="./meeting-log/20191023.md">2019년 10월 23일</a>
+- <a href="./meeting-log/20191025.md">2019년 10월 25일</a>
+- <a href="./meeting-log/20191029.md">2019년 10월 29일</a>
+- <a href="./meeting-log/20191031.md">2019년 10월 31일</a>
+- <a href="./meeting-log/20191101.md">2019년 11월 01일</a>
+- <a href="./meeting-log/20191105.md">2019년 11월 05일</a>
 
