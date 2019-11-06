@@ -47,6 +47,24 @@
 			</v-card-actions>
 			</v-card>
 		</v-dialog>
+		<v-dialog
+			v-model="roadviewDialog"
+			max-width="390"
+		>
+			<v-card>
+			<v-card-title class="mb-5">🛸 로드뷰가 지원되지 않는 지역입니다.</v-card-title>
+			<v-card-actions>
+				<v-spacer></v-spacer>
+				<v-btn
+					color="primary darken-1"
+					text
+					@click="roadviewDialog=false"
+				>
+					OK
+				</v-btn>
+			</v-card-actions>
+			</v-card>
+		</v-dialog>
 		<input class="searchFrom" v-model="searchdata" placeholder="검색" @keydown.enter="search()"/>
 		<img
 			v-if="!isPresent"
@@ -89,6 +107,7 @@ export default {
 			isPresent: false,
 			joinDialog: false,
 			createDialog: false,
+			roadviewDialog: false,
 			marker: null,
 			title: '',
 			location: null,
@@ -163,7 +182,7 @@ export default {
 				const rvClient = new kakao.maps.RoadviewClient();
 				rvClient.getNearestPanoId(_this.marker.getPosition(), 50, function(panoId){
 					if(panoId===null){
-						alert('🛸 로드뷰가 지원되지 않는 지역입니다.')
+						this.roadviewDialog = true;
 					} else {
 						_this.location = {
 							latitude: _this.marker.getPosition().Ha,
