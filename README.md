@@ -1,4 +1,4 @@
-<center><img src="./deliverables/logo.png"></center>
+<img src="./deliverables/logo.png" style="display:block; margin:0 auto;">
 
 ## 🌎 웹으로 여행하자!
 
@@ -72,7 +72,7 @@
 
 - #### 강민 : Chat part Developer
 
-  - `Firestore Database design`, `random nickname`
+  - `Firestore Database design & implement`, `random nickname`
 
 
 
@@ -82,7 +82,7 @@
 
 
 
-## 💡 프로젝트 특징
+## 💡 브랜치 전략
 
 - CI / CD를 활용한 빌드 테스팅 / 배포 자동화
 
@@ -114,23 +114,19 @@
 
 
 
-- 코드리뷰 및 문제해결 나누기
-
-  <img src="./deliverables/meeting2.jpg">
-
-  
-
-  <img src="./deliverables/meeting1.jpg">
-
-
-
 ## 🧱 프로젝트 아키텍쳐
+
+- Service Architecture 
 
 <img src="./deliverables/service-architecture.png">
 
+
+
 - Service Flow
 
-  <img src="./deliverables/serviceflow.jpg">
+  <img src="./deliverables/serviceflow.png">
+
+
 
 
 
