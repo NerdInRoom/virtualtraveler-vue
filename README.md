@@ -118,13 +118,12 @@
 
 - Service Architecture 
 
-<center> <img src="./deliverables/BangJjin_ServiceArchitecture.png"> </center>
-<center> <img src="./deliverables/BangJjin_Subscribe.png"> </center>
+<img src="./deliverables/BangJjin_ServiceArchitecture.png">
+<img src="./deliverables/BangJjin_Subscribe.png">
 
 
 
 - Service Flow
-
   <img src="./deliverables/serviceflow.png">
 
 
@@ -142,14 +141,10 @@
 - **개발환경**
 
   - CI / CD
-
     - <a href="./wiki/cicd.md">CI / CD 개념정리</a>
     - <a href="./wiki/gitlab-ci.md">GitLab CI/CD 도입하기</a>
-
   - <a href="./wiki/about_vscode.md">VScode 팁 모음</a>
-
   - <a href="./wiki/ESlint.md">ESlint</a>
-
   - <a href="./wiki/about_MVVMpattern.md">MVVM패턴</a>
 
     
@@ -189,7 +184,6 @@
 - **API**
 
   - <a href="./wiki/about_rest.md">REST API 개념정리</a>
-
   - <a href="./wiki/about_roadview.md">Kakao Roadview</a>
 
     
