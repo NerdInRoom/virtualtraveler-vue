@@ -118,7 +118,8 @@
 
 - Service Architecture 
 
-<img src="./deliverables/service-architecture.png">
+<img src="./deliverables/BangJjin_ServiceArchitecture.png">
+<img src="./deliverables/BangJjin_Subscribe.png">
 
 
 
