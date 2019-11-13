@@ -1,6 +1,7 @@
 <img src="./deliverables/logo.png" style="display:block; margin:0 auto;">
 
 ## 🌎 웹으로 여행하자!
+- ### <a href="https://www.youtube.com/watch?v=zs7YiWbZHpA&feature=youtu.be">서비스 소개 영상</a>
 
 - ### 일상에 지친 당신!
 
